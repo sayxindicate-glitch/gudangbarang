@@ -544,321 +544,339 @@
         </div>
     </div>
 
-    <script>
-        // --- Theme Logic ---
-        const themeToggle = document.getElementById('themeToggle');
-        const switchIcon = document.getElementById('switchIcon');
-        const html = document.documentElement;
+    // --- Theme Logic ---
+const themeToggle = document.getElementById('themeToggle');
+const switchIcon = document.getElementById('switchIcon');
+const html = document.documentElement;
 
-        if (localStorage.getItem('theme') === 'dark') {
-            html.setAttribute('data-theme', 'dark');
-            switchIcon.classList.replace('fa-sun', 'fa-moon');
-        }
+if (localStorage.getItem('theme') === 'dark') {
+    html.setAttribute('data-theme', 'dark');
+    switchIcon.classList.replace('fa-sun', 'fa-moon');
+}
 
-        themeToggle.addEventListener('click', () => {
-            if (html.getAttribute('data-theme') === 'light') {
-                html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                switchIcon.classList.replace('fa-sun', 'fa-moon');
-            } else {
-                html.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                switchIcon.classList.replace('fa-moon', 'fa-sun');
-            }
-        });
+themeToggle.addEventListener('click', () => {
+    if (html.getAttribute('data-theme') === 'light') {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        switchIcon.classList.replace('fa-sun', 'fa-moon');
+    } else {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        switchIcon.classList.replace('fa-moon', 'fa-sun');
+    }
+});
 
-        // --- Data Produk ---
-        const allProducts = [
-            { id: 1, img: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&q=80&w=400", title: "Kaos Polos Combed 30s", info: "Min. Order: 1 Lusin (12 Pcs)", price: "Rp 360.000", desc: "Kaos polos bahan cotton combed 30s kualitas distro.", category: "Fashion Grosir", filters: { "Jenis": ["Pakaian Pria"], "Bahan": ["Katun Combed"], "Merek": ["Lokal"] } },
-            { id: 2, img: "https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&q=80&w=400", title: "Kertas HVS A4 SiDU", info: "Min. Order: 1 Dus (5 Rim)", price: "Rp 235.000", desc: "Kertas HVS merek Sinar Dunia (SiDU) ukuran A4 70gsm.", category: "Alat Tulis Kantor", filters: { "Jenis": ["Kertas HVS"], "Ukuran": ["A4"], "Tipe": ["70gsm"], "Merek": ["SiDU"] } },
-            { id: 3, img: "https://images.unsplash.com/photo-1546554137-f86b9593a222?auto=format&fit=crop&q=80&w=400", title: "Minyak Goreng 2L", info: "Min. Order: 1 Karton (6 Pch)", price: "Rp 205.000", desc: "Minyak goreng kelapa sawit premium kemasan pouch 2 Liter.", category: "Sembako", filters: { "Jenis": ["Minyak Sawit"], "Kapasitas": ["2 Liter"], "Kemasan": ["Pouch"] } },
-            { id: 4, img: "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?auto=format&fit=crop&q=80&w=400", title: "Lampu LED Bohlam 10W", info: "Min. Order: 1 Box (50 Pcs)", price: "Rp 450.000", desc: "Lampu LED Bohlam daya 10 Watt cahaya putih.", category: "Elektronik", filters: { "Jenis": ["Penerangan"], "Daya Listrik": ["10 Watt"], "Warna Cahaya": ["Cahaya Putih"] } },
-            { id: 5, img: "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&q=80&w=400", title: "Gelas Kaca Kopi", info: "Min. Order: 3 Lusin", price: "Rp 150.000", desc: "Gelas beling/kaca bening dengan gagang yang tebal.", category: "Perabotan", filters: { "Jenis": ["Peralatan Minum"], "Material": ["Kaca Bening"] } },
-            { id: 6, img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=400", title: "Beras Premium 5Kg", info: "Min. Order: 10 Karung", price: "Rp 650.000", desc: "Beras pulen kualitas super kemasan 5kg.", category: "Sembako", filters: { "Jenis": ["Beras Putih", "Premium"], "Berat": ["5 Kg"] } },
-            { id: 7, img: "https://images.unsplash.com/photo-1626808642875-0aa545482dfb?auto=format&fit=crop&q=80&w=400", title: "Baterai AA Alkaline", info: "Min. Order: 5 Box (120 Pcs)", price: "Rp 300.000", desc: "Baterai ukuran AA awet dan tahan lama.", category: "Elektronik", filters: { "Tipe": ["Baterai AA"], "Jenis": ["Alkaline"] } },
-            { id: 8, img: "https://images.unsplash.com/photo-1520114094193-4eecdf9a9221?auto=format&fit=crop&q=80&w=400", title: "Lakban Bening 2 Inch", info: "Min. Order: 1 Dus (72 Roll)", price: "Rp 504.000", desc: "Lakban bening daya rekat kuat.", category: "Alat Tulis Kantor", filters: { "Jenis": ["Isolasi"], "Warna": ["Bening"], "Ukuran": ["2 Inch"] } },
-            { id: 9, img: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&q=80&w=400", title: "Susu Kental Manis", info: "Min. Order: 1 Karton (48 Klg)", price: "Rp 550.000", desc: "Susu kental manis kaleng cocok untuk warkop.", category: "Sembako", filters: { "Jenis": ["Minuman"], "Rasa": ["Manis"], "Kemasan": ["Susu Kaleng"] } },
-            { id: 10, img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=400", title: "Sepatu Sneakers Lokal", info: "Min. Order: 1 Seri (5 Psg)", price: "Rp 450.000", desc: "Sepatu sneakers grosir kualitas distro.", category: "Fashion Grosir", filters: { "Jenis": ["Sepatu Pria", "Sneakers"], "Merek": ["Lokal"] } },
-            { id: 11, img: "https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?auto=format&fit=crop&q=80&w=400", title: "Gula Pasir 1Kg", info: "Min. Order: 1 Karung (50Kg)", price: "Rp 850.000", desc: "Gula pasir putih kualitas premium.", category: "Sembako", filters: { "Jenis": ["Gula Putih", "Premium"], "Berat": ["1 Kg"] } },
-            { id: 12, img: "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=400", title: "Kipas Angin Berdiri", info: "Min. Order: 3 Unit", price: "Rp 450.000", desc: "Kipas angin berdiri 16 inch angin kencang.", category: "Elektronik", filters: { "Jenis": ["Pendingin Ruangan"], "Tipe": ["Kipas Angin"], "Ukuran": ["16 Inch"] } },
-            
-            // CONTOH BARANG BARU (Sistem akan otomatis membuat Kategori & Filter-nya tanpa perlu coding ulang)
-            { id: 13, img: "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&q=80&w=400", title: "Jam Tangan Pintar", info: "Min. Order: 2 Pcs", price: "Rp 850.000", desc: "Smartwatch dengan fitur tracking kesehatan dan notifikasi.", category: "Aksesoris Gadget", filters: { "Jenis": ["Smartwatch"], "Garansi": ["1 Tahun Resmi"], "Warna": ["Hitam", "Silver"] } }
-        ];
+// --- Variabel Logika (Dikosongkan karena ditarik dari Serverless Vercel) ---
+let allProducts = []; 
+let itemsPerPage = 10;
+let currentPage = 1;
+let currentProducts = [];
 
-        // --- Variabel Logika ---
-        let itemsPerPage = 10;
-        let currentPage = 1;
-        let currentProducts = [...allProducts];
+let currentCategory = "Semua Barang";
+let activeTags = [];
+
+const categoryContainer = document.getElementById('categoryContainer');
+const productContainer = document.getElementById('productContainer');
+const loadMoreBtn = document.getElementById('loadMoreBtn');
+const searchInput = document.getElementById('searchInput');
+const clearSearchBtn = document.getElementById('clearSearch');
+
+const filterBtn = document.getElementById('filterBtn');
+const filterDropdown = document.getElementById('filterDropdown');
+const filterTagsContainer = document.getElementById('filterTagsContainer');
+const clearFiltersBtn = document.getElementById('clearFilters');
+
+// --- FUNGSI MENGAMBIL DATA DARI BACKEND VERCEL ---
+async function fetchProductsFromAPI() {
+    try {
+        // Memanggil API Backend buatan kita sendiri yang disembunyikan Vercel
+        const response = await fetch('/api/products');
         
-        let currentCategory = "Semua Barang";
-        let activeTags = [];
-
-        const categoryContainer = document.getElementById('categoryContainer'); // Elemen wadah kategori
-        const productContainer = document.getElementById('productContainer');
-        const loadMoreBtn = document.getElementById('loadMoreBtn');
-        const searchInput = document.getElementById('searchInput');
-        const clearSearchBtn = document.getElementById('clearSearch');
+        if (!response.ok) {
+            throw new Error('Gagal terhubung ke server');
+        }
         
-        const filterBtn = document.getElementById('filterBtn');
-        const filterDropdown = document.getElementById('filterDropdown');
-        const filterTagsContainer = document.getElementById('filterTagsContainer');
-        const clearFiltersBtn = document.getElementById('clearFilters');
+        // Masukkan data dari database Supabase
+        const data = await response.json();
+        
+        allProducts = data;
+        currentProducts = [...allProducts];
+        
+        renderCategories(); 
+        filterProducts();   
+    } catch (error) {
+        console.error("Gagal menarik data:", error);
+        productContainer.innerHTML = `<div class="empty-state" style="color:#ff4757;">Koneksi ke server terputus. Silakan muat ulang halaman.</div>`;
+    }
+}
 
-        // --- FUNGSI GENERATE KATEGORI OTOMATIS ---
-        function renderCategories() {
-            // Ambil semua kategori unik dari array data barang
-            const uniqueCategories = new Set();
-            allProducts.forEach(prod => {
-                if(prod.category) uniqueCategories.add(prod.category);
-            });
+// --- FUNGSI GENERATE KATEGORI OTOMATIS ---
+function renderCategories() {
+    const uniqueCategories = new Set();
+    allProducts.forEach(prod => {
+        if(prod.category) uniqueCategories.add(prod.category);
+    });
 
-            categoryContainer.innerHTML = ''; // Kosongkan wadah
+    categoryContainer.innerHTML = ''; 
 
-            // Selalu buat tombol "Semua Barang" di urutan pertama
-            const allBtn = document.createElement('button');
-            allBtn.className = `cat-btn ${currentCategory === 'Semua Barang' ? 'active' : ''}`;
-            allBtn.setAttribute('data-category', 'Semua Barang');
-            allBtn.innerText = 'Semua Barang';
-            allBtn.onclick = () => handleCategoryClick(allBtn, 'Semua Barang');
-            categoryContainer.appendChild(allBtn);
+    const allBtn = document.createElement('button');
+    allBtn.className = `cat-btn ${currentCategory === 'Semua Barang' ? 'active' : ''}`;
+    allBtn.setAttribute('data-category', 'Semua Barang');
+    allBtn.innerText = 'Semua Barang';
+    allBtn.onclick = () => handleCategoryClick(allBtn, 'Semua Barang');
+    categoryContainer.appendChild(allBtn);
 
-            // Generate tombol untuk setiap kategori unik yang ditemukan
-            Array.from(uniqueCategories).sort().forEach(cat => {
-                const btn = document.createElement('button');
-                btn.className = `cat-btn ${currentCategory === cat ? 'active' : ''}`;
-                btn.setAttribute('data-category', cat);
-                btn.innerText = cat;
-                btn.onclick = () => handleCategoryClick(btn, cat);
-                categoryContainer.appendChild(btn);
-            });
-        }
+    Array.from(uniqueCategories).sort().forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = `cat-btn ${currentCategory === cat ? 'active' : ''}`;
+        btn.setAttribute('data-category', cat);
+        btn.innerText = cat;
+        btn.onclick = () => handleCategoryClick(btn, cat);
+        categoryContainer.appendChild(btn);
+    });
+}
 
-        // Logic saat kategori diklik
-        function handleCategoryClick(clickedBtn, categoryName) {
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            clickedBtn.classList.add('active');
-            
-            currentCategory = categoryName;
-            activeTags = []; // Reset filter dropdown jika pindah kategori
-            filterProducts();
-        }
+function handleCategoryClick(clickedBtn, categoryName) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    clickedBtn.classList.add('active');
+    
+    currentCategory = categoryName;
+    activeTags = []; 
+    filterProducts();
+}
 
-        // --- Fungsi Filter Utama ---
-        function filterProducts() {
-            const keyword = searchInput.value.toLowerCase();
-            
-            const scopeProducts = allProducts.filter(prod => {
-                const matchCategory = currentCategory === "Semua Barang" || prod.category === currentCategory;
-                const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
-                const matchSearch = prod.title.toLowerCase().includes(keyword) || 
-                                    prod.info.toLowerCase().includes(keyword) || 
-                                    flatTags.some(tag => tag.toLowerCase().includes(keyword));
-                                    
-                return matchCategory && matchSearch;
-            });
-            
-            updateDynamicFilterUI(scopeProducts);
-            
-            currentProducts = scopeProducts.filter(prod => {
-                if (activeTags.length === 0) return true;
-                const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
-                return activeTags.every(activeTag => flatTags.includes(activeTag));
-            });
-            
-            currentPage = 1; 
-            renderProducts();
-        }
+// --- Fungsi Filter Utama ---
+function filterProducts() {
+    const keyword = searchInput.value.toLowerCase();
+    
+    const scopeProducts = allProducts.filter(prod => {
+        const matchCategory = currentCategory === "Semua Barang" || prod.category === currentCategory;
+        const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
+        const matchSearch = prod.title.toLowerCase().includes(keyword) || 
+                            (prod.info && prod.info.toLowerCase().includes(keyword)) || 
+                            flatTags.some(tag => tag.toLowerCase().includes(keyword));
+                            
+        return matchCategory && matchSearch;
+    });
+    
+    updateDynamicFilterUI(scopeProducts);
+    
+    currentProducts = scopeProducts.filter(prod => {
+        if (activeTags.length === 0) return true;
+        const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
+        return activeTags.every(activeTag => flatTags.includes(activeTag));
+    });
+    
+    currentPage = 1; 
+    renderProducts();
+}
 
-        // --- Fungsi Update UI Filter Dropdown Terkelompok ---
-        function updateDynamicFilterUI(products) {
-            let groupedTags = {};
-            
-            products.forEach(p => {
-                if(p.filters) {
-                    for(const [groupName, tagsArray] of Object.entries(p.filters)) {
-                        if(!groupedTags[groupName]) {
-                            groupedTags[groupName] = new Set();
-                        }
-                        tagsArray.forEach(tag => groupedTags[groupName].add(tag));
-                    }
+// --- Fungsi Update UI Filter Dropdown Terkelompok ---
+function updateDynamicFilterUI(products) {
+    let groupedTags = {};
+    
+    products.forEach(p => {
+        if(p.filters) {
+            for(const [groupName, tagsArray] of Object.entries(p.filters)) {
+                if(!groupedTags[groupName]) {
+                    groupedTags[groupName] = new Set();
                 }
-            });
+                tagsArray.forEach(tag => groupedTags[groupName].add(tag));
+            }
+        }
+    });
+    
+    let allAvailableTags = new Set();
+    Object.values(groupedTags).forEach(tagSet => {
+        tagSet.forEach(tag => allAvailableTags.add(tag));
+    });
+    activeTags = activeTags.filter(tag => allAvailableTags.has(tag));
+
+    filterTagsContainer.innerHTML = '';
+    
+    if(Object.keys(groupedTags).length === 0) {
+        filterTagsContainer.innerHTML = '<span style="font-size:12px; color:var(--text-muted); font-style:italic;">Tidak ada filter spesifik yang tersedia.</span>';
+        return;
+    }
+
+    for(const [groupName, tagsSet] of Object.entries(groupedTags)) {
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'filter-group';
+        
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'filter-group-label';
+        labelDiv.innerText = groupName;
+        groupDiv.appendChild(labelDiv);
+        
+        const tagsDiv = document.createElement('div');
+        tagsDiv.className = 'filter-tags';
+        
+        Array.from(tagsSet).sort().forEach(tag => {
+            const btn = document.createElement('button');
+            btn.className = 'filter-tag';
+            if(activeTags.includes(tag)) btn.classList.add('active');
+            btn.innerText = tag;
             
-            let allAvailableTags = new Set();
-            Object.values(groupedTags).forEach(tagSet => {
-                tagSet.forEach(tag => allAvailableTags.add(tag));
-            });
-            activeTags = activeTags.filter(tag => allAvailableTags.has(tag));
+            btn.onclick = () => {
+                if(activeTags.includes(tag)) {
+                    activeTags = activeTags.filter(t => t !== tag);
+                } else {
+                    activeTags.push(tag);
+                }
+                filterProducts(); 
+            };
+            tagsDiv.appendChild(btn);
+        });
+        
+        groupDiv.appendChild(tagsDiv);
+        filterTagsContainer.appendChild(groupDiv);
+    }
+}
 
-            filterTagsContainer.innerHTML = '';
+// --- Render UI Produk ---
+function renderProducts(isLoadMore = false) {
+    if (!isLoadMore) productContainer.innerHTML = '';
+    
+    if (currentProducts.length === 0) {
+        productContainer.innerHTML = `<div class="empty-state">Barang grosir tidak ditemukan.</div>`;
+        loadMoreBtn.classList.add('hidden');
+        return;
+    }
+
+    const startIndex = isLoadMore ? (currentPage - 1) * itemsPerPage : 0;
+    const endIndex = currentPage * itemsPerPage;
+    const productsToShow = currentProducts.slice(startIndex, endIndex);
+
+    productsToShow.forEach(prod => {
+        const qtyId = `qty-${prod.id}`; 
+        
+        // Logika Promo dari Supabase
+        const isPromoActive = prod.is_promo && prod.promo_price;
+        const priceHTML = isPromoActive 
+            ? `<span style="text-decoration: line-through; font-size:13px; color:var(--text-muted); margin-right:5px;">${prod.price}</span> ${prod.promo_price}` 
+            : `${prod.price}`;
+
+        const card = document.createElement('div');
+        card.className = 'neu-card';
+        card.innerHTML = `
+            ${isPromoActive ? `<div style="position:absolute; top:10px; right:10px; background:#ff4757; color:white; font-size:10px; font-weight:700; padding:4px 8px; border-radius:10px;">PROMO</div>` : ''}
+            <img src="${prod.img}" alt="${prod.title}" class="product-img" loading="lazy">
+            <h3 class="product-title">${prod.title}</h3>
+            <p class="product-info">${prod.info}</p>
+            <div class="price">${priceHTML}</div>
             
-            if(Object.keys(groupedTags).length === 0) {
-                filterTagsContainer.innerHTML = '<span style="font-size:12px; color:var(--text-muted); font-style:italic;">Tidak ada filter spesifik yang tersedia.</span>';
-                return;
-            }
+            <div class="qty-wrapper">
+                <button class="qty-btn" onclick="decreaseQty('${qtyId}')"><i class="fas fa-minus"></i></button>
+                <input type="number" id="${qtyId}" class="qty-input" value="1" min="1">
+                <button class="qty-btn" onclick="increaseQty('${qtyId}')"><i class="fas fa-plus"></i></button>
+            </div>
 
-            for(const [groupName, tagsSet] of Object.entries(groupedTags)) {
-                const groupDiv = document.createElement('div');
-                groupDiv.className = 'filter-group';
-                
-                const labelDiv = document.createElement('div');
-                labelDiv.className = 'filter-group-label';
-                labelDiv.innerText = groupName;
-                groupDiv.appendChild(labelDiv);
-                
-                const tagsDiv = document.createElement('div');
-                tagsDiv.className = 'filter-tags';
-                
-                Array.from(tagsSet).sort().forEach(tag => {
-                    const btn = document.createElement('button');
-                    btn.className = 'filter-tag';
-                    if(activeTags.includes(tag)) btn.classList.add('active');
-                    btn.innerText = tag;
-                    
-                    btn.onclick = () => {
-                        if(activeTags.includes(tag)) {
-                            activeTags = activeTags.filter(t => t !== tag);
-                        } else {
-                            activeTags.push(tag);
-                        }
-                        filterProducts(); 
-                    };
-                    tagsDiv.appendChild(btn);
-                });
-                
-                groupDiv.appendChild(tagsDiv);
-                filterTagsContainer.appendChild(groupDiv);
-            }
-        }
+            <div class="card-actions">
+                <button class="btn-eye" onclick="openModal(${prod.id})" title="Detail Barang">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="neu-btn">
+                    <i class="fas fa-cart-plus"></i> Beli
+                </button>
+            </div>
+        `;
+        // Membuat posisi relatif agar badge PROMO (absolute) tetap di dalam kartu
+        card.style.position = 'relative'; 
+        productContainer.appendChild(card);
+    });
 
-        // --- Render UI Produk ---
-        function renderProducts(isLoadMore = false) {
-            if (!isLoadMore) productContainer.innerHTML = '';
+    if (currentProducts.length > endIndex) {
+        loadMoreBtn.classList.remove('hidden');
+    } else {
+        loadMoreBtn.classList.add('hidden');
+    }
+}
+
+// --- INISIALISASI SAAT HALAMAN DIBUKA ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Tampilkan animasi loading sebelum data dari Vercel masuk
+    productContainer.innerHTML = `<div class="empty-state">Menarik data dari gudang... <br><i class="fas fa-spinner fa-spin" style="margin-top: 15px; font-size: 24px;"></i></div>`;
+    fetchProductsFromAPI(); 
+});
+
+// --- EVENT LISTENER ---
+searchInput.addEventListener('input', (e) => {
+    const keyword = e.target.value.toLowerCase();
+    clearSearchBtn.style.display = keyword.length > 0 ? 'block' : 'none';
+    filterProducts();
+});
+
+clearSearchBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    clearSearchBtn.style.display = 'none';
+    filterProducts();
+    searchInput.focus();
+});
+
+filterBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); 
+    filterDropdown.classList.toggle('active');
+    filterBtn.classList.toggle('active');
+});
+
+clearFiltersBtn.addEventListener('click', () => {
+    activeTags = [];
+    filterProducts();
+});
+
+document.addEventListener('click', (e) => {
+    if(!e.target.closest('.search-container')) {
+        filterDropdown.classList.remove('active');
+        filterBtn.classList.remove('active');
+    }
+});
+
+filterDropdown.addEventListener('click', (e) => {
+    e.stopPropagation();
+});
+
+loadMoreBtn.addEventListener('click', () => {
+    currentPage++;
+    renderProducts(true);
+});
+
+window.decreaseQty = function(inputId) {
+    let input = document.getElementById(inputId);
+    let val = parseInt(input.value);
+    if (val > 1) input.value = val - 1;
+};
+window.increaseQty = function(inputId) {
+    let input = document.getElementById(inputId);
+    let val = parseInt(input.value);
+    input.value = val + 1;
+};
+
+const modal = document.getElementById('productModal');
+window.openModal = function(productId) {
+    const prod = allProducts.find(p => p.id === productId);
+    if(prod) {
+        document.getElementById('modalTitle').innerText = prod.title;
+        document.getElementById('modalImg').src = prod.img;
+        
+        const isPromoActive = prod.is_promo && prod.promo_price;
+        document.getElementById('modalPrice').innerHTML = isPromoActive 
+            ? `<span style="text-decoration: line-through; font-size:16px; color:var(--text-muted); margin-right:5px;">${prod.price}</span> ${prod.promo_price}`
+            : prod.price;
             
-            if (currentProducts.length === 0) {
-                productContainer.innerHTML = `<div class="empty-state">Barang grosir tidak ditemukan.</div>`;
-                loadMoreBtn.classList.add('hidden');
-                return;
-            }
+        document.getElementById('modalDesc').innerText = prod.desc;
+        document.getElementById('modalQty').value = 1;
 
-            const startIndex = isLoadMore ? (currentPage - 1) * itemsPerPage : 0;
-            const endIndex = currentPage * itemsPerPage;
-            const productsToShow = currentProducts.slice(startIndex, endIndex);
-
-            productsToShow.forEach(prod => {
-                const qtyId = `qty-${prod.id}`; 
-                const card = document.createElement('div');
-                card.className = 'neu-card';
-                card.innerHTML = `
-                    <img src="${prod.img}" alt="${prod.title}" class="product-img" loading="lazy">
-                    <h3 class="product-title">${prod.title}</h3>
-                    <p class="product-info">${prod.info}</p>
-                    <div class="price">${prod.price}</div>
-                    
-                    <div class="qty-wrapper">
-                        <button class="qty-btn" onclick="decreaseQty('${qtyId}')"><i class="fas fa-minus"></i></button>
-                        <input type="number" id="${qtyId}" class="qty-input" value="1" min="1">
-                        <button class="qty-btn" onclick="increaseQty('${qtyId}')"><i class="fas fa-plus"></i></button>
-                    </div>
-
-                    <div class="card-actions">
-                        <button class="btn-eye" onclick="openModal(${prod.id})" title="Detail Barang">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button class="neu-btn">
-                            <i class="fas fa-cart-plus"></i> Beli
-                        </button>
-                    </div>
-                `;
-                productContainer.appendChild(card);
-            });
-
-            if (currentProducts.length > endIndex) {
-                loadMoreBtn.classList.remove('hidden');
-            } else {
-                loadMoreBtn.classList.add('hidden');
-            }
-        }
-
-        // --- INISIALISASI ---
-        renderCategories(); // Buat tombol kategori berdasarkan data barang
-        filterProducts();   // Buat data barang dan filter
-
-        // --- EVENT LISTENER ---
-        searchInput.addEventListener('input', (e) => {
-            const keyword = e.target.value.toLowerCase();
-            clearSearchBtn.style.display = keyword.length > 0 ? 'block' : 'none';
-            filterProducts();
-        });
-
-        clearSearchBtn.addEventListener('click', () => {
-            searchInput.value = '';
-            clearSearchBtn.style.display = 'none';
-            filterProducts();
-            searchInput.focus();
-        });
-
-        filterBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); 
-            filterDropdown.classList.toggle('active');
-            filterBtn.classList.toggle('active');
-        });
-
-        clearFiltersBtn.addEventListener('click', () => {
-            activeTags = [];
-            filterProducts();
-        });
-
-        document.addEventListener('click', (e) => {
-            if(!e.target.closest('.search-container')) {
-                filterDropdown.classList.remove('active');
-                filterBtn.classList.remove('active');
-            }
-        });
-
-        filterDropdown.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
-
-        loadMoreBtn.addEventListener('click', () => {
-            currentPage++;
-            renderProducts(true);
-        });
-
-        window.decreaseQty = function(inputId) {
-            let input = document.getElementById(inputId);
-            let val = parseInt(input.value);
-            if (val > 1) input.value = val - 1;
-        };
-        window.increaseQty = function(inputId) {
-            let input = document.getElementById(inputId);
-            let val = parseInt(input.value);
-            input.value = val + 1;
-        };
-
-        const modal = document.getElementById('productModal');
-        window.openModal = function(productId) {
-            const prod = allProducts.find(p => p.id === productId);
-            if(prod) {
-                document.getElementById('modalTitle').innerText = prod.title;
-                document.getElementById('modalImg').src = prod.img;
-                document.getElementById('modalPrice').innerText = prod.price;
-                document.getElementById('modalDesc').innerText = prod.desc;
-                document.getElementById('modalQty').value = 1;
-
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden'; 
-                document.getElementById('modalDesc').scrollTop = 0;
-            }
-        }
-        window.closeModal = function() {
-            modal.classList.remove('active');
-            document.body.style.overflow = 'auto'; 
-        }
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
-    </script>
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; 
+        document.getElementById('modalDesc').scrollTop = 0;
+    }
+}
+window.closeModal = function() {
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto'; 
+}
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+});
 </body>
 </html>
