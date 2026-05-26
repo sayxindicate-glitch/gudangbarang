@@ -209,7 +209,7 @@
 
         .nav-btn-chat-mobile { display: none; }
 
-        /* --- KATEGORI FULL WIDTH & PANAH --- */
+        /* --- KATEGORI FULL WIDTH DENGAN EFEK FADE & PANAH --- */
         .categories-wrapper { 
             position: relative;
             width: 100%; 
@@ -218,13 +218,36 @@
             align-items: center;
         }
 
+        /* Topeng Gradasi Kiri dan Kanan agar menu memudar dengan mulus */
+        .categories-wrapper::before,
+        .categories-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 80px; /* Lebar area kabur */
+            z-index: 5;
+            pointer-events: none; /* Agar tidak menghalangi saat di-klik/drag pengguna */
+        }
+        .categories-wrapper::before {
+            left: 0;
+            /* Gradasi dari padat ke transparan ke arah kanan */
+            background: linear-gradient(to right, var(--bg-color) 45%, transparent);
+        }
+        .categories-wrapper::after {
+            right: 0;
+            /* Gradasi dari padat ke transparan ke arah kiri */
+            background: linear-gradient(to left, var(--bg-color) 45%, transparent);
+        }
+
         .categories { 
             display: flex; 
             gap: 15px; 
             justify-content: flex-start; 
             flex-wrap: nowrap; 
             overflow-x: auto; 
-            padding: 15px 60px; /* Jarak kiri-kanan untuk ruang tombol panah */
+            /* Padding diperlebar jadi 80px agar menu berhenti sblum tabrakan sama panah */
+            padding: 15px 80px 25px 80px; 
             scroll-behavior: smooth;
             -ms-overflow-style: none;  
             scrollbar-width: none;
@@ -244,7 +267,7 @@
 
         /* Desain Tombol Panah Neumorphism */
         .scroll-arrow {
-            position: absolute; top: 50%; transform: translateY(-50%);
+            position: absolute; top: 50%; transform: translateY(-60%);
             width: 40px; height: 40px; border-radius: 50%;
             background: var(--bg-color); color: var(--text-main); border: none;
             box-shadow: var(--neu-flat); cursor: pointer; z-index: 10;
@@ -252,8 +275,8 @@
             font-size: 14px; transition: all 0.3s ease;
         }
         .scroll-arrow:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
-        .left-arrow { left: 10px; }
-        .right-arrow { right: 10px; }
+        .left-arrow { left: 15px; } /* Posisi sedikit masuk ke dalam */
+        .right-arrow { right: 15px; }
 
         .container { max-width: 1300px; margin: 0 auto; padding: 20px; flex: 1; }
         .product-grid {
@@ -417,7 +440,8 @@
             .search-container { flex: 1 1 100%; order: 3; margin-top: 10px; position: relative; } 
             .filter-dropdown { top: calc(100% + 10px); left: 0; width: 100%; max-width: none; padding: 15px; }
 
-            /* Penyesuaian Mobile: Sembunyikan panah dan sesuaikan padding */
+            /* Matikan efek gradasi dan panah di Mobile, murni pakai usapan jari */
+            .categories-wrapper::before, .categories-wrapper::after { display: none; }
             .scroll-arrow { display: none; }
             .categories { padding: 15px 20px; }
             
