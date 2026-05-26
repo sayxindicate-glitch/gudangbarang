@@ -209,7 +209,6 @@
 
         .nav-btn-chat-mobile { display: none; }
 
-
         /* ========================================================= */
         /* --- KATEGORI FULL WIDTH DENGAN MASKING SEMPURNA --- */
         /* ========================================================= */
@@ -227,7 +226,6 @@
             justify-content: flex-start; 
             flex-wrap: nowrap; 
             overflow-x: auto; 
-            /* Memberikan ruang gulung ekstra di ujung agar barang terakhir bisa lolos dari efek pudar */
             padding: 15px 120px 30px 120px; 
             scroll-behavior: smooth;
             -ms-overflow-style: none;  
@@ -235,9 +233,6 @@
             cursor: grab; 
             width: 100%; 
             
-            /* INI ADALAH KUNCI UTAMANYA SESUAI CORETAN ANDA: */
-            /* 1. transparent 0 s/d transparent 70px -> Tembus pandang 100% (Area Hijau/Panah) */
-            /* 2. black 250px -> Gradasi pudar panjang dari 70px ke 250px (Area Merah) */
             -webkit-mask-image: linear-gradient(
                 to right, 
                 transparent 0, 
@@ -269,7 +264,6 @@
         }
         .cat-btn.active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
-        /* Desain Tombol Panah Neumorphism */
         .scroll-arrow {
             position: absolute; top: 50%; transform: translateY(-65%);
             width: 40px; height: 40px; border-radius: 50%;
@@ -281,8 +275,8 @@
         .scroll-arrow:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
         .left-arrow { left: 15px; } 
         .right-arrow { right: 15px; }
-        /* ========================================================= */
 
+        /* ========================================================= */
 
         .container { max-width: 1300px; margin: 0 auto; padding: 20px; flex: 1; }
         .product-grid {
@@ -399,10 +393,17 @@
         .btn-modal-cart:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
         [data-theme="dark"] .btn-modal-cart { color: var(--accent-color); }
 
+        /* ========================================================= */
+        /* --- FOOTER & PARTNER PEMBAYARAN (GAYA TRAVELOKA) --- */
+        /* ========================================================= */
         .footer-prof {
             background-color: #1a1b1e; color: #f5f6fa; padding: 50px 20px 80px 20px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1);
         }
-        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+        /* Mengubah kolom grid dari 4 menjadi 5 agar Partner Pembayaran punya tempat */
+        .footer-container { 
+            max-width: 1200px; margin: 0 auto; display: grid; 
+            grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr; gap: 30px; 
+        }
         .footer-logo { font-size: 20px; font-weight: 700; color: #00e5ff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
         .footer-desc { font-size: 13px; color: #a4b0be; line-height: 1.6; margin-bottom: 20px; }
         .footer-socials { display: flex; gap: 15px; }
@@ -419,9 +420,47 @@
         .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; color: #a4b0be; font-size: 13px; margin-bottom: 15px; line-height: 1.5; }
         .footer-contact-item i { color: #00e5ff; margin-top: 3px; }
 
+        /* Desain Kotak Logo Partner Pembayaran (Traveloka Style) */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .pay-box {
+            background-color: #ffffff;
+            border-radius: 6px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease;
+            cursor: default;
+        }
+        .pay-box:hover {
+            transform: scale(1.08); /* Efek membesar saat disentuh mouse */
+        }
+        .pay-logo {
+            font-family: 'Arial Black', Impact, sans-serif;
+            font-weight: 900;
+        }
+        /* Pewarnaan Logo Teks Murni agar anti-pecah */
+        .logo-bca { color: #003399; font-style: italic; font-size: 14px; }
+        .logo-mandiri { color: #F2A900; font-size: 10px; letter-spacing: -0.5px; }
+        .logo-bni { color: #005E6A; font-style: italic; font-size: 14px; }
+        .logo-bri { color: #00529C; font-size: 13px; }
+        .logo-gopay { color: #00AED6; font-size: 11px; }
+        .logo-ovo { color: #4C3494; font-style: italic; font-size: 13px; }
+        .logo-dana { color: #118EEA; font-size: 11px; }
+        .logo-qris { color: #ED0226; font-style: italic; font-size: 13px; }
+        .logo-alfa { color: #E3000F; font-size: 10px; }
+
+        /* ========================================================= */
+
         @media (max-width: 1024px) { 
             .product-grid { grid-template-columns: repeat(4, 1fr); } 
-            .footer-container { grid-template-columns: 1fr 1fr; }
+            /* Ubah layout jadi 3 kolom agar tidak sempit */
+            .footer-container { grid-template-columns: 1fr 1fr 1fr; }
         }
         
         @media (max-width: 768px) {
@@ -446,11 +485,10 @@
             .search-container { flex: 1 1 100%; order: 3; margin-top: 10px; position: relative; } 
             .filter-dropdown { top: calc(100% + 10px); left: 0; width: 100%; max-width: none; padding: 15px; }
 
-            /* Matikan efek masking dan panah di Mobile, murni pakai usapan jari */
             .scroll-arrow { display: none; }
             .categories { 
                 padding: 15px 20px; 
-                -webkit-mask-image: none; /* Mematikan kabur di HP agar natural */
+                -webkit-mask-image: none; 
                 mask-image: none;
             }
             
@@ -479,6 +517,13 @@
             .footer-container { grid-template-columns: 1fr; gap: 30px; text-align: center; }
             .footer-contact-item { justify-content: center; }
             .footer-socials { justify-content: center; }
+            
+            /* Pusatkan logo pembayaran di HP */
+            .payment-grid { 
+                grid-template-columns: repeat(4, 60px); 
+                justify-content: center; 
+                margin: 0 auto; 
+            }
             
             body { padding-bottom: 90px; }
         }
@@ -590,7 +635,22 @@
                     <li><a href="#">Bantuan (FAQ)</a></li>
                 </ul>
             </div>
-        </div>
+            
+            <div>
+                <h4 class="footer-title">Partner Pembayaran</h4>
+                <div class="payment-grid">
+                    <div class="pay-box"><span class="pay-logo logo-bca">BCA</span></div>
+                    <div class="pay-box"><span class="pay-logo logo-mandiri">mandiri</span></div>
+                    <div class="pay-box"><span class="pay-logo logo-bni">BNI</span></div>
+                    <div class="pay-box"><span class="pay-logo logo-bri">BRI</span></div>
+                    <div class="pay-box"><span class="pay-logo logo-gopay">gopay</span></div>
+                    <div class="pay-box"><span class="pay-logo logo-ovo">OVO</span></div>
+                    <div class="pay-box"><span class="pay-logo logo-dana">DANA</span></div>
+                    <div class="pay-box"><span class="pay-logo logo-qris">QRIS</span></div>
+                    <div class="pay-box"><span class="pay-logo logo-alfa">Alfamart</span></div>
+                </div>
+            </div>
+            </div>
     </footer>
 
     <div class="modal-overlay" id="productModal">
@@ -658,16 +718,10 @@
         // --- FUNGSI MENGAMBIL DATA DARI BACKEND VERCEL ---
         async function fetchProductsFromAPI() {
             try {
-                // Memanggil API Backend Vercel
                 const response = await fetch('/api/products');
+                if (!response.ok) throw new Error('Gagal terhubung ke server');
                 
-                if (!response.ok) {
-                    throw new Error('Gagal terhubung ke server');
-                }
-                
-                // Masukkan data dari database Supabase
                 const data = await response.json();
-                
                 allProducts = data;
                 currentProducts = [...allProducts];
                 
@@ -819,7 +873,6 @@
             productsToShow.forEach(prod => {
                 const qtyId = `qty-${prod.id}`; 
                 
-                // Logika Promo dari Supabase
                 const isPromoActive = prod.is_promo && prod.promo_price;
                 const priceHTML = isPromoActive 
                     ? `<span style="text-decoration: line-through; font-size:13px; color:var(--text-muted); margin-right:5px;">${prod.price}</span> ${prod.promo_price}` 
@@ -862,7 +915,6 @@
 
         // --- INISIALISASI SAAT HALAMAN DIBUKA ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Tampilkan animasi loading sebelum data dari Vercel masuk
             productContainer.innerHTML = `<div class="empty-state">Menarik data dari gudang... <br><i class="fas fa-spinner fa-spin" style="margin-top: 15px; font-size: 24px;"></i></div>`;
             fetchProductsFromAPI(); 
         });
@@ -984,7 +1036,6 @@
             categoryContainer.scrollLeft += e.deltaY; 
         });
 
-        // --- LOGIKA TOMBOL PANAH KIRI KANAN ---
         const scrollLeftBtn = document.getElementById('scrollLeftBtn');
         const scrollRightBtn = document.getElementById('scrollRightBtn');
 
