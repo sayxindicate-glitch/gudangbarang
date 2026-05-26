@@ -226,6 +226,13 @@
             scroll-behavior: smooth;
             -ms-overflow-style: none;  
             scrollbar-width: none;  
+            
+            /* TAMBAHKAN 2 BARIS INI: */
+            cursor: grab; /* Mengubah kursor jadi gambar tangan terbuka */
+        }
+        /* Efek tangan menggenggam saat diklik */
+        .categories:active {
+            cursor: grabbing;
         }
         .categories::-webkit-scrollbar { display: none; }
         .cat-btn { 
