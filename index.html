@@ -227,18 +227,18 @@
             justify-content: flex-start; 
             flex-wrap: nowrap; 
             overflow-x: auto; 
-            /* Jarak ini wajib besar agar barang berhenti di balik panah, bukan di sebelahnya */
-            padding: 20px 70px 30px 70px; 
+            /* Padding diperlebar menjadi 110px agar konten tidak menyentuh panah */
+            padding: 15px 110px 30px 110px; 
             scroll-behavior: smooth;
             -ms-overflow-style: none;  
             scrollbar-width: none;
             cursor: grab; 
             width: 100%; 
             
-            /* INI TRIK AJAIBNYA: CSS MASK IMAGE */
-            /* Memotong elemen menjadi transparan 0 hingga 60px dari ujung kiri dan kanan */
-            -webkit-mask-image: linear-gradient(to right, transparent 0, black 60px, black calc(100% - 60px), transparent 100%);
-            mask-image: linear-gradient(to right, transparent 0, black 60px, black calc(100% - 60px), transparent 100%);
+            /* EFEK PUDAR/MENGHILANG (DIPERLEBAR) */
+            /* Diperbesar menjadi 150px agar pudarnya dimulai jauh sebelum panah */
+            -webkit-mask-image: linear-gradient(to right, transparent 0, black 150px, black calc(100% - 150px), transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, black 150px, black calc(100% - 150px), transparent 100%);
         }
         
         .categories:active { cursor: grabbing; }
@@ -254,7 +254,7 @@
 
         /* Desain Tombol Panah Neumorphism */
         .scroll-arrow {
-            position: absolute; top: 50%; transform: translateY(-60%);
+            position: absolute; top: 50%; transform: translateY(-65%);
             width: 40px; height: 40px; border-radius: 50%;
             background: var(--bg-color); color: var(--text-main); border: none;
             box-shadow: var(--neu-flat); cursor: pointer; z-index: 10;
@@ -262,8 +262,8 @@
             font-size: 14px; transition: all 0.3s ease;
         }
         .scroll-arrow:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
-        .left-arrow { left: 10px; }
-        .right-arrow { right: 10px; }
+        .left-arrow { left: 15px; } 
+        .right-arrow { right: 15px; }
         /* ========================================================= */
 
 
