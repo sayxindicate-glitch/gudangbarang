@@ -211,7 +211,7 @@
 
 
         /* ========================================================= */
-        /* --- KATEGORI FULL WIDTH & EFEK MASKING (SUPER RAPI) --- */
+        /* --- KATEGORI FULL WIDTH DENGAN MASKING SEMPURNA --- */
         /* ========================================================= */
         .categories-wrapper { 
             position: relative;
@@ -227,18 +227,35 @@
             justify-content: flex-start; 
             flex-wrap: nowrap; 
             overflow-x: auto; 
-            /* Padding diperlebar menjadi 110px agar konten tidak menyentuh panah */
-            padding: 15px 110px 30px 110px; 
+            /* Memberikan ruang gulung ekstra di ujung agar barang terakhir bisa lolos dari efek pudar */
+            padding: 15px 120px 30px 120px; 
             scroll-behavior: smooth;
             -ms-overflow-style: none;  
             scrollbar-width: none;
             cursor: grab; 
             width: 100%; 
             
-            /* EFEK PUDAR/MENGHILANG (DIPERLEBAR) */
-            /* Diperbesar menjadi 150px agar pudarnya dimulai jauh sebelum panah */
-            -webkit-mask-image: linear-gradient(to right, transparent 0, black 150px, black calc(100% - 150px), transparent 100%);
-            mask-image: linear-gradient(to right, transparent 0, black 150px, black calc(100% - 150px), transparent 100%);
+            /* INI ADALAH KUNCI UTAMANYA SESUAI CORETAN ANDA: */
+            /* 1. transparent 0 s/d transparent 70px -> Tembus pandang 100% (Area Hijau/Panah) */
+            /* 2. black 250px -> Gradasi pudar panjang dari 70px ke 250px (Area Merah) */
+            -webkit-mask-image: linear-gradient(
+                to right, 
+                transparent 0, 
+                transparent 70px, 
+                black 250px, 
+                black calc(100% - 250px), 
+                transparent calc(100% - 70px), 
+                transparent 100%
+            );
+            mask-image: linear-gradient(
+                to right, 
+                transparent 0, 
+                transparent 70px, 
+                black 250px, 
+                black calc(100% - 250px), 
+                transparent calc(100% - 70px), 
+                transparent 100%
+            );
         }
         
         .categories:active { cursor: grabbing; }
