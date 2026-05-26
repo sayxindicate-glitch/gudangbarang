@@ -907,6 +907,46 @@
         modal.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
         });
+
+
+        // --- MESIN PENGGESER KATEGORI (DRAG & MOUSE WHEEL) ---
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        // 1. Fitur Klik & Tarik (Drag to Scroll)
+        categoryContainer.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - categoryContainer.offsetLeft;
+            scrollLeft = categoryContainer.scrollLeft;
+            // Matikan smooth scroll sementara saat ditarik agar responsif
+            categoryContainer.style.scrollBehavior = 'auto'; 
+        });
+
+        categoryContainer.addEventListener('mouseleave', () => {
+            isDown = false;
+            categoryContainer.style.scrollBehavior = 'smooth';
+        });
+
+        categoryContainer.addEventListener('mouseup', () => {
+            isDown = false;
+            categoryContainer.style.scrollBehavior = 'smooth';
+        });
+
+        categoryContainer.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - categoryContainer.offsetLeft;
+            const walk = (x - startX) * 2; // Angka 2 adalah kecepatan tarikan
+            categoryContainer.scrollLeft = scrollLeft - walk;
+        });
+
+        // 2. Fitur Scroll Mouse (Otomatis geser ke samping)
+        categoryContainer.addEventListener('wheel', (e) => {
+            e.preventDefault(); // Mencegah layar web ikut turun
+            categoryContainer.scrollBehavior = 'auto';
+            categoryContainer.scrollLeft += e.deltaY; // Mengubah scroll atas-bawah jadi kiri-kanan
+        });
     </script>
 </body>
 </html>
