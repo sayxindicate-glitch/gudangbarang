@@ -488,6 +488,21 @@
             if (sessionData) {
                 const session = JSON.parse(sessionData);
                 
+                // --- PERBAIKAN: Ubah UI langsung jadi mode "Profil" dari penyimpanan lokal ---
+                // Agar tidak muncul sekilas tombol "Login" saat menunggu respon API yang lambat/error
+                const savedName = session.name || (session.user && session.user.name) || "User";
+                const tempNickname = savedName.split(' ')[0]; 
+                const tempAvatar = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(savedName)}&backgroundColor=e0e5ec`;
+
+                loginBtn.className = 'nav-profile-badge hide-on-mobile';
+                loginBtn.href = 'akun.html';
+                loginBtn.innerHTML = `<img src="${tempAvatar}" alt="Avatar"><span>${tempNickname}</span>`;
+
+                if (mobileAccountBtn) {
+                    mobileAccountBtn.href = 'akun.html';
+                    mobileAccountBtn.innerHTML = `<img src="${tempAvatar}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${tempNickname}</span>`;
+                }
+
                 try {
                     const userRes = await fetch('/api/user', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
                     
@@ -503,16 +518,15 @@
                         const nickname = fullName.split(' ')[0]; 
                         const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(fullName)}&backgroundColor=e0e5ec`;
 
-                        loginBtn.className = 'nav-profile-badge hide-on-mobile';
-                        loginBtn.href = 'akun.html';
                         loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${nickname}</span>`;
-
                         if (mobileAccountBtn) {
-                            mobileAccountBtn.href = 'akun.html';
                             mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${nickname}</span>`;
                         }
                     }
-                } catch (e) { console.error("Mode Offline", e); }
+                } catch (e) { 
+                    console.error("Mode Offline atau Server Lambat: Menggunakan sesi lokal.", e); 
+                    // Tombol tetap aman menampilkan Profil berdasarkan data lokal (fallback)
+                }
                 
                 // Sinkronisasi Angka Background (Keranjang dkk)
                 syncBadges(session.access_token);
