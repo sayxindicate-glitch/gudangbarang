@@ -156,6 +156,8 @@
             font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px;
         }
         .nav-link:hover { color: var(--accent-color); }
+        
+        /* Tombol Login Lonjong (Standar) */
         .nav-btn-cap {
             background: var(--bg-color); color: var(--text-main);
             text-decoration: none; font-size: 15px; font-weight: 700;
@@ -164,6 +166,22 @@
         }
         .nav-btn-cap:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         [data-theme="dark"] .nav-btn-cap:hover { color: var(--accent-color); text-shadow: 0 0 5px var(--accent-color); }
+
+        /* --- DESAIN BARU: BADGE AVATAR PROFIL --- */
+        .nav-profile-badge {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; gap: 4px; transition: transform 0.2s ease; cursor: pointer;
+        }
+        .nav-profile-badge:active { transform: scale(0.95); }
+        .nav-profile-badge img {
+            width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
+            box-shadow: var(--neu-flat-sm); border: 2px solid transparent;
+        }
+        [data-theme="dark"] .nav-profile-badge img { border-color: rgba(255,255,255,0.1); }
+        .nav-profile-badge span {
+            font-size: 11px; font-weight: 700; color: var(--text-main);
+            max-width: 65px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center;
+        }
 
         .neu-btn-icon {
             background: var(--bg-color); color: var(--text-main); border: none;
@@ -598,7 +616,7 @@
         const clearFiltersBtn = document.getElementById('clearFilters');
 
         // =========================================================================
-        // FUNGSI UPDATE UI HEADER & KERANJANG OTOMATIS
+        // FUNGSI UPDATE UI HEADER DENGAN AVATAR UNIK & KERANJANG
         // =========================================================================
         async function updateNavUI() {
             const sessionData = localStorage.getItem('user_session');
@@ -611,13 +629,36 @@
                 // JIKA PENGGUNA SUDAH LOGIN
                 const session = JSON.parse(sessionData);
                 
-                // 1. Ubah Tombol "Login" menjadi "Akun Saya"
-                loginBtn.href = 'akun.html';
-                loginBtn.innerHTML = '<i class="fas fa-user-circle" style="color: var(--accent-color);"></i> <span>Akun Saya</span>';
-                
-                if (mobileAccountBtn) {
-                    mobileAccountBtn.href = 'akun.html';
-                    mobileAccountBtn.querySelector('span').innerText = 'Akun';
+                // 1. Tarik Data Profil dari Backend untuk Avatar & Nama Panggilan
+                try {
+                    const userRes = await fetch('/api/user', {
+                        headers: { 'Authorization': `Bearer ${session.access_token}` }
+                    });
+                    
+                    if (userRes.ok) {
+                        const userData = await userRes.json();
+                        const fullName = userData.name || "User";
+                        const nickname = fullName.split(' ')[0]; // Mengambil kata pertama saja
+                        
+                        // Generate Avatar Keren menggunakan DiceBear
+                        const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(fullName)}&backgroundColor=e0e5ec`;
+
+                        // Ubah Tombol Login Menjadi Badge Profil (Desktop)
+                        loginBtn.className = 'nav-profile-badge hide-on-mobile';
+                        loginBtn.href = 'akun.html';
+                        loginBtn.innerHTML = `
+                            <img src="${avatarUrl}" alt="Avatar">
+                            <span>${nickname}</span>
+                        `;
+
+                        // Ubah Teks Menu Akun (Mobile) menjadi Nama Panggilan
+                        if (mobileAccountBtn) {
+                            mobileAccountBtn.href = 'akun.html';
+                            mobileAccountBtn.querySelector('span').innerText = nickname;
+                        }
+                    }
+                } catch (e) {
+                    console.error("Gagal memuat data profil", e);
                 }
                 
                 // 2. Cek jumlah barang di keranjang dari database secara diam-diam (background)
@@ -627,13 +668,10 @@
                     });
                     if (response.ok) {
                         const cartItems = await response.json();
-                        // Menjumlahkan total kuantitas barang di keranjang
                         const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
                         
-                        // Menampilkan lencana merah jika ada barang
                         if (totalQty > 0) {
                             const displayText = totalQty > 99 ? '99+' : totalQty;
-                            
                             cartBadge.style.display = 'flex';
                             cartBadge.innerText = displayText;
                             
@@ -649,13 +687,16 @@
                 } catch (e) {
                     console.error("Gagal memperbarui notifikasi keranjang", e);
                 }
+
             } else {
-                // JIKA BELUM LOGIN: Pastikan tampilannya "Login" dan sembunyikan keranjang
+                // JIKA BELUM LOGIN: Kembalikan tampilan tombol Login normal seperti semula
+                loginBtn.className = 'nav-btn-cap hide-on-mobile';
                 loginBtn.href = 'login.html';
                 loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span>Login</span>';
-                cartBadge.style.display = 'none';
                 
+                cartBadge.style.display = 'none';
                 if (mobileCartBadge) mobileCartBadge.style.display = 'none';
+                
                 if (mobileAccountBtn) {
                      mobileAccountBtn.href = 'login.html';
                      mobileAccountBtn.querySelector('span').innerText = 'Login';
@@ -975,7 +1016,7 @@
                 
                 showNotification("Berhasil!", `Barang "${prod.title}" telah sukses dimasukkan ke keranjang Anda.`, "success");
                 
-                // --- PEMBARUAN BARU: Update angka keranjang secara realtime! ---
+                // Update angka keranjang secara realtime!
                 updateNavUI(); 
 
             } catch (error) {
@@ -1004,7 +1045,7 @@
             fetchProductsFromAPI(); 
             fetchLogosFromAPI(); 
             
-            // --- PEMBARUAN BARU: Periksa status login & update UI Navigasi ---
+            // Periksa status login & update UI Navigasi (Avatar & Badge Keranjang)
             updateNavUI(); 
         });
 
