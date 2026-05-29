@@ -15,28 +15,44 @@ export default async function handler(req, res) {
         const { data: { user }, error: authError } = await supabase.auth.getUser();
         if (authError || !user) throw new Error('Sesi login tidak valid');
 
-        // Tarik Total Pesanan (Pakai safe fallback)
-        const { count: orderCount } = await supabase.from('gg_orders').select('*', { count: 'exact', head: true }).eq('user_id', user.id);
-        const safeOrderCount = orderCount || 0;
+        // 1. Ambil Order Count (Pakai try-catch agar tidak crash jika tabel error)
+        let safeOrderCount = 0;
+        try {
+            const { count } = await supabase.from('gg_orders').select('*', { count: 'exact', head: true }).eq('user_id', user.id);
+            safeOrderCount = count || 0;
+        } catch(e) {}
 
-        const { data: claimedData } = await supabase.from('gg_claimed_vouchers').select('voucher_code').eq('user_id', user.id);
-        const claimedCodes = claimedData ? claimedData.map(c => c.voucher_code) : [];
+        // 2. Ambil Voucher yang Sudah Diklaim
+        let claimedCodes = [];
+        try {
+            const { data } = await supabase.from('gg_claimed_vouchers').select('voucher_code').eq('user_id', user.id);
+            if (data) claimedCodes = data.map(c => c.voucher_code);
+        } catch(e) {}
 
+        // Waktu
         const now = new Date();
-        const daysSinceCreated = user.created_at ? (now - new Date(user.created_at)) / (1000 * 60 * 60 * 24) : 0;
-        const daysSinceLastSignIn = user.last_sign_in_at ? (now - new Date(user.last_sign_in_at)) / (1000 * 60 * 60 * 24) : 0;
+        const createdDate = user.created_at ? new Date(user.created_at) : now;
+        const lastSignInDate = user.last_sign_in_at ? new Date(user.last_sign_in_at) : now;
+        
+        const daysSinceCreated = Math.max(0, (now - createdDate) / (1000 * 60 * 60 * 24));
+        const daysSinceLastSignIn = Math.max(0, (now - lastSignInDate) / (1000 * 60 * 60 * 24));
 
+        // 3. Ambil Semua Voucher dari Database
         const { data: dbVouchers, error: dbError } = await supabase.from('gg_vouchers').select('*').order('id', { ascending: true });
         if (dbError) throw dbError;
 
+        // FILTER STRATEGI MARKETING
         const filteredVouchers = (dbVouchers || []).filter(vch => {
+            const segment = (vch.target_segment || '').trim().toLowerCase();
+            
+            // Buang yang sudah diklaim
             if (claimedCodes.includes(vch.code)) return false;
 
-            if (vch.target_segment === 'all') return true;
-            if (vch.target_segment === 'new' && safeOrderCount === 0 && daysSinceCreated <= 14) return true;
-            if (vch.target_segment === 'comeback' && safeOrderCount === 0 && daysSinceCreated > 14 && daysSinceLastSignIn > 14) return true;
-            if (vch.target_segment === 'window_shopper' && safeOrderCount === 0 && daysSinceLastSignIn <= 7) return true;
-            if (vch.target_segment === 'loyal' && safeOrderCount >= 3) return true;
+            if (segment === 'all') return true;
+            if (segment === 'new' && safeOrderCount === 0 && daysSinceCreated <= 14) return true;
+            if (segment === 'comeback' && safeOrderCount === 0 && daysSinceCreated > 14 && daysSinceLastSignIn > 14) return true;
+            if (segment === 'window_shopper' && safeOrderCount === 0 && daysSinceLastSignIn <= 7) return true;
+            if (segment === 'loyal' && safeOrderCount >= 3) return true;
             
             return false;
         });
@@ -46,5 +62,7 @@ export default async function handler(req, res) {
         }));
 
         return res.status(200).json(responseData);
-    } catch (error) { return res.status(400).json({ error: error.message }); }
+    } catch (error) { 
+        return res.status(400).json({ error: error.message }); 
+    }
 }
