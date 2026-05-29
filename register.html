@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun | Goedang Grosir</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #e0e5ec; --text-main: #2d3436; --text-muted: #636e72; --accent-color: #0984e3;
+            --shadow-light: #ffffff; --shadow-dark: #a3b1c6;
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1b1e; --text-main: #f5f6fa; --text-muted: #a4b0be; --accent-color: #00e5ff;
+            --shadow-light: rgba(255, 255, 255, 0.05); --shadow-dark: rgba(0, 0, 0, 0.6);
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
+
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; position: relative; }
+
+        .top-nav { position: absolute; top: 0; left: 0; width: 100%; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo:hover { opacity: 0.8; }
+        
+        .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; }
+        .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
+        [data-theme="dark"] .switch-handle { transform: translateX(30px); }
+
+        .auth-container { background: var(--bg-color); width: 100%; max-width: 400px; border-radius: 30px; padding: 40px 30px; box-shadow: var(--neu-flat); text-align: center; z-index: 10; margin-top: 50px; margin-bottom: 50px; }
+        .auth-title { font-size: 24px; font-weight: 700; margin-bottom: 5px; color: var(--accent-color); }
+        .auth-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 30px; }
+
+        .input-group { margin-bottom: 20px; position: relative; }
+        .input-group i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; }
+        .neu-input { width: 100%; padding: 15px 20px 15px 50px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed); outline: none; font-size: 14px; font-weight: 600; }
+        .neu-input::placeholder { color: var(--text-muted); font-weight: 400; }
+
+        /* Syarat Password */
+        .password-rules { text-align: left; margin-top: -10px; margin-bottom: 25px; padding: 0 15px; }
+        .rule-item { display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 600; color: #ff4757; margin-bottom: 6px; transition: color 0.3s; }
+        .rule-item.valid { color: #27ae60; }
+        .rule-item i { width: 14px; text-align: center; }
+
+        .auth-btn { width: 100%; padding: 15px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); font-size: 15px; font-weight: 700; box-shadow: var(--neu-flat); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: all 0.3s; }
+        .auth-btn:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
+        .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        [data-theme="dark"] .auth-btn { color: var(--accent-color); }
+
+        .auth-switch { margin-top: 25px; font-size: 13px; color: var(--text-muted); font-weight: 600; }
+        .auth-switch a { color: var(--accent-color); text-decoration: none; margin-left: 5px; }
+        .auth-switch a:hover { text-decoration: underline; }
+
+        #alertMsg { margin-top: 20px; font-size: 12px; font-weight: 600; padding: 10px; border-radius: 10px; display: none; }
+        .alert-success { background: rgba(39, 174, 96, 0.1); color: #27ae60; border: 1px solid #27ae60; }
+        .alert-error { background: rgba(255, 71, 87, 0.1); color: #ff4757; border: 1px solid #ff4757; }
+
+        .bottom-nav { display: none; }
+
+        @media (max-width: 768px) {
+            .top-nav { padding: 15px 20px; }
+            .auth-container { padding: 30px 20px; border-radius: 25px; box-shadow: none; background: transparent; margin-top: 60px; margin-bottom: 80px; }
+            .neu-input { padding: 12px 20px 12px 45px; }
+            body { padding-bottom: 80px; justify-content: flex-start; }
+            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px 10px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
+            [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
+            .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; }
+            .bottom-nav-item i { font-size: 18px; }
+            .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <a href="index.html" class="logo"><i class="fas fa-box-open"></i> GOEDANG</a>
+        <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
+    </div>
+
+    <div class="auth-container">
+        <h2 class="auth-title">Buat Akun Baru</h2>
+        <p class="auth-subtitle">Daftar untuk mulai berbelanja grosir</p>
+
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="name" class="neu-input" placeholder="Nama Lengkap" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="email" class="neu-input" placeholder="Alamat Email" required>
+        </div>
+        
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" class="neu-input" placeholder="Password" required>
+        </div>
+
+        <div class="password-rules">
+            <div class="rule-item" id="rule-length"><i class="fas fa-times"></i> Minimal 8 karakter</div>
+            <div class="rule-item" id="rule-upper"><i class="fas fa-times"></i> Mengandung huruf besar (A-Z)</div>
+            <div class="rule-item" id="rule-lower"><i class="fas fa-times"></i> Mengandung huruf kecil (a-z)</div>
+            <div class="rule-item" id="rule-number"><i class="fas fa-times"></i> Mengandung angka (0-9)</div>
+            <div class="rule-item" id="rule-symbol"><i class="fas fa-times"></i> Mengandung simbol (!@#$%^&*)</div>
+        </div>
+
+        <button class="auth-btn" id="submitBtn" disabled>
+            <i class="fas fa-user-plus"></i> <span>Daftar Sekarang</span>
+        </button>
+
+        <p class="auth-switch">Sudah punya akun? <a href="login.html">Masuk di sini</a></p>
+
+        <div id="alertMsg"></div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
+        <a href="#" class="bottom-nav-item"><i class="fas fa-tags"></i><span>Promo</span></a>
+        <a href="#" class="bottom-nav-item"><i class="fas fa-shopping-cart"></i><span>Keranjang</span></a>
+        <a href="#" class="bottom-nav-item"><i class="fas fa-box"></i><span>Pesanan</span></a>
+        <a href="login.html" class="bottom-nav-item active"><i class="fas fa-user"></i><span>Akun</span></a>
+    </nav>
+
+    <script>
+        function checkUserSession() {
+            if (localStorage.getItem('user_session')) {
+                window.location.href = 'index.html'; 
+            }
+        }
+        checkUserSession();
+
+        const themeToggle = document.getElementById('themeToggle');
+        const switchIcon = document.getElementById('switchIcon');
+        const html = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark') {
+            html.setAttribute('data-theme', 'dark');
+            switchIcon.classList.replace('fa-sun', 'fa-moon');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            if (html.getAttribute('data-theme') === 'light') {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                switchIcon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                html.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                switchIcon.classList.replace('fa-moon', 'fa-sun');
+            }
+        });
+
+        // --- VALIDASI PASSWORD REAL-TIME ---
+        const passInput = document.getElementById('password');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        const ruleLength = document.getElementById('rule-length');
+        const ruleUpper = document.getElementById('rule-upper');
+        const ruleLower = document.getElementById('rule-lower');
+        const ruleNumber = document.getElementById('rule-number');
+        const ruleSymbol = document.getElementById('rule-symbol');
+
+        let isPasswordValid = false;
+
+        function updateRule(element, isValid) {
+            const icon = element.querySelector('i');
+            if (isValid) {
+                element.classList.add('valid');
+                icon.className = 'fas fa-check';
+            } else {
+                element.classList.remove('valid');
+                icon.className = 'fas fa-times';
+            }
+            return isValid;
+        }
+
+        passInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+            
+            const vLen = updateRule(ruleLength, val.length >= 8);
+            const vUpp = updateRule(ruleUpper, /[A-Z]/.test(val));
+            const vLow = updateRule(ruleLower, /[a-z]/.test(val));
+            const vNum = updateRule(ruleNumber, /[0-9]/.test(val));
+            const vSym = updateRule(ruleSymbol, /[^A-Za-z0-9]/.test(val));
+
+            isPasswordValid = vLen && vUpp && vLow && vNum && vSym;
+            submitBtn.disabled = !isPasswordValid;
+        });
+
+        const alertMsg = document.getElementById('alertMsg');
+        function showAlert(message, isSuccess) {
+            alertMsg.style.display = 'block';
+            alertMsg.innerText = message;
+            alertMsg.className = isSuccess ? 'alert-success' : 'alert-error';
+        }
+
+        // --- FUNGSI SUBMIT REGISTER KE VERCEL ---
+        submitBtn.addEventListener('click', async () => {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = passInput.value;
+
+            if (!name || !email || !isPasswordValid) {
+                showAlert("Harap isi semua kolom dengan benar!", false);
+                return;
+            }
+
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'register', name, email, password })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) throw new Error(result.error || 'Terjadi kesalahan server');
+
+                showAlert("Pendaftaran Berhasil! Mengalihkan ke Halaman Login...", true);
+                
+                setTimeout(() => { window.location.href = 'login.html'; }, 2500);
+
+            } catch (error) {
+                let errText = error.message;
+                if(errText.includes('already registered')) errText = "Email ini sudah terdaftar! Silakan ke halaman Login.";
+                showAlert(errText, false);
+                
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> <span>Daftar Sekarang</span>';
+            }
+        });
+    </script>
+</body>
+</html>
