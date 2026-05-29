@@ -20,9 +20,10 @@ export default async function handler(req, res) {
             .select('*', { count: 'exact', head: true })
             .eq('user_id', user.id);
 
-        const daysSinceCreated = (new Date() - new Date(user.created_at)) / (1000 * 60 * 60 * 24);
+        const now = new Date();
+        const daysSinceCreated = (now - new Date(user.created_at)) / (1000 * 60 * 60 * 24);
+        const daysSinceLastSignIn = user.last_sign_in_at ? (now - new Date(user.last_sign_in_at)) / (1000 * 60 * 60 * 24) : 0;
 
-        // Ambil SEMUA baris voucher dari tabel Supabase
         const { data: dbVouchers, error: dbError } = await supabase
             .from('gg_vouchers')
             .select('*')
@@ -30,12 +31,23 @@ export default async function handler(req, res) {
             
         if (dbError) throw dbError;
 
-        // Filter otomatis berdasarkan status pelanggan (baru, lama, loyal)
+        // FILTER STRATEGI MARKETING OTOMATIS
         const filteredVouchers = dbVouchers.filter(vch => {
+            // Berlaku untuk semua orang
             if (vch.target_segment === 'all') return true;
+            
+            // Pengguna baru: Umur akun di bawah 14 hari & belum pernah belanja
             if (vch.target_segment === 'new' && orderCount === 0 && daysSinceCreated <= 14) return true;
-            if (vch.target_segment === 'comeback' && orderCount === 0 && daysSinceCreated > 14) return true;
+            
+            // Comeback: Belum belanja, umur akun lama, dan sudah lama tidak login
+            if (vch.target_segment === 'comeback' && orderCount === 0 && daysSinceCreated > 14 && daysSinceLastSignIn > 14) return true;
+            
+            // Window Shopper: Belum belanja, tapi dia login dalam 7 hari terakhir (masih memantau)
+            if (vch.target_segment === 'window_shopper' && orderCount === 0 && daysSinceLastSignIn <= 7) return true;
+
+            // Loyal: Sudah belanja 3 kali atau lebih
             if (vch.target_segment === 'loyal' && orderCount >= 3) return true;
+            
             return false;
         });
 
