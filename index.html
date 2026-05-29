@@ -169,7 +169,7 @@
             background: var(--bg-color); color: var(--text-main); border: none;
             width: 48px; height: 48px; border-radius: 50%; 
             font-size: 18px; display: flex; justify-content: center; align-items: center;
-            box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none;
+            box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative;
         }
         .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
@@ -384,7 +384,7 @@
             .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px 10px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
             
-            .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; }
+            .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; position: relative; }
             .bottom-nav-item i { font-size: 18px; }
             .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
             
@@ -433,8 +433,15 @@
                 </a>
                 <a href="promo.html" class="nav-link hide-on-mobile"><i class="fas fa-tags"></i> <span>Promo</span></a>
                 <a href="#" class="nav-link hide-on-mobile"><i class="fas fa-box"></i> <span>Pesanan</span></a>
-                <a href="login.html" class="nav-btn-cap hide-on-mobile"><i class="fas fa-sign-in-alt"></i> <span>Login</span></a>
-                <a href="keranjang.html" class="neu-btn-icon hide-on-mobile"><i class="fas fa-shopping-cart"></i></a>
+                
+                <a href="login.html" class="nav-btn-cap hide-on-mobile" id="navLoginBtn">
+                    <i class="fas fa-sign-in-alt"></i> <span>Login</span>
+                </a>
+                
+                <a href="keranjang.html" class="neu-btn-icon hide-on-mobile" style="text-decoration: none; position: relative;">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartBadge" style="display: none; position: absolute; top: -5px; right: -5px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; justify-content: center; align-items: center; border: 2px solid var(--bg-color);">0</span>
+                </a>
             </div>
         </nav>
 
@@ -462,9 +469,20 @@
     <nav class="bottom-nav">
         <a href="index.html" class="bottom-nav-item active"><i class="fas fa-home"></i><span>Beranda</span></a>
         <a href="promo.html" class="bottom-nav-item"><i class="fas fa-tags"></i><span>Promo</span></a>
-        <a href="keranjang.html" class="bottom-nav-item"><i class="fas fa-shopping-cart"></i><span>Keranjang</span></a>
+        
+        <a href="keranjang.html" class="bottom-nav-item">
+            <div style="position: relative;">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="mobileCartBadge" style="display: none; position: absolute; top: -5px; right: -10px; background: #ff4757; color: white; font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; border: 2px solid var(--bg-color);">0</span>
+            </div>
+            <span>Keranjang</span>
+        </a>
+        
         <a href="#" class="bottom-nav-item"><i class="fas fa-box"></i><span>Pesanan</span></a>
-        <a href="akun.html" class="bottom-nav-item"><i class="fas fa-user"></i><span>Akun</span></a>
+        
+        <a href="akun.html" class="bottom-nav-item" id="mobileAccountBtn">
+            <i class="fas fa-user"></i><span>Akun</span>
+        </a>
     </nav>
 
     <footer class="footer-prof">
@@ -508,7 +526,6 @@
         </div>
     </footer>
 
-    <!-- MODAL DETAIL PRODUK -->
     <div class="modal-overlay" id="productModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -528,7 +545,6 @@
         </div>
     </div>
 
-    <!-- MODAL POP-UP NOTIFIKASI KUSTOM -->
     <div class="modal-overlay" id="notificationModal" style="z-index: 3000;">
         <div class="modal-content" style="max-width: 320px; text-align: center; padding: 30px 20px;">
             <div id="notifIcon" style="font-size: 45px; margin-bottom: 15px;"></div>
@@ -580,6 +596,73 @@
         const filterDropdown = document.getElementById('filterDropdown');
         const filterTagsContainer = document.getElementById('filterTagsContainer');
         const clearFiltersBtn = document.getElementById('clearFilters');
+
+        // =========================================================================
+        // FUNGSI UPDATE UI HEADER & KERANJANG OTOMATIS
+        // =========================================================================
+        async function updateNavUI() {
+            const sessionData = localStorage.getItem('user_session');
+            const loginBtn = document.getElementById('navLoginBtn');
+            const cartBadge = document.getElementById('cartBadge');
+            const mobileCartBadge = document.getElementById('mobileCartBadge');
+            const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+
+            if (sessionData) {
+                // JIKA PENGGUNA SUDAH LOGIN
+                const session = JSON.parse(sessionData);
+                
+                // 1. Ubah Tombol "Login" menjadi "Akun Saya"
+                loginBtn.href = 'akun.html';
+                loginBtn.innerHTML = '<i class="fas fa-user-circle" style="color: var(--accent-color);"></i> <span>Akun Saya</span>';
+                
+                if (mobileAccountBtn) {
+                    mobileAccountBtn.href = 'akun.html';
+                    mobileAccountBtn.querySelector('span').innerText = 'Akun';
+                }
+                
+                // 2. Cek jumlah barang di keranjang dari database secara diam-diam (background)
+                try {
+                    const response = await fetch('/api/cart', {
+                        headers: { 'Authorization': `Bearer ${session.access_token}` }
+                    });
+                    if (response.ok) {
+                        const cartItems = await response.json();
+                        // Menjumlahkan total kuantitas barang di keranjang
+                        const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+                        
+                        // Menampilkan lencana merah jika ada barang
+                        if (totalQty > 0) {
+                            const displayText = totalQty > 99 ? '99+' : totalQty;
+                            
+                            cartBadge.style.display = 'flex';
+                            cartBadge.innerText = displayText;
+                            
+                            if (mobileCartBadge) {
+                                mobileCartBadge.style.display = 'inline-block';
+                                mobileCartBadge.innerText = displayText;
+                            }
+                        } else {
+                            cartBadge.style.display = 'none';
+                            if (mobileCartBadge) mobileCartBadge.style.display = 'none';
+                        }
+                    }
+                } catch (e) {
+                    console.error("Gagal memperbarui notifikasi keranjang", e);
+                }
+            } else {
+                // JIKA BELUM LOGIN: Pastikan tampilannya "Login" dan sembunyikan keranjang
+                loginBtn.href = 'login.html';
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span>Login</span>';
+                cartBadge.style.display = 'none';
+                
+                if (mobileCartBadge) mobileCartBadge.style.display = 'none';
+                if (mobileAccountBtn) {
+                     mobileAccountBtn.href = 'login.html';
+                     mobileAccountBtn.querySelector('span').innerText = 'Login';
+                }
+            }
+        }
+
 
         // --- FUNGSI TAMPILKAN POP-UP NOTIFIKASI PROFESIONAL ---
         function showNotification(title, message, type, redirectUrl = null) {
@@ -891,6 +974,9 @@
                 }
                 
                 showNotification("Berhasil!", `Barang "${prod.title}" telah sukses dimasukkan ke keranjang Anda.`, "success");
+                
+                // --- PEMBARUAN BARU: Update angka keranjang secara realtime! ---
+                updateNavUI(); 
 
             } catch (error) {
                 console.error("Detail Error:", error);
@@ -904,6 +990,7 @@
                         "warning", 
                         "login.html"
                     );
+                    updateNavUI(); // Kembalikan menu ke status "Belum Login"
                 } else {
                     // Jika error lain
                     showNotification("Gagal Memasukkan Barang", error.message, "error");
@@ -916,6 +1003,9 @@
             productContainer.innerHTML = `<div class="empty-state">Menarik data dari gudang... <br><i class="fas fa-spinner fa-spin" style="margin-top: 15px; font-size: 24px;"></i></div>`;
             fetchProductsFromAPI(); 
             fetchLogosFromAPI(); 
+            
+            // --- PEMBARUAN BARU: Periksa status login & update UI Navigasi ---
+            updateNavUI(); 
         });
 
         // --- EVENT LISTENER PENCARIAN & FILTER ---
