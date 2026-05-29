@@ -62,7 +62,6 @@
         .cart-layout { display: flex; gap: 30px; align-items: flex-start; }
         .cart-items-section { flex: 2; display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; }
         
-        /* --- DESAIN CARD KERANJANG LEBIH KOMPAK & PROFESIONAL --- */
         .cart-card { background: var(--bg-color); border-radius: 15px; padding: 12px 15px; box-shadow: var(--neu-flat); display: flex; gap: 15px; align-items: center; }
         .cart-img { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; box-shadow: var(--neu-pressed-sm); flex-shrink: 0; }
         .cart-details { flex: 1; display: flex; flex-direction: column; justify-content: center; }
@@ -79,7 +78,7 @@
         .btn-delete { background: var(--bg-color); color: #ff4757; border: none; width: 30px; height: 30px; border-radius: 50%; box-shadow: var(--neu-flat-sm); cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 12px; }
         .btn-delete:active { box-shadow: var(--neu-pressed-sm); }
 
-        /* --- RINGKASAN CHECKOUT (Tombol Ringkas) --- */
+        /* --- RINGKASAN CHECKOUT --- */
         .checkout-summary { flex: 1; background: var(--bg-color); border-radius: 25px; padding: 25px; box-shadow: var(--neu-flat); position: sticky; top: 100px; }
         
         .summary-actions { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
@@ -120,7 +119,6 @@
         .neu-btn { padding: 12px 20px; border-radius: 15px; border: none; background: var(--bg-color); color: var(--text-main); font-size: 13px; font-weight: 700; box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.3s; }
         .neu-btn:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
-        /* Desain Promo Pill */
         .promo-pill { background: var(--bg-color); border: 2px dashed rgba(9, 132, 227, 0.4); padding: 12px 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; box-shadow: var(--neu-flat-sm); }
         .promo-pill-info { display: flex; flex-direction: column; }
         .promo-pill-code { font-weight: 700; font-size: 13px; color: var(--accent-color); }
@@ -132,17 +130,17 @@
             .cart-layout { flex-direction: column; gap: 20px; }
             .top-nav { padding: 15px 20px; }
             .hide-on-mobile { display: none !important; }
-            .container { padding-bottom: 120px; margin-top: 20px; } 
-            body { padding-bottom: 70px; }
             
-            /* Checkout Bar Anti-Scroll */
+            body { padding-bottom: 200px; } /* Jarak luas agar keranjang tidak tertutup panel bawah */
+            
+            /* Checkout Bar Mengambang (Floating Island) agar tidak menabrak Navigasi */
             .checkout-summary {
-                position: fixed; bottom: 65px; left: 0; width: 100%; top: auto;
-                border-radius: 25px 25px 0 0; padding: 15px 20px;
-                box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 998;
+                position: fixed; bottom: 85px; left: 15px; width: calc(100% - 30px); top: auto;
+                border-radius: 20px; padding: 15px 20px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.1), var(--neu-flat); z-index: 998;
                 margin: 0; flex: none;
             }
-            [data-theme="dark"] .checkout-summary { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
+            [data-theme="dark"] .checkout-summary { box-shadow: 0 5px 20px rgba(0,0,0,0.6), var(--neu-flat); }
             
             .summary-actions { flex-direction: row; gap: 10px; margin-bottom: 15px; }
             .summary-action-btn { padding: 10px 12px; border-radius: 12px; gap: 8px; }
@@ -204,7 +202,6 @@
             </div>
 
             <div class="checkout-summary">
-                
                 <div class="summary-actions">
                     <button class="summary-action-btn" onclick="openAddressModal()">
                         <i class="fas fa-map-marker-alt icon-main"></i>
@@ -219,7 +216,7 @@
                         <i class="fas fa-ticket-alt icon-main"></i>
                         <div class="summary-action-text">
                             <div class="summary-action-label">Makin Hemat</div>
-                            <div class="summary-action-value" id="summaryPromoVal" style="color: var(--accent-color);">Pakai Promo / Voucher</div>
+                            <div class="summary-action-value" id="summaryPromoVal" style="color: var(--accent-color);">Pakai Promo (Maks 2)</div>
                         </div>
                         <i class="fas fa-chevron-right" style="color: var(--text-muted); font-size: 12px; margin-left: auto;"></i>
                     </button>
@@ -272,15 +269,45 @@
             </div>
             <div id="modalVoucherMsg" style="font-size: 11px; margin-bottom: 15px; font-weight: 600; text-align: center;"></div>
             
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">Promo Tersedia:</span>
+                <button onclick="resetVoucher()" style="background:none; border:none; color:#ff4757; font-size:11px; font-weight:bold; cursor:pointer; text-decoration:underline;">Reset Promo</button>
+            </div>
+
             <div style="overflow-y: auto; padding-right: 5px; flex-grow: 1;" id="availablePromosContainer">
                 <div style="text-align:center; font-size:12px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Mencari promo...</div>
             </div>
         </div>
     </div>
 
+    <div class="modal-overlay" id="confirmCheckoutModal">
+        <div class="modal-content" style="max-width: 320px; text-align: center;">
+            <div class="modal-header" style="justify-content: center; margin-bottom: 10px;">
+                <div class="modal-title-box"><h2 style="color: var(--accent-color);"><i class="fas fa-question-circle"></i> Konfirmasi</h2></div>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Apakah alamat pengiriman Anda sudah sesuai?</p>
+            
+            <div style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 25px; padding: 15px; background: var(--bg-color); border-radius: 15px; box-shadow: var(--neu-pressed-sm); line-height: 1.5;" id="confirmAddressDisplay">
+                </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <button class="neu-btn" onclick="closeConfirmModal()" style="flex: 1; color: #ff4757;">Belum</button>
+                <button class="neu-btn" onclick="executeCheckout()" style="flex: 1; color: #27ae60;" id="finalExecuteBtn">Ya, Lanjut</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="notificationModal" style="z-index: 3000;">
+        <div class="modal-content" style="max-width: 320px; text-align: center; padding: 30px 20px;">
+            <div id="notifIcon" style="font-size: 45px; margin-bottom: 15px;"></div>
+            <h3 id="notifTitle" style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Judul</h3>
+            <p id="notifMessage" style="font-size: 13px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.5;">Pesan</p>
+            <button class="neu-btn" id="notifBtn" style="width: 100%; padding: 12px; border-radius: 50px;">Mengerti</button>
+        </div>
+    </div>
+
     <nav class="bottom-nav">
         <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
-        
         <a href="promo.html" class="bottom-nav-item">
             <div style="position: relative;">
                 <i class="fas fa-tags"></i>
@@ -288,7 +315,6 @@
             </div>
             <span>Promo</span>
         </a>
-        
         <a href="keranjang.html" class="bottom-nav-item active">
             <div style="position: relative;">
                 <i class="fas fa-shopping-cart"></i>
@@ -296,7 +322,6 @@
             </div>
             <span>Keranjang</span>
         </a>
-        
         <a href="#" class="bottom-nav-item">
             <div style="position: relative;">
                 <i class="fas fa-box"></i>
@@ -304,29 +329,56 @@
             </div>
             <span>Pesanan</span>
         </a>
-        
         <a href="akun.html" class="bottom-nav-item" id="mobileAccountBtn">
             <i class="fas fa-user"></i><span>Akun</span>
         </a>
     </nav>
 
     <script>
-        // --- CEK KEAMANAN ---
         const sessionData = localStorage.getItem('user_session');
-        if (!sessionData) {
-            alert("Anda harus login untuk melihat keranjang.");
-            window.location.href = 'login.html';
-        }
+        if (!sessionData) { window.location.href = 'login.html'; }
         const session = JSON.parse(sessionData);
 
         let cartItems = [];
         let rawSubtotal = 0; 
         let finalTotalRp = 0; 
         let appliedDiscount = 0;
-        let appliedPromoCode = "";
+        
+        // Array untuk menyimpan maksimal 2 promo
+        let activeVouchers = []; 
         
         let globalAddress = "";
         let globalPhone = "";
+
+        // =========================================================================
+        // FUNGSI NOTIFIKASI
+        // =========================================================================
+        function showNotification(title, message, type) {
+            const notifModal = document.getElementById('notificationModal');
+            const notifIcon = document.getElementById('notifIcon');
+            const notifTitle = document.getElementById('notifTitle');
+            const notifMessage = document.getElementById('notifMessage');
+            const notifBtn = document.getElementById('notifBtn');
+
+            if(type === 'success') {
+                notifIcon.innerHTML = '<i class="fas fa-check-circle" style="color: #27ae60;"></i>';
+                notifTitle.style.color = '#27ae60';
+                notifBtn.innerText = 'Lanjut';
+            } else if(type === 'error') {
+                notifIcon.innerHTML = '<i class="fas fa-times-circle" style="color: #ff4757;"></i>';
+                notifTitle.style.color = '#ff4757';
+                notifBtn.innerText = 'Tutup';
+            } else if(type === 'warning') {
+                notifIcon.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #e67e22;"></i>';
+                notifTitle.style.color = '#e67e22';
+                notifBtn.innerText = 'Mengerti';
+            }
+
+            notifTitle.innerText = title;
+            notifMessage.innerText = message;
+            notifBtn.onclick = function() { notifModal.classList.remove('active'); };
+            notifModal.classList.add('active');
+        }
 
         // =========================================================================
         // FUNGSI UPDATE UI HEADER & MOBILE (AVATAR & BADGE)
@@ -344,10 +396,12 @@
                     const nickname = fullName.split(' ')[0]; 
                     const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(fullName)}&backgroundColor=e0e5ec`;
 
-                    // Set Alamat Lokal
+                    // Set Alamat Lokal & Perpendek Tampilan di Tombol
                     globalAddress = userData.address || "";
                     globalPhone = userData.phone || "";
-                    if(globalAddress) document.getElementById('summaryAddressVal').innerText = globalAddress;
+                    if(globalAddress) {
+                        document.getElementById('summaryAddressVal').innerText = "Alamat Pengiriman (Tersimpan)";
+                    }
 
                     // Set Desktop Profile
                     loginBtn.style.display = 'flex';
@@ -415,7 +469,7 @@
         }
 
         // =========================================================================
-        // FUNGSI KERANJANG DAN CHECKOUT
+        // FUNGSI KERANJANG UTAMA
         // =========================================================================
         function parsePrice(priceString) { return parseInt(priceString.replace(/[^0-9]/g, '')) || 0; }
         function formatRupiah(number) { return "Rp " + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
@@ -464,8 +518,9 @@
 
             rawSubtotal = totalCalculation;
             
-            if(appliedPromoCode) {
-                executeApplyVoucher(appliedPromoCode); 
+            // Re-kalkulasi ulang jika ada promo aktif
+            if(activeVouchers.length > 0) {
+                recalculateActiveVouchers();
             } else {
                 finalTotalRp = totalCalculation;
                 document.getElementById('strikePriceDisplay').style.display = 'none';
@@ -547,7 +602,7 @@
             globalPhone = document.getElementById('modalShipPhone').value.trim();
             
             if(globalAddress) {
-                document.getElementById('summaryAddressVal').innerText = globalAddress;
+                document.getElementById('summaryAddressVal').innerText = "Alamat Pengiriman (Tersimpan)";
             } else {
                 document.getElementById('summaryAddressVal').innerText = "Atur Alamat & Kontak";
             }
@@ -555,7 +610,7 @@
         }
 
         // =========================================================================
-        // SISTEM MODAL PROMO OTOMATIS
+        // SISTEM GABUNG 2 PROMO MAKSIMAL
         // =========================================================================
         function openPromoModal() {
             document.getElementById('promoModal').classList.add('active');
@@ -591,78 +646,141 @@
         }
 
         function resetVoucher() {
+            activeVouchers = [];
             appliedDiscount = 0;
-            appliedPromoCode = "";
-            document.getElementById('summaryPromoVal').innerText = "Pakai Promo / Voucher";
+            finalTotalRp = rawSubtotal;
+            
+            document.getElementById('summaryPromoVal').innerText = "Pakai Promo (Maks 2)";
             document.getElementById('summaryPromoVal').style.color = "var(--accent-color)";
             document.getElementById('strikePriceDisplay').style.display = 'none';
+            document.getElementById('totalPriceDisplay').innerText = formatRupiah(finalTotalRp);
+            
+            document.getElementById('modalVoucherMsg').innerText = "Semua promo dibatalkan.";
+            document.getElementById('modalVoucherMsg').style.color = "var(--text-muted)";
         }
 
         function applyVoucherManual() {
             const code = document.getElementById('manualVoucherInput').value.trim();
-            if(code) executeApplyVoucher(code);
+            if(code) {
+                executeApplyVoucher(code);
+                document.getElementById('manualVoucherInput').value = ''; // Bersihkan input
+            }
+        }
+
+        // Fungsi internal untuk mengkalkulasi ulang jika QTY barang diubah saat promo sedang aktif
+        async function recalculateActiveVouchers() {
+            if(activeVouchers.length === 0) return;
+            
+            let tempTotal = rawSubtotal;
+            let totalDiscount = 0;
+            
+            for (let v of activeVouchers) {
+                try {
+                    const res = await fetch('/api/apply-voucher', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code: v.code, total_price: tempTotal })
+                    });
+                    if(res.ok) {
+                        const result = await res.json();
+                        totalDiscount += result.discount_amount;
+                        tempTotal = result.final_total;
+                    }
+                } catch(e) { }
+            }
+            
+            appliedDiscount = totalDiscount;
+            finalTotalRp = tempTotal;
+            updateTotalDisplay();
         }
 
         async function executeApplyVoucher(code) {
-            const msgBox = document.getElementById('modalVoucherMsg');
-            const btnManual = document.getElementById('btnApplyManual');
-            
             if(rawSubtotal === 0) {
-                msgBox.innerText = "Keranjang Anda kosong.";
-                msgBox.style.color = "#ff4757";
+                showNotification("Keranjang Kosong", "Masukkan barang ke keranjang terlebih dahulu.", "warning");
                 return;
             }
 
+            // CEK BATAS MAKSIMAL 2 PROMO
+            if (activeVouchers.length >= 2) {
+                showNotification("Batas Maksimal", "Anda hanya dapat menggabungkan maksimal 2 promo sekaligus.", "warning");
+                return;
+            }
+
+            // CEK APAKAH PROMO SUDAH DIPAKAI
+            if (activeVouchers.some(v => v.code === code)) {
+                showNotification("Sudah Dipakai", `Promo ${code} sudah diterapkan.`, "warning");
+                return;
+            }
+
+            const msgBox = document.getElementById('modalVoucherMsg');
+            const btnManual = document.getElementById('btnApplyManual');
+            
             msgBox.innerText = "Memeriksa kode...";
             msgBox.style.color = "var(--accent-color)";
             btnManual.disabled = true;
 
             try {
+                // Menghitung diskon berdasarkan harga SISA (jika sudah ada promo 1 yang aktif)
                 const response = await fetch('/api/apply-voucher', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code: code, total_price: rawSubtotal })
+                    body: JSON.stringify({ code: code, total_price: finalTotalRp })
                 });
 
                 const result = await response.json();
                 if(!response.ok) throw new Error(result.error);
 
-                appliedDiscount = result.discount_amount;
-                finalTotalRp = result.final_total;
-                appliedPromoCode = code;
-
-                // Update UI Summary Button Promo
-                document.getElementById('summaryPromoVal').innerText = "Diskon " + formatRupiah(appliedDiscount) + " Terpakai!";
-                document.getElementById('summaryPromoVal').style.color = "#27ae60"; 
+                // SIMPAN PROMO YANG BERHASIL
+                activeVouchers.push({ code: code, discount: result.discount_amount });
                 
-                // Coret Harga
-                const strikeEl = document.getElementById('strikePriceDisplay');
-                strikeEl.style.display = 'inline-block';
-                strikeEl.innerText = formatRupiah(rawSubtotal);
-                
-                // Harga Baru
-                document.getElementById('totalPriceDisplay').innerText = formatRupiah(finalTotalRp);
+                appliedDiscount += result.discount_amount;
+                finalTotalRp = rawSubtotal - appliedDiscount;
+                if(finalTotalRp < 0) finalTotalRp = 0;
 
+                updateTotalDisplay();
                 closePromoModal();
+                showNotification("Berhasil!", `Promo ${code} berhasil diterapkan.`, "success");
 
             } catch (error) {
-                resetVoucher();
-                document.getElementById('totalPriceDisplay').innerText = formatRupiah(rawSubtotal);
                 msgBox.innerText = error.message;
                 msgBox.style.color = "#ff4757"; 
             } finally {
                 btnManual.disabled = false;
             }
         }
+        
+        function updateTotalDisplay() {
+            document.getElementById('summaryPromoVal').innerText = `${activeVouchers.length} Promo Terpakai (-${formatRupiah(appliedDiscount)})`;
+            document.getElementById('summaryPromoVal').style.color = "#27ae60"; 
+            
+            const strikeEl = document.getElementById('strikePriceDisplay');
+            strikeEl.style.display = 'inline-block';
+            strikeEl.innerText = formatRupiah(rawSubtotal);
+            
+            document.getElementById('totalPriceDisplay').innerText = formatRupiah(finalTotalRp);
+        }
 
-        // --- CHECKOUT PESANAN ---
-        async function processCheckout() {
+        // =========================================================================
+        // SISTEM KONFIRMASI CHECKOUT
+        // =========================================================================
+        function processCheckout() {
             if(!globalAddress || !globalPhone) { 
-                alert("Harap atur Alamat dan Nomor Telepon pengiriman terlebih dahulu!"); 
+                showNotification("Perhatian", "Harap atur Alamat dan Nomor Telepon pengiriman terlebih dahulu!", "warning"); 
                 openAddressModal();
                 return; 
             }
+            
+            // Tampilkan pop-up konfirmasi
+            document.getElementById('confirmAddressDisplay').innerText = globalAddress + "\n(Telp: " + globalPhone + ")";
+            document.getElementById('confirmCheckoutModal').classList.add('active');
+        }
+        
+        function closeConfirmModal() {
+            document.getElementById('confirmCheckoutModal').classList.remove('active');
+        }
 
+        async function executeCheckout() {
+            closeConfirmModal(); // Tutup pop-up
+            
             const finalTotalText = document.getElementById('totalPriceDisplay').innerText;
             const btn = document.getElementById('checkoutBtn');
 
@@ -686,7 +804,7 @@
                 alert("Checkout Berhasil! Pesanan Anda sedang diproses oleh admin.");
                 window.location.href = 'index.html'; 
             } catch (error) {
-                alert(error.message);
+                showNotification("Gagal", error.message, "error");
                 btn.innerHTML = 'Buat Pesanan';
                 btn.disabled = false;
             }
