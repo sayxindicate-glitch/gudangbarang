@@ -40,82 +40,26 @@
             --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-            transition: background-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column; 
-        }
+        .sticky-header { position: sticky; top: 0; z-index: 100; background-color: var(--bg-color); padding-bottom: 10px; }
+        nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
 
-        .sticky-header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background-color: var(--bg-color);
-            padding-bottom: 10px;
-        }
-
-        nav {
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .logo {
-            font-size: 24px; font-weight: 700;
-            color: var(--accent-color); letter-spacing: 2px;
-            flex: 1; white-space: nowrap; display: flex; align-items: center; gap: 10px;
-        }
+        .logo { font-size: 24px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; flex: 1; white-space: nowrap; display: flex; align-items: center; gap: 10px; text-decoration: none; }
 
         .search-container { flex: 2; position: relative; max-width: 500px; }
-        .search-container input {
-            width: 100%; padding: 12px 85px 12px 45px; 
-            border-radius: 50px; border: none;
-            background: var(--bg-color); color: var(--text-main);
-            box-shadow: var(--neu-pressed); outline: none; font-size: 14px;
-        }
+        .search-container input { width: 100%; padding: 12px 85px 12px 45px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed); outline: none; font-size: 14px; }
         .search-container input::placeholder { color: var(--text-muted); }
-        .search-container .fa-search {
-            position: absolute; left: 18px; top: 50%;
-            transform: translateY(-50%); color: var(--text-muted);
-        }
-        .search-container .fa-times {
-            position: absolute; right: 55px; top: 50%; 
-            transform: translateY(-50%); color: var(--text-muted);
-            cursor: pointer; display: none; padding: 5px;
-        }
+        .search-container .fa-search { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .search-container .fa-times { position: absolute; right: 55px; top: 50%; transform: translateY(-50%); color: var(--text-muted); cursor: pointer; display: none; padding: 5px; }
         .search-container .fa-times:hover { color: var(--accent-color); }
 
-        .filter-toggle-btn {
-            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-            background: var(--bg-color); color: var(--text-muted); border: none;
-            width: 32px; height: 32px; border-radius: 50%;
-            box-shadow: var(--neu-flat-sm); cursor: pointer; 
-            display: flex; justify-content: center; align-items: center; font-size: 14px;
-            transition: all 0.2s ease;
-        }
+        .filter-toggle-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: var(--bg-color); color: var(--text-muted); border: none; width: 32px; height: 32px; border-radius: 50%; box-shadow: var(--neu-flat-sm); cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 14px; transition: all 0.2s ease; }
         .filter-toggle-btn:active { box-shadow: var(--neu-pressed-sm); }
         .filter-toggle-btn.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
 
-        .filter-dropdown {
-            position: absolute; top: calc(100% + 15px); right: 0;
-            width: 100%; max-width: 380px; background: var(--bg-color);
-            border-radius: 20px; padding: 20px; box-shadow: var(--neu-flat);
-            z-index: 200; display: none; flex-direction: column; gap: 15px;
-            border: 1px solid rgba(255,255,255,0.1);
-            max-height: 450px; overflow-y: auto;
-        }
+        .filter-dropdown { position: absolute; top: calc(100% + 15px); right: 0; width: 100%; max-width: 380px; background: var(--bg-color); border-radius: 20px; padding: 20px; box-shadow: var(--neu-flat); z-index: 200; display: none; flex-direction: column; gap: 15px; border: 1px solid rgba(255,255,255,0.1); max-height: 450px; overflow-y: auto; }
         .filter-dropdown.active { display: flex; animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -125,141 +69,52 @@
 
         .filter-dropdown-header { display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--bg-color); padding-bottom: 10px; z-index: 10; border-bottom: 1px solid rgba(128,128,128,0.2); margin-bottom: 5px; }
         .filter-dropdown-title { font-size: 13px; font-weight: 700; color: var(--text-main); }
-        .filter-clear-btn { 
-            font-size: 11px; color: #ff4757; cursor: pointer; font-weight: 600; 
-            background: none; border: none; padding: 5px 10px; border-radius: 10px;
-            box-shadow: var(--neu-flat-sm);
-        }
+        .filter-clear-btn { font-size: 11px; color: #ff4757; cursor: pointer; font-weight: 600; background: none; border: none; padding: 5px 10px; border-radius: 10px; box-shadow: var(--neu-flat-sm); }
         .filter-clear-btn:active { box-shadow: var(--neu-pressed-sm); }
 
         .filter-group { margin-bottom: 15px; }
-        .filter-group-label {
-            font-size: 11px; font-weight: 700; color: var(--text-main);
-            margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;
-            opacity: 0.8; padding-left: 5px; border-left: 3px solid var(--accent-color);
-        }
+        .filter-group-label { font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; padding-left: 5px; border-left: 3px solid var(--accent-color); }
         .filter-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-        .filter-tag {
-            padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 600;
-            background: var(--bg-color); color: var(--text-muted); border: none;
-            box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.2s;
-        }
+        .filter-tag { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 600; background: var(--bg-color); color: var(--text-muted); border: none; box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.2s; }
         .filter-tag:active { box-shadow: var(--neu-pressed-sm); }
         .filter-tag.active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
-        /* ========================================================= */
-        /* --- KONTROL NAVIGASI KANAN (DIPERBAIKI) --- */
-        /* ========================================================= */
-        .controls {
-            display: flex; align-items: center; gap: 20px; 
-            flex: 1; justify-content: flex-end;
-        }
-        .nav-link {
-            color: var(--text-muted); text-decoration: none; position: relative;
-            font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px;
-        }
+        .controls { display: flex; align-items: center; gap: 20px; flex: 1; justify-content: flex-end; }
+        .nav-link { color: var(--text-muted); text-decoration: none; position: relative; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
         .nav-link:hover { color: var(--accent-color); }
         
-        .badge-count {
-            position: absolute; top: -10px; right: -15px; 
-            background: #ff4757; color: white; font-size: 10px; font-weight: bold; 
-            padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color);
-            display: flex; justify-content: center; align-items: center;
-        }
+        .badge-count { position: absolute; top: -10px; right: -15px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-        /* Tombol Keranjang Bulat */
-        .neu-btn-icon {
-            background: var(--bg-color); color: var(--text-main); border: none;
-            width: 48px; height: 48px; border-radius: 50%; 
-            font-size: 18px; display: flex; justify-content: center; align-items: center;
-            box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative;
-        }
+        .neu-btn-icon { background: var(--bg-color); color: var(--text-main); border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative; }
         .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+        .neu-btn-icon i { transition: transform 0.2s ease; } /* Untuk efek denyut saat barang ditambahkan */
 
-        /* Tombol Login Lonjong (Standar) */
-        .nav-btn-cap {
-            background: var(--bg-color); color: var(--text-main);
-            text-decoration: none; font-size: 15px; font-weight: 700;
-            display: flex; align-items: center; gap: 8px;
-            padding: 10px 22px; border-radius: 50px; box-shadow: var(--neu-flat-sm);
-        }
+        .nav-btn-cap { background: var(--bg-color); color: var(--text-main); text-decoration: none; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 50px; box-shadow: var(--neu-flat-sm); }
         .nav-btn-cap:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         [data-theme="dark"] .nav-btn-cap:hover { color: var(--accent-color); text-shadow: 0 0 5px var(--accent-color); }
 
-        /* Desain Profil Horizontal */
-        .nav-profile-badge {
-            display: flex; flex-direction: row; align-items: center; justify-content: center;
-            text-decoration: none; gap: 10px; transition: transform 0.2s ease; cursor: pointer;
-            background: var(--bg-color); padding: 5px 15px 5px 5px; border-radius: 50px;
-            box-shadow: var(--neu-flat-sm);
-        }
+        .nav-profile-badge { display: flex; flex-direction: row; align-items: center; justify-content: center; text-decoration: none; gap: 10px; transition: transform 0.2s ease; cursor: pointer; background: var(--bg-color); padding: 5px 15px 5px 5px; border-radius: 50px; box-shadow: var(--neu-flat-sm); }
         .nav-profile-badge:active { box-shadow: var(--neu-pressed-sm); }
-        .nav-profile-badge img {
-            width: 36px; height: 36px; border-radius: 50%; object-fit: cover;
-            box-shadow: var(--neu-pressed-sm); border: 2px solid transparent;
-        }
+        .nav-profile-badge img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; box-shadow: var(--neu-pressed-sm); border: 2px solid transparent; }
         [data-theme="dark"] .nav-profile-badge img { border-color: rgba(255,255,255,0.1); }
-        .nav-profile-badge span {
-            font-size: 13px; font-weight: 700; color: var(--text-main);
-            max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
+        .nav-profile-badge span { font-size: 13px; font-weight: 700; color: var(--text-main); max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .theme-switch {
-            width: 60px; height: 30px; border-radius: 50px; 
-            background: var(--bg-color); box-shadow: var(--neu-pressed); 
-            position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px;
-            flex-shrink: 0;
-        }
-        .switch-handle {
-            width: 22px; height: 22px; border-radius: 50%; 
-            background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px;
-            transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center;
-            color: var(--accent-color); font-size: 10px;
-        }
+        .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; flex-shrink: 0; }
+        .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
         [data-theme="dark"] .switch-handle { transform: translateX(30px); }
 
-        .floating-chat-desktop {
-            position: fixed; bottom: 0; right: 0; 
-            background: var(--bg-color); border-radius: 16px 0 0 0; 
-            padding: 12px 20px; display: flex; flex-direction: row; align-items: center; gap: 12px; 
-            text-decoration: none; z-index: 1000; transition: all 0.3s ease;
-            border-top: 1px solid rgba(255,255,255,0.2); border-left: 1px solid rgba(255,255,255,0.2);
-        }
-        .floating-chat-desktop:hover { background: var(--bg-color); }
+        .floating-chat-desktop { position: fixed; bottom: 0; right: 0; background: var(--bg-color); border-radius: 16px 0 0 0; padding: 12px 20px; display: flex; flex-direction: row; align-items: center; gap: 12px; text-decoration: none; z-index: 1000; transition: all 0.3s ease; border-top: 1px solid rgba(255,255,255,0.2); border-left: 1px solid rgba(255,255,255,0.2); }
         .floating-chat-desktop i { color: #25d366; font-size: 22px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.1)); }
-        .floating-chat-desktop span {
-            font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 12px; 
-            letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase;
-        }
+        .floating-chat-desktop span { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; }
         [data-theme="dark"] .floating-chat-desktop span { color: var(--text-main); }
-        [data-theme="dark"] .floating-chat-desktop:hover i { text-shadow: 0 0 10px #25d366; }
-
-        .nav-btn-chat-mobile { display: none; }
-
-        .categories-wrapper { 
-            position: relative; width: 100%; background-color: var(--bg-color); display: flex; align-items: center;
-        }
-        .categories { 
-            display: flex; gap: 15px; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; 
-            padding: 15px 120px 30px 120px; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none;
-            cursor: grab; width: 100%; 
-            -webkit-mask-image: linear-gradient(to right, transparent 0, transparent 70px, black 250px, black calc(100% - 250px), transparent calc(100% - 70px), transparent 100%);
-            mask-image: linear-gradient(to right, transparent 0, transparent 70px, black 250px, black calc(100% - 250px), transparent calc(100% - 70px), transparent 100%);
-        }
+        
+        .categories-wrapper { position: relative; width: 100%; background-color: var(--bg-color); display: flex; align-items: center; }
+        .categories { display: flex; gap: 15px; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; padding: 15px 120px 30px 120px; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; cursor: grab; width: 100%; -webkit-mask-image: linear-gradient(to right, transparent 0, transparent 70px, black 250px, black calc(100% - 250px), transparent calc(100% - 70px), transparent 100%); mask-image: linear-gradient(to right, transparent 0, transparent 70px, black 250px, black calc(100% - 250px), transparent calc(100% - 70px), transparent 100%); }
         .categories:active { cursor: grabbing; }
         .categories::-webkit-scrollbar { display: none; }
-        
-        .cat-btn { 
-            flex-shrink: 0; padding: 10px 22px; border-radius: 50px; background: var(--bg-color); color: var(--text-main); 
-            border: none; font-size: 13px; font-weight: 600; white-space: nowrap; box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.3s ease;
-        }
+        .cat-btn { flex-shrink: 0; padding: 10px 22px; border-radius: 50px; background: var(--bg-color); color: var(--text-main); border: none; font-size: 13px; font-weight: 600; white-space: nowrap; box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.3s ease; }
         .cat-btn.active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
-
-        .scroll-arrow {
-            position: absolute; top: 50%; transform: translateY(-65%); width: 40px; height: 40px; border-radius: 50%;
-            background: var(--bg-color); color: var(--text-main); border: none; box-shadow: var(--neu-flat); cursor: pointer; z-index: 10;
-            display: flex; justify-content: center; align-items: center; font-size: 14px; transition: all 0.3s ease;
-        }
+        .scroll-arrow { position: absolute; top: 50%; transform: translateY(-65%); width: 40px; height: 40px; border-radius: 50%; background: var(--bg-color); color: var(--text-main); border: none; box-shadow: var(--neu-flat); cursor: pointer; z-index: 10; display: flex; justify-content: center; align-items: center; font-size: 14px; transition: all 0.3s ease; }
         .scroll-arrow:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
         .left-arrow { left: 15px; } 
         .right-arrow { right: 15px; }
@@ -267,10 +122,7 @@
         .container { max-width: 1300px; margin: 0 auto; padding: 20px; flex: 1; }
         .product-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 25px; padding-bottom: 40px; margin-top: 20px; }
         
-        .neu-card {
-            background: var(--bg-color); border-radius: 20px; padding: 15px; box-shadow: var(--neu-flat); 
-            text-align: center; display: flex; flex-direction: column; position: relative;
-        }
+        .neu-card { background: var(--bg-color); border-radius: 20px; padding: 15px; box-shadow: var(--neu-flat); text-align: center; display: flex; flex-direction: column; position: relative; transition: box-shadow 0.3s ease, transform 0.3s ease; }
         .neu-card:hover { box-shadow: var(--neu-hover); transform: translateY(-5px); }
         .product-img { width: 100%; aspect-ratio: 1 / 1; border-radius: 12px; object-fit: cover; margin-bottom: 15px; box-shadow: var(--neu-flat-sm); }
         .product-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; line-height: 1.3;}
@@ -278,87 +130,50 @@
         .price { font-size: 18px; font-weight: 700; color: var(--accent-color); margin-bottom: 15px; }
 
         .qty-wrapper { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px; width: 100%; }
-        .qty-btn {
-            width: 32px; height: 32px; border-radius: 50%; background: var(--bg-color); color: var(--text-main); border: none;
-            box-shadow: var(--neu-flat-sm); cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 12px;
-        }
+        .qty-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--bg-color); color: var(--text-main); border: none; box-shadow: var(--neu-flat-sm); cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 12px; }
         .qty-btn:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
-        .qty-input {
-            width: 50px; text-align: center; background: var(--bg-color); border: none; color: var(--text-main); font-size: 14px; font-weight: 700;
-            padding: 6px; border-radius: 10px; box-shadow: var(--neu-pressed-sm); outline: none; -moz-appearance: textfield; appearance: textfield; 
-        }
+        .qty-input { width: 50px; text-align: center; background: var(--bg-color); border: none; color: var(--text-main); font-size: 14px; font-weight: 700; padding: 6px; border-radius: 10px; box-shadow: var(--neu-pressed-sm); outline: none; -moz-appearance: textfield; appearance: textfield; }
         .qty-input::-webkit-outer-spin-button, .qty-input::-webkit-inner-spin-button { -webkit-appearance: none; appearance: none; margin: 0; }
 
-        .card-actions { display: flex; gap: 10px; width: 100%; }
-        .btn-eye {
-            width: 40px; flex-shrink: 0; background: var(--bg-color); color: var(--text-main); border: none; border-radius: 10px; 
-            box-shadow: var(--neu-flat-sm); display: flex; justify-content: center; align-items: center; cursor: pointer;
-        }
+        .card-actions { display: flex; gap: 10px; width: 100%; position: relative; }
+        .btn-eye { width: 40px; flex-shrink: 0; background: var(--bg-color); color: var(--text-main); border: none; border-radius: 10px; box-shadow: var(--neu-flat-sm); display: flex; justify-content: center; align-items: center; cursor: pointer; }
         .btn-eye:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         
-        .neu-btn {
-            background: var(--bg-color); color: var(--text-main); border: none; padding: 10px 10px; border-radius: 10px; font-size: 12px; font-weight: 600;
-            box-shadow: var(--neu-flat-sm); cursor: pointer; flex-grow: 1; display: flex; justify-content: center; align-items: center; gap: 8px;
-        }
+        .neu-btn { background: var(--bg-color); color: var(--text-main); border: none; padding: 10px 10px; border-radius: 10px; font-size: 12px; font-weight: 600; box-shadow: var(--neu-flat-sm); cursor: pointer; flex-grow: 1; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.2s ease;}
         .neu-btn:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         [data-theme="dark"] .neu-btn:hover { color: var(--accent-color); text-shadow: 0 0 5px var(--accent-color); }
 
         .empty-state { grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 16px; }
 
         .load-more-container { text-align: center; margin-bottom: 40px; }
-        .btn-load-more {
-            background: var(--bg-color); color: var(--text-main); border: none; padding: 12px 30px; border-radius: 50px; font-size: 14px; font-weight: 600;
-            box-shadow: var(--neu-flat); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease;
-        }
+        .btn-load-more { background: var(--bg-color); color: var(--text-main); border: none; padding: 12px 30px; border-radius: 50px; font-size: 14px; font-weight: 600; box-shadow: var(--neu-flat); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
         .btn-load-more:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
         .btn-load-more.hidden { display: none; }
 
         .bottom-nav { display: none; }
 
-        /* --- STYLING MODAL (POP-UP) UMUM --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
-            display: none; justify-content: center; align-items: center; z-index: 2000; opacity: 0; transition: opacity 0.3s ease;
-        }
+        /* --- STYLING MODAL UMUM --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.active { display: flex; opacity: 1; }
-        .modal-content {
-            background: var(--bg-color); width: 90%; max-width: 400px; border-radius: 25px; padding: 25px; box-shadow: var(--neu-flat);
-            transform: translateY(30px); transition: transform 0.3s ease; max-height: 90vh; display: flex; flex-direction: column; 
-            overflow: hidden; position: relative;
-        }
+        .modal-content { background: var(--bg-color); width: 90%; max-width: 400px; border-radius: 25px; padding: 25px; box-shadow: var(--neu-flat); transform: translateY(30px); transition: transform 0.3s ease; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
 
-        /* Khusus Modal Detail Produk */
         .modal-header, .modal-img-box, .modal-price, .modal-desc-label, .qty-wrapper-modal, .btn-modal-cart { flex-shrink: 0; }
         .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
         .modal-title-box h2 { font-size: 20px; font-weight: 700; color: var(--accent-color); margin-bottom: 5px; line-height: 1.3; }
-        .modal-close {
-            background: var(--bg-color); border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 16px; color: var(--text-main);
-            box-shadow: var(--neu-flat-sm); cursor: pointer; display: flex; justify-content: center; align-items: center; flex-shrink: 0;
-        }
+        .modal-close { background: var(--bg-color); border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 16px; color: var(--text-main); box-shadow: var(--neu-flat-sm); cursor: pointer; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
         .modal-close:active { box-shadow: var(--neu-pressed-sm); color: #ff4757; }
-
-        .modal-img-box {
-            width: 100%; height: 180px; border-radius: 15px; background: var(--bg-color); box-shadow: var(--neu-pressed);
-            margin-bottom: 15px; display: flex; justify-content: center; align-items: center; overflow: hidden;
-        }
+        .modal-img-box { width: 100%; height: 180px; border-radius: 15px; background: var(--bg-color); box-shadow: var(--neu-pressed); margin-bottom: 15px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
         .modal-img-box img { width: 100%; height: 100%; object-fit: cover; }
-
         .modal-price { font-size: 26px; font-weight: 700; color: var(--accent-color); margin-bottom: 10px; }
         .modal-desc-label { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
         .modal-desc-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 15px; overflow-y: auto; flex-grow: 1; padding-right: 10px; }
         .modal-desc-text::-webkit-scrollbar { width: 6px; }
         .modal-desc-text::-webkit-scrollbar-track { background: var(--bg-color); border-radius: 10px; box-shadow: var(--neu-pressed-sm); }
         .modal-desc-text::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
-
         .qty-wrapper-modal { margin-bottom: 15px; }
-        .btn-modal-cart {
-            width: 100%; padding: 15px; border-radius: 15px; border: none; background: var(--bg-color); color: var(--text-main);
-            font-size: 15px; font-weight: 700; box-shadow: var(--neu-flat); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px;
-        }
+        .btn-modal-cart { width: 100%; padding: 15px; border-radius: 15px; border: none; background: var(--bg-color); color: var(--text-main); font-size: 15px; font-weight: 700; box-shadow: var(--neu-flat); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; }
         .btn-modal-cart:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
-        [data-theme="dark"] .btn-modal-cart { color: var(--accent-color); }
 
         .footer-prof { background-color: #1a1b1e; color: #f5f6fa; padding: 50px 20px 80px 20px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); }
         .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr; gap: 30px; }
@@ -374,10 +189,8 @@
         .footer-links a:hover { color: #00e5ff; }
         .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; color: #a4b0be; font-size: 13px; margin-bottom: 15px; line-height: 1.5; }
         .footer-contact-item i { color: #00e5ff; margin-top: 3px; }
-
         .payment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .pay-box { background-color: #ffffff; border-radius: 6px; height: 38px; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: transform 0.2s ease; cursor: default; padding: 5px 8px; }
-        .pay-box:hover { transform: scale(1.08); }
+        .pay-box { background-color: #ffffff; border-radius: 6px; height: 38px; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); cursor: default; padding: 5px 8px; }
         .pay-img { width: 100%; height: 100%; object-fit: contain; }
 
         @media (max-width: 1024px) { 
@@ -391,10 +204,6 @@
             .controls { flex: unset; justify-content: flex-end; gap: 10px; }
             .hide-on-mobile { display: none !important; }
             .floating-chat-desktop { display: none !important; }
-
-            .nav-btn-chat-mobile { display: flex; align-items: center; background: var(--bg-color); color: var(--text-main); text-decoration: none; font-weight: 700; box-shadow: var(--neu-flat-sm); padding: 6px 12px; font-size: 11px; border-radius: 50px; gap: 5px; }
-            .nav-btn-chat-mobile:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
-            .nav-btn-chat-mobile i { font-size: 14px; color: #25d366; }
 
             .theme-switch { width: 50px; height: 26px; padding: 3px; }
             .switch-handle { width: 20px; height: 20px; font-size: 9px; }
@@ -415,13 +224,12 @@
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
             
             .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; position: relative; }
-            .bottom-nav-item i { font-size: 18px; }
+            .bottom-nav-item i { font-size: 18px; transition: transform 0.2s ease; } /* Animasi Ikon Bottom Nav */
             .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
             
             .footer-container { grid-template-columns: 1fr; gap: 30px; text-align: center; }
             .footer-contact-item { justify-content: center; }
             .footer-socials { justify-content: center; }
-            
             .payment-grid { grid-template-columns: repeat(4, 60px); justify-content: center; margin: 0 auto; }
             
             body { padding-bottom: 90px; }
@@ -459,7 +267,7 @@
                     <div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div>
                 </div>
                 
-                <a href="https://wa.me/628153335000" class="nav-btn-chat-mobile" target="_blank">
+                <a href="https://wa.me/628153335000" class="nav-btn-chat-mobile" target="_blank" style="display: none;">
                     <i class="fab fa-whatsapp"></i> <span>Chat Admin</span>
                 </a>
                 
@@ -473,7 +281,7 @@
                     <span class="badge-count" id="orderBadge" style="display: none;">0</span>
                 </a>
                 
-                <a href="keranjang.html" class="neu-btn-icon hide-on-mobile">
+                <a href="keranjang.html" class="neu-btn-icon hide-on-mobile" id="desktopCartIconTarget">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="badge-count" id="cartBadge" style="display: none; top: -5px; right: -5px; width: 18px; height: 18px; padding: 0;">0</span>
                 </a>
@@ -516,7 +324,7 @@
             <span>Promo</span>
         </a>
         
-        <a href="keranjang.html" class="bottom-nav-item">
+        <a href="keranjang.html" class="bottom-nav-item" id="mobileCartIconTarget">
             <div style="position: relative;">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="badge-count" id="mobileCartBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span>
@@ -597,7 +405,7 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="notificationModal" style="z-index: 3000;">
+    <div class="modal-overlay" id="notificationModal" style="z-index: 4000;">
         <div class="modal-content" style="max-width: 320px; text-align: center; padding: 30px 20px;">
             <div id="notifIcon" style="font-size: 45px; margin-bottom: 15px;"></div>
             <h3 id="notifTitle" style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Judul</h3>
@@ -643,153 +451,118 @@
         const loadMoreBtn = document.getElementById('loadMoreBtn');
         const searchInput = document.getElementById('searchInput');
         const clearSearchBtn = document.getElementById('clearSearch');
-        
         const filterBtn = document.getElementById('filterBtn');
         const filterDropdown = document.getElementById('filterDropdown');
         const filterTagsContainer = document.getElementById('filterTagsContainer');
         const clearFiltersBtn = document.getElementById('clearFilters');
 
         // =========================================================================
-        // FUNGSI UPDATE UI HEADER: AVATAR HORIZONTAL & BADGE PROMO/PESANAN/KERANJANG
+        // SINKRONISASI NAVIGASI CERDAS (AVATAR & BADGE)
         // =========================================================================
         async function updateNavUI() {
             const sessionData = localStorage.getItem('user_session');
             const loginBtn = document.getElementById('navLoginBtn');
-            const cartBadge = document.getElementById('cartBadge');
-            const mobileCartBadge = document.getElementById('mobileCartBadge');
             const mobileAccountBtn = document.getElementById('mobileAccountBtn');
-            const promoBadge = document.getElementById('promoBadge');
-            const mobilePromoBadge = document.getElementById('mobilePromoBadge');
-            const orderBadge = document.getElementById('orderBadge');
-            const mobileOrderBadge = document.getElementById('mobileOrderBadge');
 
             if (sessionData) {
-                // JIKA PENGGUNA SUDAH LOGIN
                 const session = JSON.parse(sessionData);
                 
-                // 1. Tarik Data Profil (Untuk Avatar & Nama Horizontal)
                 try {
-                    const userRes = await fetch('/api/user', {
-                        headers: { 'Authorization': `Bearer ${session.access_token}` }
-                    });
+                    const userRes = await fetch('/api/user', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
                     
+                    if (userRes.status === 401 || userRes.status === 403) {
+                        localStorage.removeItem('user_session');
+                        setLoggedOutUI();
+                        return;
+                    }
+
                     if (userRes.ok) {
                         const userData = await userRes.json();
                         const fullName = userData.name || "User";
-                        const nickname = fullName.split(' ')[0]; // Mengambil kata pertama saja
-                        
+                        const nickname = fullName.split(' ')[0]; 
                         const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(fullName)}&backgroundColor=e0e5ec`;
 
-                        // Ubah Tombol Login Menjadi Badge Profil Pil Horizontal (Desktop)
                         loginBtn.className = 'nav-profile-badge hide-on-mobile';
                         loginBtn.href = 'akun.html';
-                        loginBtn.innerHTML = `
-                            <img src="${avatarUrl}" alt="Avatar">
-                            <span>${nickname}</span>
-                        `;
+                        loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${nickname}</span>`;
 
-                        // Ubah Teks & Tambahkan Avatar di Menu Akun (Mobile)
                         if (mobileAccountBtn) {
                             mobileAccountBtn.href = 'akun.html';
-                            mobileAccountBtn.innerHTML = `
-                                <img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;">
-                                <span>${nickname}</span>
-                            `;
+                            mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${nickname}</span>`;
                         }
                     }
-                } catch (e) { console.error("Gagal memuat data profil", e); }
+                } catch (e) { console.error("Mode Offline", e); }
                 
-                // 2. Cek jumlah barang di keranjang
-                try {
-                    const response = await fetch('/api/cart', {
-                        headers: { 'Authorization': `Bearer ${session.access_token}` }
-                    });
-                    if (response.ok) {
-                        const cartItems = await response.json();
-                        const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-                        
-                        if (totalQty > 0) {
-                            const displayText = totalQty > 99 ? '99+' : totalQty;
-                            cartBadge.style.display = 'flex';
-                            cartBadge.innerText = displayText;
-                            if (mobileCartBadge) {
-                                mobileCartBadge.style.display = 'flex';
-                                mobileCartBadge.innerText = displayText;
-                            }
-                        } else {
-                            cartBadge.style.display = 'none';
-                            if (mobileCartBadge) mobileCartBadge.style.display = 'none';
-                        }
-                    }
-                } catch (e) { console.error("Gagal memperbarui notifikasi keranjang", e); }
-
-                // 3. Cek jumlah Promo/Voucher khusus pengguna
-                try {
-                    const promoRes = await fetch('/api/vouchers', {
-                        headers: { 'Authorization': `Bearer ${session.access_token}` }
-                    });
-                    if (promoRes.ok) {
-                        const promos = await promoRes.json();
-                        if (promos.length > 0) {
-                            promoBadge.style.display = 'flex';
-                            promoBadge.innerText = promos.length;
-                            if (mobilePromoBadge) {
-                                mobilePromoBadge.style.display = 'flex';
-                                mobilePromoBadge.innerText = promos.length;
-                            }
-                        } else {
-                            promoBadge.style.display = 'none';
-                            if (mobilePromoBadge) mobilePromoBadge.style.display = 'none';
-                        }
-                    }
-                } catch (e) { console.error("Gagal cek promo", e); }
-
-                // 4. Cek jumlah Pesanan Aktif (Simulasi Pengecekan Aman)
-                try {
-                    const orderRes = await fetch('/api/orders', {
-                        headers: { 'Authorization': `Bearer ${session.access_token}` }
-                    });
-                    if (orderRes.ok) {
-                        const orders = await orderRes.json();
-                        // Hanya hitung pesanan yang belum selesai
-                        const activeOrders = orders.filter(o => o.status !== 'Selesai' && o.status !== 'Dibatalkan');
-                        if (activeOrders.length > 0) {
-                            orderBadge.style.display = 'flex';
-                            orderBadge.innerText = activeOrders.length;
-                            if (mobileOrderBadge) {
-                                mobileOrderBadge.style.display = 'flex';
-                                mobileOrderBadge.innerText = activeOrders.length;
-                            }
-                        } else {
-                            orderBadge.style.display = 'none';
-                            if (mobileOrderBadge) mobileOrderBadge.style.display = 'none';
-                        }
-                    }
-                } catch (e) { 
-                    // Abaikan secara diam-diam jika file api/orders belum dibuat
-                }
+                // Sinkronisasi Angka Background (Keranjang dkk)
+                syncBadges(session.access_token);
 
             } else {
-                // JIKA BELUM LOGIN: Kembalikan semua ke mode standar dan sembunyikan semua badge merah
-                loginBtn.className = 'nav-btn-cap hide-on-mobile';
-                loginBtn.href = 'login.html';
-                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span>Login</span>';
-                
-                cartBadge.style.display = 'none';
-                promoBadge.style.display = 'none';
-                orderBadge.style.display = 'none';
-                
-                if (mobileCartBadge) mobileCartBadge.style.display = 'none';
-                if (mobilePromoBadge) mobilePromoBadge.style.display = 'none';
-                if (mobileOrderBadge) mobileOrderBadge.style.display = 'none';
-                
-                if (mobileAccountBtn) {
-                     mobileAccountBtn.href = 'login.html';
-                     mobileAccountBtn.innerHTML = '<i class="fas fa-user"></i><span>Login</span>';
-                }
+                setLoggedOutUI();
             }
         }
 
+        async function syncBadges(token) {
+            try {
+                const cartRes = await fetch('/api/cart', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (cartRes.ok) {
+                    const cartItems = await cartRes.json();
+                    const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+                    updateCartBadgeDirectly(totalQty, false); // Sinkron tanpa animasi bounce
+                }
+            } catch (e) {}
+
+            try {
+                const promoRes = await fetch('/api/vouchers', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (promoRes.ok) {
+                    const promos = await promoRes.json();
+                    const pb = document.getElementById('promoBadge');
+                    const mpb = document.getElementById('mobilePromoBadge');
+                    if (promos.length > 0) {
+                        pb.style.display = 'flex'; pb.innerText = promos.length;
+                        if (mpb) { mpb.style.display = 'flex'; mpb.innerText = promos.length; }
+                    } else {
+                        pb.style.display = 'none';
+                        if (mpb) mpb.style.display = 'none';
+                    }
+                }
+            } catch (e) {}
+
+            try {
+                const orderRes = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (orderRes.ok) {
+                    const orders = await orderRes.json();
+                    const activeOrders = orders.filter(o => o.status !== 'Selesai' && o.status !== 'Dibatalkan');
+                    const ob = document.getElementById('orderBadge');
+                    const mob = document.getElementById('mobileOrderBadge');
+                    if (activeOrders.length > 0) {
+                        ob.style.display = 'flex'; ob.innerText = activeOrders.length;
+                        if (mob) { mob.style.display = 'flex'; mob.innerText = activeOrders.length; }
+                    } else {
+                        ob.style.display = 'none';
+                        if (mob) mob.style.display = 'none';
+                    }
+                }
+            } catch (e) {}
+        }
+
+        function setLoggedOutUI() {
+            const loginBtn = document.getElementById('navLoginBtn');
+            const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+
+            loginBtn.className = 'nav-btn-cap hide-on-mobile';
+            loginBtn.href = 'login.html';
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span>Login</span>';
+
+            if (mobileAccountBtn) {
+                mobileAccountBtn.href = 'login.html';
+                mobileAccountBtn.innerHTML = '<i class="fas fa-user"></i><span>Akun</span>';
+            }
+
+            ['cartBadge', 'orderBadge', 'promoBadge', 'mobileCartBadge', 'mobilePromoBadge', 'mobileOrderBadge'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+        }
 
         // --- FUNGSI TAMPILKAN POP-UP NOTIFIKASI PROFESIONAL ---
         function showNotification(title, message, type, redirectUrl = null) {
@@ -818,11 +591,8 @@
             
             notifBtn.onclick = function() {
                 notifModal.classList.remove('active');
-                if(redirectUrl) {
-                    window.location.href = redirectUrl;
-                }
+                if(redirectUrl) window.location.href = redirectUrl;
             };
-
             notifModal.classList.add('active');
         }
 
@@ -831,50 +601,36 @@
             try {
                 const response = await fetch('/api/products');
                 if (!response.ok) throw new Error('Gagal terhubung ke server');
-                
                 const data = await response.json();
                 allProducts = data;
                 currentProducts = [...allProducts];
-                
                 renderCategories(); 
                 filterProducts();   
             } catch (error) {
-                console.error("Gagal menarik data:", error);
                 productContainer.innerHTML = `<div class="empty-state" style="color:#ff4757;">Koneksi ke server terputus. Silakan muat ulang halaman.</div>`;
             }
         }
 
-        // --- FUNGSI MENGAMBIL LOGO PEMBAYARAN DARI SUPABASE ---
         async function fetchLogosFromAPI() {
             try {
                 const response = await fetch('/api/logos');
                 if (!response.ok) throw new Error('Gagal menarik data logo');
-                
                 const logos = await response.json();
                 const paymentContainer = document.getElementById('paymentContainer');
-                
                 paymentContainer.innerHTML = ''; 
-
                 logos.forEach(logo => {
                     const box = document.createElement('div');
                     box.className = 'pay-box';
                     box.innerHTML = `<img src="${logo.url}" alt="Partner Pembayaran" class="pay-img" title="${logo.name}">`;
                     paymentContainer.appendChild(box);
                 });
-            } catch (error) {
-                console.error("Gagal memuat logo pembayaran:", error);
-            }
+            } catch (error) {}
         }
 
-        // --- FUNGSI GENERATE KATEGORI OTOMATIS ---
         function renderCategories() {
             const uniqueCategories = new Set();
-            allProducts.forEach(prod => {
-                if(prod.category) uniqueCategories.add(prod.category);
-            });
-
+            allProducts.forEach(prod => { if(prod.category) uniqueCategories.add(prod.category); });
             categoryContainer.innerHTML = ''; 
-
             const allBtn = document.createElement('button');
             allBtn.className = `cat-btn ${currentCategory === 'Semua Barang' ? 'active' : ''}`;
             allBtn.setAttribute('data-category', 'Semua Barang');
@@ -895,61 +651,46 @@
         function handleCategoryClick(clickedBtn, categoryName) {
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
             clickedBtn.classList.add('active');
-            
             currentCategory = categoryName;
             activeTags = []; 
             filterProducts();
         }
 
-        // --- Fungsi Filter Utama ---
         function filterProducts() {
             const keyword = searchInput.value.toLowerCase();
-            
             const scopeProducts = allProducts.filter(prod => {
                 const matchCategory = currentCategory === "Semua Barang" || prod.category === currentCategory;
                 const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
                 const matchSearch = prod.title.toLowerCase().includes(keyword) || 
                                     (prod.info && prod.info.toLowerCase().includes(keyword)) || 
                                     flatTags.some(tag => tag.toLowerCase().includes(keyword));
-                                    
                 return matchCategory && matchSearch;
             });
-            
             updateDynamicFilterUI(scopeProducts);
-            
             currentProducts = scopeProducts.filter(prod => {
                 if (activeTags.length === 0) return true;
                 const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
                 return activeTags.every(activeTag => flatTags.includes(activeTag));
             });
-            
             currentPage = 1; 
             renderProducts();
         }
 
-        // --- Fungsi Update UI Filter Dropdown Terkelompok ---
         function updateDynamicFilterUI(products) {
             let groupedTags = {};
-            
             products.forEach(p => {
                 if(p.filters) {
                     for(const [groupName, tagsArray] of Object.entries(p.filters)) {
-                        if(!groupedTags[groupName]) {
-                            groupedTags[groupName] = new Set();
-                        }
+                        if(!groupedTags[groupName]) groupedTags[groupName] = new Set();
                         tagsArray.forEach(tag => groupedTags[groupName].add(tag));
                     }
                 }
             });
-            
             let allAvailableTags = new Set();
-            Object.values(groupedTags).forEach(tagSet => {
-                tagSet.forEach(tag => allAvailableTags.add(tag));
-            });
+            Object.values(groupedTags).forEach(tagSet => { tagSet.forEach(tag => allAvailableTags.add(tag)); });
             activeTags = activeTags.filter(tag => allAvailableTags.has(tag));
 
             filterTagsContainer.innerHTML = '';
-            
             if(Object.keys(groupedTags).length === 0) {
                 filterTagsContainer.innerHTML = '<span style="font-size:12px; color:var(--text-muted); font-style:italic;">Tidak ada filter spesifik yang tersedia.</span>';
                 return;
@@ -958,12 +699,10 @@
             for(const [groupName, tagsSet] of Object.entries(groupedTags)) {
                 const groupDiv = document.createElement('div');
                 groupDiv.className = 'filter-group';
-                
                 const labelDiv = document.createElement('div');
                 labelDiv.className = 'filter-group-label';
                 labelDiv.innerText = groupName;
                 groupDiv.appendChild(labelDiv);
-                
                 const tagsDiv = document.createElement('div');
                 tagsDiv.className = 'filter-tags';
                 
@@ -972,27 +711,21 @@
                     btn.className = 'filter-tag';
                     if(activeTags.includes(tag)) btn.classList.add('active');
                     btn.innerText = tag;
-                    
                     btn.onclick = () => {
-                        if(activeTags.includes(tag)) {
-                            activeTags = activeTags.filter(t => t !== tag);
-                        } else {
-                            activeTags.push(tag);
-                        }
+                        if(activeTags.includes(tag)) activeTags = activeTags.filter(t => t !== tag);
+                        else activeTags.push(tag);
                         filterProducts(); 
                     };
                     tagsDiv.appendChild(btn);
                 });
-                
                 groupDiv.appendChild(tagsDiv);
                 filterTagsContainer.appendChild(groupDiv);
             }
         }
 
-        // --- Render UI Produk ---
+        // --- Render UI Produk (Perhatikan penambahan parameter 'event' di tombol Beli) ---
         function renderProducts(isLoadMore = false) {
             if (!isLoadMore) productContainer.innerHTML = '';
-            
             if (currentProducts.length === 0) {
                 productContainer.innerHTML = `<div class="empty-state">Barang grosir tidak ditemukan.</div>`;
                 loadMoreBtn.classList.add('hidden');
@@ -1005,7 +738,6 @@
 
             productsToShow.forEach(prod => {
                 const qtyId = `qty-${prod.id}`; 
-                
                 const isPromoActive = prod.is_promo && prod.promo_price;
                 const priceHTML = isPromoActive 
                     ? `<span style="text-decoration: line-through; font-size:13px; color:var(--text-muted); margin-right:5px;">${prod.price}</span> ${prod.promo_price}` 
@@ -1030,12 +762,11 @@
                         <button class="btn-eye" onclick="openModal('${prod.id}')" title="Detail Barang">
                             <i class="fas fa-eye"></i>
                         </button>
-                        <button class="neu-btn" onclick="addToCart('${prod.id}', '${qtyId}')">
+                        <button class="neu-btn" onclick="addToCart('${prod.id}', '${qtyId}', event)">
                             <i class="fas fa-cart-plus"></i> Beli
                         </button>
                     </div>
                 `;
-                card.style.position = 'relative'; 
                 productContainer.appendChild(card);
             });
 
@@ -1046,33 +777,127 @@
             }
         }
 
-        // --- FUNGSI MEMASUKKAN BARANG KE KERANJANG DENGAN LOGIKA SESI PINTAR ---
-        async function addToCart(productId, qtyInputId) {
+        // =========================================================================
+        // SISTEM OPTIMISTIC UI & ANIMASI FLYING CART (KERANJANG TERBANG)
+        // =========================================================================
+
+        function updateCartBadgeDirectly(totalQty, playBounce = true) {
+            const cartBadge = document.getElementById('cartBadge');
+            const mobileCartBadge = document.getElementById('mobileCartBadge');
+            
+            const displayText = totalQty > 99 ? '99+' : totalQty;
+
+            if (totalQty > 0) {
+                cartBadge.style.display = 'flex';
+                cartBadge.innerText = displayText;
+                if (mobileCartBadge) {
+                    mobileCartBadge.style.display = 'flex';
+                    mobileCartBadge.innerText = displayText;
+                }
+            } else {
+                cartBadge.style.display = 'none';
+                if (mobileCartBadge) mobileCartBadge.style.display = 'none';
+            }
+
+            // Memutar efek denyut (Bounce) pada ikon keranjang
+            if (playBounce) {
+                const isMobile = window.innerWidth <= 768;
+                const targetIcon = isMobile 
+                    ? document.querySelector('#mobileCartIconTarget i') 
+                    : document.querySelector('#desktopCartIconTarget i');
+                
+                if (targetIcon) {
+                    targetIcon.style.transform = 'scale(1.3)';
+                    targetIcon.style.color = '#ff4757';
+                    setTimeout(() => {
+                        targetIcon.style.transform = 'scale(1)';
+                        targetIcon.style.color = '';
+                    }, 300);
+                }
+            }
+        }
+
+        function flyToCart(startX, startY) {
+            const isMobile = window.innerWidth <= 768;
+            const targetElement = isMobile 
+                ? document.getElementById('mobileCartIconTarget') 
+                : document.getElementById('desktopCartIconTarget');
+
+            if (!targetElement) return;
+
+            const targetRect = targetElement.getBoundingClientRect();
+            const endX = targetRect.left + (targetRect.width / 2);
+            const endY = targetRect.top + (targetRect.height / 2);
+
+            // Buat elemen ikon keranjang kecil yang melayang
+            const flyingCart = document.createElement('div');
+            flyingCart.innerHTML = '<i class="fas fa-shopping-cart"></i>';
+            flyingCart.style.position = 'fixed';
+            flyingCart.style.left = startX + 'px';
+            flyingCart.style.top = startY + 'px';
+            flyingCart.style.fontSize = '22px';
+            flyingCart.style.color = '#ff4757'; // Warna merah mencolok
+            flyingCart.style.zIndex = '9999';
+            flyingCart.style.pointerEvents = 'none';
+            flyingCart.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)'; // Efek melesat cepat dan melambat di akhir
+            flyingCart.style.transform = 'translate(-50%, -50%)';
+            flyingCart.style.textShadow = '0 0 10px rgba(255, 71, 87, 0.5)';
+
+            document.body.appendChild(flyingCart);
+
+            // Paksa browser membaca posisi awal sebelum menjalankan CSS Transition (Reflow)
+            flyingCart.offsetWidth;
+
+            // Jalankan animasi ke titik tujuan
+            flyingCart.style.left = endX + 'px';
+            flyingCart.style.top = endY + 'px';
+            flyingCart.style.transform = 'translate(-50%, -50%) scale(0.3)';
+            flyingCart.style.opacity = '0';
+
+            // Bersihkan elemen setelah animasi selesai (0.8 detik)
+            setTimeout(() => {
+                flyingCart.remove();
+            }, 800);
+        }
+
+        async function addToCart(productId, qtyInputId, event) {
             const sessionData = localStorage.getItem('user_session');
             
-            // JIKA BELUM LOGIN SAMA SEKALI:
+            // JIKA BELUM LOGIN SAMA SEKALI
             if (!sessionData) {
-                showNotification(
-                    "Wajib Login", 
-                    "Anda wajib masuk (login) ke akun terlebih dahulu untuk bisa membeli barang.", 
-                    "warning", 
-                    "login.html"
-                );
+                showNotification("Wajib Login", "Anda wajib masuk (login) ke akun terlebih dahulu untuk bisa membeli barang.", "warning", "login.html");
                 return;
             }
             
             const session = JSON.parse(sessionData);
             const prod = allProducts.find(p => p.id == productId);
-            
-            if (!prod) {
-                showNotification("Terjadi Kesalahan", "Produk tidak ditemukan di tampilan.", "error");
-                return;
-            }
+            if (!prod) return;
 
             const qtyInput = document.getElementById(qtyInputId);
             const quantity = parseInt(qtyInput.value) || 1;
             const finalPrice = (prod.is_promo && prod.promo_price) ? prod.promo_price : prod.price;
 
+            // 1. Jalankan Animasi Keranjang Terbang (Berdasarkan posisi klik Mouse / Sentuhan)
+            if (event && (event.clientX || event.touches)) {
+                const startX = event.clientX || event.touches[0].clientX;
+                const startY = event.clientY || event.touches[0].clientY;
+                flyToCart(startX, startY);
+            }
+
+            // 2. Pembaruan UI Optimistis (Tambahkan angka ke lencana keranjang tanpa menunggu server)
+            const currentBadge = document.getElementById('cartBadge').innerText;
+            let currentTotal = parseInt(currentBadge) || 0;
+            if (currentBadge === '99+') currentTotal = 99; // Pembatasan aman
+            
+            updateCartBadgeDirectly(currentTotal + quantity, true);
+
+            // Tutup Pop-Up Modal Jika Terbuka
+            const productModal = document.getElementById('productModal');
+            if(productModal.classList.contains('active')) {
+                closeModal();
+            }
+
+            // 3. Kirim Data Ke Database Secara Diam-Diam (Background Sync)
             try {
                 const response = await fetch('/api/cart', {
                     method: 'POST',
@@ -1094,33 +919,21 @@
                     throw new Error(err.error || err.message || "Gagal terhubung ke Database");
                 }
                 
-                // JIKA BERHASIL: Tutup modal detail (jika sedang terbuka) dan tampilkan Pop-up centang hijau
-                const productModal = document.getElementById('productModal');
-                if(productModal.classList.contains('active')) {
-                    closeModal();
-                }
-                
-                showNotification("Berhasil!", `Barang "${prod.title}" telah sukses dimasukkan ke keranjang Anda.`, "success");
-                
-                // Update angka keranjang secara realtime!
-                updateNavUI(); 
+                // Proses Sukses! Kita tidak perlu memunculkan alert apa pun, 
+                // karena pengguna sudah mendapatkan visual feedback dari animasi.
 
             } catch (error) {
                 console.error("Detail Error:", error);
                 
-                // JIKA SESI KADALUARSA / ERROR OTORISASI:
+                // JIKA GAGAL (Contoh: Sesi Habis) -> Kembalikan angka keranjang (Rollback) & Beri Notifikasi
+                syncBadges(session.access_token); 
+
                 if (error.message.toLowerCase().includes('sesi') || error.message.toLowerCase().includes('valid') || error.message.toLowerCase().includes('akses')) {
-                    localStorage.removeItem('user_session'); // Bersihkan sisa tiket rusak di browser
-                    showNotification(
-                        "Wajib Login", 
-                        "Anda wajib masuk (login) ke akun terlebih dahulu untuk bisa membeli barang.", 
-                        "warning", 
-                        "login.html"
-                    );
-                    updateNavUI(); // Kembalikan menu ke status "Belum Login"
+                    localStorage.removeItem('user_session');
+                    showNotification("Sesi Berakhir", "Tiket login Anda telah kedaluwarsa. Silakan login kembali.", "warning", "login.html");
+                    updateNavUI();
                 } else {
-                    // Jika error lain
-                    showNotification("Gagal Memasukkan Barang", error.message, "error");
+                    showNotification("Gagal Memasukkan Barang", "Mohon periksa koneksi internet Anda.", "error");
                 }
             }
         }
@@ -1130,8 +943,6 @@
             productContainer.innerHTML = `<div class="empty-state">Menarik data dari gudang... <br><i class="fas fa-spinner fa-spin" style="margin-top: 15px; font-size: 24px;"></i></div>`;
             fetchProductsFromAPI(); 
             fetchLogosFromAPI(); 
-            
-            // Periksa status login & update UI Navigasi (Avatar & Badge Keranjang)
             updateNavUI(); 
         });
 
@@ -1202,8 +1013,9 @@
                 document.getElementById('modalDesc').innerText = prod.desc;
                 document.getElementById('modalQty').value = 1;
 
-                document.getElementById('modalAddToCartBtn').onclick = function() {
-                    addToCart(`${productId}`, 'modalQty');
+                // Tambahkan 'event' agar Pop-up Modal juga bisa meluncurkan animasi Flying Cart
+                document.getElementById('modalAddToCartBtn').onclick = function(event) {
+                    addToCart(`${productId}`, 'modalQty', event);
                 };
 
                 modal.classList.add('active');
@@ -1219,7 +1031,7 @@
             if (e.target === modal) closeModal();
         });
 
-        // --- MESIN PENGGESER KATEGORI (DRAG & MOUSE WHEEL) ---
+        // --- MESIN PENGGESER KATEGORI (DRAG) ---
         let isDown = false;
         let startX;
         let scrollLeft;
@@ -1247,12 +1059,6 @@
             const x = e.pageX - categoryContainer.offsetLeft;
             const walk = (x - startX) * 2; 
             categoryContainer.scrollLeft = scrollLeft - walk;
-        });
-
-        categoryContainer.addEventListener('wheel', (e) => {
-            e.preventDefault(); 
-            categoryContainer.style.scrollBehavior = 'auto';
-            categoryContainer.scrollLeft += e.deltaY; 
         });
 
         const scrollLeftBtn = document.getElementById('scrollLeftBtn');
