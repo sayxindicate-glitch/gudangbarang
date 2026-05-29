@@ -169,7 +169,7 @@
             background: var(--bg-color); color: var(--text-main); border: none;
             width: 48px; height: 48px; border-radius: 50%; 
             font-size: 18px; display: flex; justify-content: center; align-items: center;
-            box-shadow: var(--neu-flat-sm); cursor: pointer;
+            box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none;
         }
         .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
@@ -206,122 +206,69 @@
         .nav-btn-chat-mobile { display: none; }
 
         .categories-wrapper { 
-            position: relative;
-            width: 100%; 
-            background-color: var(--bg-color);
-            display: flex;
-            align-items: center;
+            position: relative; width: 100%; background-color: var(--bg-color); display: flex; align-items: center;
         }
 
         .categories { 
-            display: flex; 
-            gap: 15px; 
-            justify-content: flex-start; 
-            flex-wrap: nowrap; 
-            overflow-x: auto; 
-            padding: 15px 120px 30px 120px; 
-            scroll-behavior: smooth;
-            -ms-overflow-style: none;  
-            scrollbar-width: none;
-            cursor: grab; 
-            width: 100%; 
-            
-            -webkit-mask-image: linear-gradient(
-                to right, 
-                transparent 0, 
-                transparent 70px, 
-                black 250px, 
-                black calc(100% - 250px), 
-                transparent calc(100% - 70px), 
-                transparent 100%
-            );
-            mask-image: linear-gradient(
-                to right, 
-                transparent 0, 
-                transparent 70px, 
-                black 250px, 
-                black calc(100% - 250px), 
-                transparent calc(100% - 70px), 
-                transparent 100%
-            );
+            display: flex; gap: 15px; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; 
+            padding: 15px 120px 30px 120px; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none;
+            cursor: grab; width: 100%; 
+            -webkit-mask-image: linear-gradient(to right, transparent 0, transparent 70px, black 250px, black calc(100% - 250px), transparent calc(100% - 70px), transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, transparent 70px, black 250px, black calc(100% - 250px), transparent calc(100% - 70px), transparent 100%);
         }
-        
         .categories:active { cursor: grabbing; }
         .categories::-webkit-scrollbar { display: none; }
         
         .cat-btn { 
-            flex-shrink: 0; padding: 10px 22px; border-radius: 50px; 
-            background: var(--bg-color); color: var(--text-main); border: none; 
-            font-size: 13px; font-weight: 600; white-space: nowrap; 
-            box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.3s ease;
+            flex-shrink: 0; padding: 10px 22px; border-radius: 50px; background: var(--bg-color); color: var(--text-main); 
+            border: none; font-size: 13px; font-weight: 600; white-space: nowrap; box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.3s ease;
         }
         .cat-btn.active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
         .scroll-arrow {
-            position: absolute; top: 50%; transform: translateY(-65%);
-            width: 40px; height: 40px; border-radius: 50%;
-            background: var(--bg-color); color: var(--text-main); border: none;
-            box-shadow: var(--neu-flat); cursor: pointer; z-index: 10;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 14px; transition: all 0.3s ease;
+            position: absolute; top: 50%; transform: translateY(-65%); width: 40px; height: 40px; border-radius: 50%;
+            background: var(--bg-color); color: var(--text-main); border: none; box-shadow: var(--neu-flat); cursor: pointer; z-index: 10;
+            display: flex; justify-content: center; align-items: center; font-size: 14px; transition: all 0.3s ease;
         }
         .scroll-arrow:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
         .left-arrow { left: 15px; } 
         .right-arrow { right: 15px; }
 
-
         .container { max-width: 1300px; margin: 0 auto; padding: 20px; flex: 1; }
-        .product-grid {
-            display: grid; grid-template-columns: repeat(5, 1fr);
-            gap: 25px; padding-bottom: 40px; margin-top: 20px;
-        }
+        .product-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 25px; padding-bottom: 40px; margin-top: 20px; }
+        
         .neu-card {
-            background: var(--bg-color); border-radius: 20px; padding: 15px;
-            box-shadow: var(--neu-flat); text-align: center; display: flex; flex-direction: column;
-            position: relative;
+            background: var(--bg-color); border-radius: 20px; padding: 15px; box-shadow: var(--neu-flat); 
+            text-align: center; display: flex; flex-direction: column; position: relative;
         }
         .neu-card:hover { box-shadow: var(--neu-hover); transform: translateY(-5px); }
-        .product-img {
-            width: 100%; aspect-ratio: 1 / 1; border-radius: 12px; 
-            object-fit: cover; margin-bottom: 15px; box-shadow: var(--neu-flat-sm);
-        }
+        .product-img { width: 100%; aspect-ratio: 1 / 1; border-radius: 12px; object-fit: cover; margin-bottom: 15px; box-shadow: var(--neu-flat-sm); }
         .product-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; line-height: 1.3;}
         .product-info { font-size: 11px; color: var(--text-muted); margin-bottom: 15px; flex-grow: 1; }
         .price { font-size: 18px; font-weight: 700; color: var(--accent-color); margin-bottom: 15px; }
 
-        .qty-wrapper {
-            display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px; width: 100%;
-        }
+        .qty-wrapper { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px; width: 100%; }
         .qty-btn {
-            width: 32px; height: 32px; border-radius: 50%;
-            background: var(--bg-color); color: var(--text-main); border: none;
-            box-shadow: var(--neu-flat-sm); cursor: pointer;
-            display: flex; justify-content: center; align-items: center; font-size: 12px;
+            width: 32px; height: 32px; border-radius: 50%; background: var(--bg-color); color: var(--text-main); border: none;
+            box-shadow: var(--neu-flat-sm); cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 12px;
         }
         .qty-btn:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         .qty-input {
-            width: 50px; text-align: center; background: var(--bg-color);
-            border: none; color: var(--text-main); font-size: 14px; font-weight: 700;
-            padding: 6px; border-radius: 10px; box-shadow: var(--neu-pressed-sm); outline: none;
-            -moz-appearance: textfield; appearance: textfield; 
+            width: 50px; text-align: center; background: var(--bg-color); border: none; color: var(--text-main); font-size: 14px; font-weight: 700;
+            padding: 6px; border-radius: 10px; box-shadow: var(--neu-pressed-sm); outline: none; -moz-appearance: textfield; appearance: textfield; 
         }
-        .qty-input::-webkit-outer-spin-button, .qty-input::-webkit-inner-spin-button {
-            -webkit-appearance: none; appearance: none; margin: 0;
-        }
+        .qty-input::-webkit-outer-spin-button, .qty-input::-webkit-inner-spin-button { -webkit-appearance: none; appearance: none; margin: 0; }
 
         .card-actions { display: flex; gap: 10px; width: 100%; }
         .btn-eye {
-            width: 40px; flex-shrink: 0; background: var(--bg-color); color: var(--text-main); 
-            border: none; border-radius: 10px; box-shadow: var(--neu-flat-sm);
-            display: flex; justify-content: center; align-items: center; cursor: pointer;
+            width: 40px; flex-shrink: 0; background: var(--bg-color); color: var(--text-main); border: none; border-radius: 10px; 
+            box-shadow: var(--neu-flat-sm); display: flex; justify-content: center; align-items: center; cursor: pointer;
         }
         .btn-eye:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         
         .neu-btn {
-            background: var(--bg-color); color: var(--text-main); border: none;
-            padding: 10px 10px; border-radius: 10px; font-size: 12px; font-weight: 600;
-            box-shadow: var(--neu-flat-sm); cursor: pointer; flex-grow: 1;
-            display: flex; justify-content: center; align-items: center; gap: 8px;
+            background: var(--bg-color); color: var(--text-main); border: none; padding: 10px 10px; border-radius: 10px; font-size: 12px; font-weight: 600;
+            box-shadow: var(--neu-flat-sm); cursor: pointer; flex-grow: 1; display: flex; justify-content: center; align-items: center; gap: 8px;
         }
         .neu-btn:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         [data-theme="dark"] .neu-btn:hover { color: var(--accent-color); text-shadow: 0 0 5px var(--accent-color); }
@@ -330,16 +277,15 @@
 
         .load-more-container { text-align: center; margin-bottom: 40px; }
         .btn-load-more {
-            background: var(--bg-color); color: var(--text-main); border: none;
-            padding: 12px 30px; border-radius: 50px; font-size: 14px; font-weight: 600;
-            box-shadow: var(--neu-flat); cursor: pointer; display: inline-flex;
-            align-items: center; gap: 8px; transition: all 0.3s ease;
+            background: var(--bg-color); color: var(--text-main); border: none; padding: 12px 30px; border-radius: 50px; font-size: 14px; font-weight: 600;
+            box-shadow: var(--neu-flat); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease;
         }
         .btn-load-more:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
         .btn-load-more.hidden { display: none; }
 
         .bottom-nav { display: none; }
 
+        /* --- STYLING MODAL (POP-UP) UMUM --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
@@ -353,6 +299,7 @@
         }
         .modal-overlay.active .modal-content { transform: translateY(0); }
 
+        /* Khusus Modal Detail Produk */
         .modal-header, .modal-img-box, .modal-price, .modal-desc-label, .qty-wrapper-modal, .btn-modal-cart { flex-shrink: 0; }
         .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
         .modal-title-box h2 { font-size: 20px; font-weight: 700; color: var(--accent-color); margin-bottom: 5px; line-height: 1.3; }
@@ -370,9 +317,7 @@
 
         .modal-price { font-size: 26px; font-weight: 700; color: var(--accent-color); margin-bottom: 10px; }
         .modal-desc-label { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
-        .modal-desc-text { 
-            font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 15px; overflow-y: auto; flex-grow: 1; padding-right: 10px; 
-        }
+        .modal-desc-text { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 15px; overflow-y: auto; flex-grow: 1; padding-right: 10px; }
         .modal-desc-text::-webkit-scrollbar { width: 6px; }
         .modal-desc-text::-webkit-scrollbar-track { background: var(--bg-color); border-radius: 10px; box-shadow: var(--neu-pressed-sm); }
         .modal-desc-text::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
@@ -385,20 +330,12 @@
         .btn-modal-cart:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
         [data-theme="dark"] .btn-modal-cart { color: var(--accent-color); }
 
-        .footer-prof {
-            background-color: #1a1b1e; color: #f5f6fa; padding: 50px 20px 80px 20px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        .footer-container { 
-            max-width: 1200px; margin: 0 auto; display: grid; 
-            grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr; gap: 30px; 
-        }
+        .footer-prof { background-color: #1a1b1e; color: #f5f6fa; padding: 50px 20px 80px 20px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr; gap: 30px; }
         .footer-logo { font-size: 20px; font-weight: 700; color: #00e5ff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
         .footer-desc { font-size: 13px; color: #a4b0be; line-height: 1.6; margin-bottom: 20px; }
         .footer-socials { display: flex; gap: 15px; }
-        .social-icon {
-            width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.05); color: #f5f6fa;
-            display: flex; justify-content: center; align-items: center; text-decoration: none; transition: background 0.3s;
-        }
+        .social-icon { width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.05); color: #f5f6fa; display: flex; justify-content: center; align-items: center; text-decoration: none; transition: background 0.3s; }
         .social-icon:hover { background: #00e5ff; color: #1a1b1e; }
         .footer-title { font-size: 15px; font-weight: 600; margin-bottom: 20px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
         .footer-links { list-style: none; padding: 0; }
@@ -408,31 +345,10 @@
         .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; color: #a4b0be; font-size: 13px; margin-bottom: 15px; line-height: 1.5; }
         .footer-contact-item i { color: #00e5ff; margin-top: 3px; }
 
-        .payment-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-        .pay-box {
-            background-color: #ffffff;
-            border-radius: 6px;
-            height: 38px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            transition: transform 0.2s ease;
-            cursor: default;
-            padding: 5px 8px;
-        }
-        .pay-box:hover {
-            transform: scale(1.08);
-        }
-        .pay-img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; 
-        }
+        .payment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .pay-box { background-color: #ffffff; border-radius: 6px; height: 38px; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: transform 0.2s ease; cursor: default; padding: 5px 8px; }
+        .pay-box:hover { transform: scale(1.08); }
+        .pay-img { width: 100%; height: 100%; object-fit: contain; }
 
         @media (max-width: 1024px) { 
             .product-grid { grid-template-columns: repeat(4, 1fr); } 
@@ -446,11 +362,7 @@
             .hide-on-mobile { display: none !important; }
             .floating-chat-desktop { display: none !important; }
 
-            .nav-btn-chat-mobile {
-                display: flex; align-items: center; background: var(--bg-color); color: var(--text-main);
-                text-decoration: none; font-weight: 700; box-shadow: var(--neu-flat-sm);
-                padding: 6px 12px; font-size: 11px; border-radius: 50px; gap: 5px;
-            }
+            .nav-btn-chat-mobile { display: flex; align-items: center; background: var(--bg-color); color: var(--text-main); text-decoration: none; font-weight: 700; box-shadow: var(--neu-flat-sm); padding: 6px 12px; font-size: 11px; border-radius: 50px; gap: 5px; }
             .nav-btn-chat-mobile:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
             .nav-btn-chat-mobile i { font-size: 14px; color: #25d366; }
 
@@ -462,31 +374,17 @@
             .filter-dropdown { top: calc(100% + 10px); left: 0; width: 100%; max-width: none; padding: 15px; }
 
             .scroll-arrow { display: none; }
-            .categories { 
-                padding: 15px 20px; 
-                -webkit-mask-image: none; 
-                mask-image: none;
-            }
+            .categories { padding: 15px 20px; -webkit-mask-image: none; mask-image: none; }
             
             .product-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 5px; }
             .neu-card { padding: 12px; }
             .btn-eye { width: 35px; font-size: 12px; }
             .neu-btn { font-size: 11px; padding: 8px; }
 
-            .bottom-nav {
-                display: flex; position: fixed; bottom: 0; left: 0; width: 100%;
-                background-color: var(--bg-color); border-radius: 25px 25px 0 0;
-                box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999;
-                padding: 10px 10px; justify-content: space-between;
-                padding-bottom: max(15px, env(safe-area-inset-bottom));
-            }
+            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px 10px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
             
-            .bottom-nav-item {
-                display: flex; flex-direction: column; align-items: center; justify-content: center;
-                text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600;
-                gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center;
-            }
+            .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; }
             .bottom-nav-item i { font-size: 18px; }
             .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
             
@@ -494,11 +392,7 @@
             .footer-contact-item { justify-content: center; }
             .footer-socials { justify-content: center; }
             
-            .payment-grid { 
-                grid-template-columns: repeat(4, 60px); 
-                justify-content: center; 
-                margin: 0 auto; 
-            }
+            .payment-grid { grid-template-columns: repeat(4, 60px); justify-content: center; margin: 0 auto; }
             
             body { padding-bottom: 90px; }
         }
@@ -540,15 +434,13 @@
                 <a href="promo.html" class="nav-link hide-on-mobile"><i class="fas fa-tags"></i> <span>Promo</span></a>
                 <a href="#" class="nav-link hide-on-mobile"><i class="fas fa-box"></i> <span>Pesanan</span></a>
                 <a href="login.html" class="nav-btn-cap hide-on-mobile"><i class="fas fa-sign-in-alt"></i> <span>Login</span></a>
-                <a href="keranjang.html" class="neu-btn-icon hide-on-mobile" style="text-decoration: none;"><i class="fas fa-shopping-cart"></i></a>
+                <a href="keranjang.html" class="neu-btn-icon hide-on-mobile"><i class="fas fa-shopping-cart"></i></a>
             </div>
         </nav>
 
         <div class="categories-wrapper">
             <button class="scroll-arrow left-arrow" id="scrollLeftBtn" title="Geser Kiri"><i class="fas fa-chevron-left"></i></button>
-            
             <div class="categories" id="categoryContainer"></div>
-            
             <button class="scroll-arrow right-arrow" id="scrollRightBtn" title="Geser Kanan"><i class="fas fa-chevron-right"></i></button>
         </div>
     </header>
@@ -609,7 +501,6 @@
                     <li><a href="#">Bantuan (FAQ)</a></li>
                 </ul>
             </div>
-            
             <div>
                 <h4 class="footer-title">Partner Pembayaran</h4>
                 <div class="payment-grid" id="paymentContainer"></div>
@@ -633,6 +524,15 @@
                 <button class="qty-btn" onclick="increaseQty('modalQty')"><i class="fas fa-plus"></i></button>
             </div>
             <button class="btn-modal-cart" id="modalAddToCartBtn"><i class="fas fa-cart-plus"></i> Tambah ke Keranjang</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="notificationModal" style="z-index: 3000;">
+        <div class="modal-content" style="max-width: 320px; text-align: center; padding: 30px 20px;">
+            <div id="notifIcon" style="font-size: 45px; margin-bottom: 15px;"></div>
+            <h3 id="notifTitle" style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Judul</h3>
+            <p id="notifMessage" style="font-size: 13px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.5;">Pesan</p>
+            <button class="neu-btn" id="notifBtn" style="width: 100%; padding: 12px; border-radius: 50px;">Mengerti</button>
         </div>
     </div>
 
@@ -678,6 +578,41 @@
         const filterDropdown = document.getElementById('filterDropdown');
         const filterTagsContainer = document.getElementById('filterTagsContainer');
         const clearFiltersBtn = document.getElementById('clearFilters');
+
+        // --- FUNGSI TAMPILKAN POP-UP NOTIFIKASI PROFESIONAL ---
+        function showNotification(title, message, type, redirectUrl = null) {
+            const notifModal = document.getElementById('notificationModal');
+            const notifIcon = document.getElementById('notifIcon');
+            const notifTitle = document.getElementById('notifTitle');
+            const notifMessage = document.getElementById('notifMessage');
+            const notifBtn = document.getElementById('notifBtn');
+
+            if(type === 'success') {
+                notifIcon.innerHTML = '<i class="fas fa-check-circle" style="color: #27ae60;"></i>';
+                notifTitle.style.color = '#27ae60';
+                notifBtn.innerText = 'Lanjut Belanja';
+            } else if(type === 'error') {
+                notifIcon.innerHTML = '<i class="fas fa-times-circle" style="color: #ff4757;"></i>';
+                notifTitle.style.color = '#ff4757';
+                notifBtn.innerText = 'Tutup';
+            } else if(type === 'warning') {
+                notifIcon.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #e67e22;"></i>';
+                notifTitle.style.color = '#e67e22';
+                notifBtn.innerText = redirectUrl ? 'Login Sekarang' : 'Mengerti';
+            }
+
+            notifTitle.innerText = title;
+            notifMessage.innerText = message;
+            
+            notifBtn.onclick = function() {
+                notifModal.classList.remove('active');
+                if(redirectUrl) {
+                    window.location.href = redirectUrl;
+                }
+            };
+
+            notifModal.classList.add('active');
+        }
 
         // --- FUNGSI MENGAMBIL DATA PRODUK ---
         async function fetchProductsFromAPI() {
@@ -899,22 +834,26 @@
             }
         }
 
-        // --- FUNGSI MEMASUKKAN BARANG KE KERANJANG (VERSI DEBUG & AMAN) ---
+        // --- FUNGSI MEMASUKKAN BARANG KE KERANJANG DENGAN LOGIKA SESI PINTAR ---
         async function addToCart(productId, qtyInputId) {
             const sessionData = localStorage.getItem('user_session');
+            
+            // JIKA BELUM LOGIN: Tampilkan pop up khusus, arahkan ke login.html
             if (!sessionData) {
-                alert("Silakan login terlebih dahulu untuk memasukkan barang ke keranjang.");
-                window.location.href = 'login.html';
+                showNotification(
+                    "Akses Ditolak", 
+                    "Silakan masuk (login) ke akun Anda terlebih dahulu untuk bisa memasukkan barang ke keranjang belanja.", 
+                    "warning", 
+                    "login.html"
+                );
                 return;
             }
             
             const session = JSON.parse(sessionData);
-            
-            // Gunakan == agar aman jika ID berupa angka maupun teks (UUID)
             const prod = allProducts.find(p => p.id == productId);
             
             if (!prod) {
-                alert("Gagal: Produk tidak ditemukan di tampilan.");
+                showNotification("Terjadi Kesalahan", "Produk tidak ditemukan di tampilan.", "error");
                 return;
             }
 
@@ -938,17 +877,35 @@
                     })
                 });
 
-                // BACA PESAN ERROR ASLI DARI SERVER JIKA GAGAL
                 if (!response.ok) {
                     const err = await response.json();
-                    throw new Error(err.error || err.message || "Gagal terhubung ke Database Supabase");
+                    throw new Error(err.error || err.message || "Gagal terhubung ke Database");
                 }
                 
-                alert("Berhasil! Barang telah dimasukkan ke keranjang.");
+                // JIKA BERHASIL: Tutup modal detail (jika sedang terbuka) dan tampilkan Pop-up centang hijau
+                const productModal = document.getElementById('productModal');
+                if(productModal.classList.contains('active')) {
+                    closeModal();
+                }
+                
+                showNotification("Berhasil!", `Barang "${prod.title}" telah sukses dimasukkan ke keranjang Anda.`, "success");
+
             } catch (error) {
                 console.error("Detail Error:", error);
-                // Tampilkan pesan error asli di Pop-up
-                alert("GAGAL MEMASUKKAN BARANG:\n\nAlasan: " + error.message);
+                
+                // JIKA SESI KADALUARSA / TIDAK VALID (seperti di screenshot):
+                if (error.message.toLowerCase().includes('sesi') || error.message.toLowerCase().includes('valid')) {
+                    localStorage.removeItem('user_session'); // Bersihkan sisa tiket rusak di browser
+                    showNotification(
+                        "Sesi Berakhir", 
+                        "Waktu sesi login Anda sudah habis demi keamanan. Silakan login kembali untuk melanjutkan.", 
+                        "warning", 
+                        "login.html"
+                    );
+                } else {
+                    // Jika error lain
+                    showNotification("Gagal Memasukkan Barang", error.message, "error");
+                }
             }
         }
 
@@ -1013,7 +970,7 @@
 
         const modal = document.getElementById('productModal');
         window.openModal = function(productId) {
-            const prod = allProducts.find(p => p.id == productId); // Gunakan ==
+            const prod = allProducts.find(p => p.id == productId); 
             if(prod) {
                 document.getElementById('modalTitle').innerText = prod.title;
                 document.getElementById('modalImg').src = prod.img;
@@ -1042,7 +999,6 @@
         modal.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
         });
-
 
         // --- MESIN PENGGESER KATEGORI (DRAG & MOUSE WHEEL) ---
         let isDown = false;
@@ -1092,6 +1048,7 @@
             categoryContainer.style.scrollBehavior = 'smooth';
             categoryContainer.scrollBy({ left: 300, behavior: 'smooth' });
         });
+
     </script>
 </body>
 </html>
