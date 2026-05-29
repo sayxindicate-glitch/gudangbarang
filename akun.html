@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akun Saya | Goedang Grosir</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #e0e5ec; --text-main: #2d3436; --text-muted: #636e72; --accent-color: #0984e3;
+            --shadow-light: #ffffff; --shadow-dark: #a3b1c6;
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1b1e; --text-main: #f5f6fa; --text-muted: #a4b0be; --accent-color: #00e5ff;
+            --shadow-light: rgba(255, 255, 255, 0.05); --shadow-dark: rgba(0, 0, 0, 0.6);
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
+
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; position: relative; }
+
+        .top-nav { position: absolute; top: 0; left: 0; width: 100%; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; }
+        .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
+        [data-theme="dark"] .switch-handle { transform: translateX(30px); }
+
+        .profile-container { background: var(--bg-color); width: 100%; max-width: 450px; border-radius: 30px; padding: 40px 30px; box-shadow: var(--neu-flat); text-align: center; z-index: 10; margin-top: 60px; margin-bottom: 60px; }
+        
+        /* Area Avatar Profil */
+        .avatar-box { margin: 0 auto 20px auto; width: 100px; height: 100px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-pressed); display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
+        .avatar-box img { width: 90px; height: 90px; object-fit: cover; border-radius: 50%; }
+        
+        .profile-title { font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 5px; }
+        .profile-email { font-size: 13px; color: var(--text-muted); margin-bottom: 30px; font-weight: 600; }
+
+        .input-group { margin-bottom: 20px; position: relative; text-align: left; }
+        .input-label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; margin-left: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .input-group i { position: absolute; left: 20px; top: 38px; color: var(--text-muted); font-size: 16px; }
+        .neu-input { width: 100%; padding: 15px 20px 15px 50px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed); outline: none; font-size: 14px; font-weight: 600; }
+        .neu-input::placeholder { color: var(--text-muted); font-weight: 400; opacity: 0.6; }
+        
+        /* Email digembok agar tidak bisa diganti di sini (demi keamanan) */
+        .neu-input:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* Tombol Aksi */
+        .btn-group { display: flex; gap: 15px; margin-top: 30px; }
+        .neu-btn { flex: 1; padding: 15px; border-radius: 50px; border: none; background: var(--bg-color); font-size: 13px; font-weight: 700; box-shadow: var(--neu-flat); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.3s; }
+        .neu-btn:active { box-shadow: var(--neu-pressed); }
+        .btn-save { color: #27ae60; }
+        .btn-logout { color: #ff4757; }
+
+        #alertMsg { margin-top: 20px; font-size: 12px; font-weight: 600; padding: 10px; border-radius: 10px; display: none; }
+        .alert-success { background: rgba(39, 174, 96, 0.1); color: #27ae60; border: 1px solid #27ae60; }
+        .alert-error { background: rgba(255, 71, 87, 0.1); color: #ff4757; border: 1px solid #ff4757; }
+        .alert-loading { background: rgba(9, 132, 227, 0.1); color: #0984e3; border: 1px solid #0984e3; }
+
+        .bottom-nav { display: none; }
+
+        @media (max-width: 768px) {
+            .top-nav { padding: 15px 20px; }
+            .profile-container { padding: 30px 20px; border-radius: 25px; box-shadow: none; background: transparent; margin-top: 40px; margin-bottom: 80px; }
+            .neu-input { padding: 12px 20px 12px 45px; }
+            .input-group i { top: 35px; }
+            body { padding-bottom: 80px; justify-content: flex-start; }
+            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px 10px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
+            [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
+            .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; }
+            .bottom-nav-item i { font-size: 18px; }
+            .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <a href="index.html" class="logo"><i class="fas fa-box-open"></i> GOEDANG</a>
+        <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
+    </div>
+
+    <div class="profile-container">
+        <div id="loadingArea" style="padding: 50px 0; color: var(--accent-color);">
+            <i class="fas fa-spinner fa-spin fa-3x"></i>
+            <p style="margin-top: 15px; font-size: 13px; font-weight: 600;">Memuat profil aman...</p>
+        </div>
+
+        <div id="formArea" style="display: none;">
+            <div class="avatar-box">
+                <img id="userAvatar" src="" alt="Avatar Profil">
+            </div>
+            <h2 class="profile-title" id="displayTitle">Memuat...</h2>
+            <p class="profile-email" id="displayEmail">Memuat email...</p>
+
+            <div class="input-group">
+                <span class="input-label">Nama Lengkap</span>
+                <i class="fas fa-user"></i>
+                <input type="text" id="name" class="neu-input" placeholder="Masukkan nama lengkap">
+            </div>
+
+            <div class="input-group">
+                <span class="input-label">Nomor WhatsApp / HP</span>
+                <i class="fas fa-phone-alt"></i>
+                <input type="tel" id="phone" class="neu-input" placeholder="Contoh: 08123456789">
+            </div>
+            
+            <div class="input-group">
+                <span class="input-label">Alamat Pengiriman Utama</span>
+                <i class="fas fa-map-marker-alt"></i>
+                <input type="text" id="address" class="neu-input" placeholder="Jln. Raya, RT/RW, Kota, Kode Pos">
+            </div>
+
+            <div class="input-group">
+                <span class="input-label">Alamat Email (Akun)</span>
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" class="neu-input" disabled title="Email tidak bisa diubah di sini">
+            </div>
+
+            <div id="alertMsg"></div>
+
+            <div class="btn-group">
+                <button class="neu-btn btn-logout" id="logoutBtn" onclick="handleLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Keluar
+                </button>
+                <button class="neu-btn btn-save" id="saveBtn" onclick="saveProfile()">
+                    <i class="fas fa-save"></i> Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
+        <a href="#" class="bottom-nav-item"><i class="fas fa-tags"></i><span>Promo</span></a>
+        <a href="#" class="bottom-nav-item"><i class="fas fa-shopping-cart"></i><span>Keranjang</span></a>
+        <a href="#" class="bottom-nav-item"><i class="fas fa-box"></i><span>Pesanan</span></a>
+        <a href="akun.html" class="bottom-nav-item active"><i class="fas fa-user"></i><span>Akun</span></a>
+    </nav>
+
+    <script>
+        // --- CEK KEAMANAN (TENDANG JIKA BELUM LOGIN) ---
+        const sessionData = localStorage.getItem('user_session');
+        if (!sessionData) {
+            window.location.href = 'login.html'; // Usir jika tidak ada tiket
+        }
+        const session = JSON.parse(sessionData);
+
+        // --- DARK MODE ---
+        const themeToggle = document.getElementById('themeToggle');
+        const switchIcon = document.getElementById('switchIcon');
+        const html = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); switchIcon.classList.replace('fa-sun', 'fa-moon'); }
+
+        themeToggle.addEventListener('click', () => {
+            if (html.getAttribute('data-theme') === 'light') {
+                html.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); switchIcon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                html.setAttribute('data-theme', 'light'); localStorage.setItem('theme', 'light'); switchIcon.classList.replace('fa-moon', 'fa-sun');
+            }
+        });
+
+        // --- UI HELPER ---
+        const alertMsg = document.getElementById('alertMsg');
+        function showAlert(message, type) {
+            alertMsg.style.display = 'block';
+            alertMsg.innerText = message;
+            alertMsg.className = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : 'alert-loading';
+        }
+
+        // --- FETCH DATA PENGGUNA SAAT HALAMAN DIBUKA ---
+        async function loadProfile() {
+            try {
+                // Mengirim Token ke Vercel untuk minta data
+                const response = await fetch('/api/user', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                });
+
+                if (!response.ok) throw new Error("Gagal mengambil data, sesi mungkin kadaluarsa.");
+                const userData = await response.json();
+
+                // Memasukkan data ke form
+                document.getElementById('name').value = userData.name;
+                document.getElementById('phone').value = userData.phone;
+                document.getElementById('address').value = userData.address;
+                document.getElementById('email').value = userData.email;
+                
+                // Menampilkan nama dan email di area teks
+                document.getElementById('displayTitle').innerText = userData.name || "Pengguna Grosir";
+                document.getElementById('displayEmail').innerText = userData.email;
+
+                // Generator Avatar 3D Keren berdasarkan Nama!
+                const avatarName = encodeURIComponent(userData.name || userData.email);
+                document.getElementById('userAvatar').src = `https://api.dicebear.com/7.x/micah/svg?seed=${avatarName}&backgroundColor=e0e5ec`;
+
+                // Tampilkan Form, Sembunyikan Loading
+                document.getElementById('loadingArea').style.display = 'none';
+                document.getElementById('formArea').style.display = 'block';
+
+            } catch (error) {
+                alert("Sesi login Anda bermasalah. Silakan login kembali.");
+                handleLogout(); // Paksa keluar jika tiket palsu/kadaluarsa
+            }
+        }
+
+        // --- FUNGSI SIMPAN PERUBAHAN ---
+        async function saveProfile() {
+            const btn = document.getElementById('saveBtn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+            btn.disabled = true;
+            showAlert("Menyimpan data...", "loading");
+
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+
+            try {
+                const response = await fetch('/api/user', {
+                    method: 'PUT',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${session.access_token}` // Kirim token keamanan
+                    },
+                    body: JSON.stringify({ name, phone, address })
+                });
+
+                if (!response.ok) throw new Error("Gagal menyimpan perubahan.");
+                
+                // Update UI Avatar dan Nama secara langsung
+                document.getElementById('displayTitle').innerText = name || "Pengguna Grosir";
+                document.getElementById('userAvatar').src = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=e0e5ec`;
+                
+                showAlert("Profil berhasil diperbarui!", "success");
+
+                // Hilangkan alert sukses setelah 3 detik
+                setTimeout(() => { alertMsg.style.display = 'none'; }, 3000);
+            } catch (error) {
+                showAlert(error.message, "error");
+            } finally {
+                btn.innerHTML = '<i class="fas fa-save"></i> Simpan';
+                btn.disabled = false;
+            }
+        }
+
+        // --- FUNGSI LOGOUT KELUAR ---
+        function handleLogout() {
+            localStorage.removeItem('user_session'); // Hapus tiket dari browser
+            window.location.href = 'login.html'; // Usir kembali ke halaman login
+        }
+
+        // Jalankan saat halaman siap
+        window.addEventListener('DOMContentLoaded', loadProfile);
+
+    </script>
+</body>
+</html>
