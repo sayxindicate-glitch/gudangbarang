@@ -880,10 +880,10 @@
                     </div>
 
                     <div class="card-actions">
-                        <button class="btn-eye" onclick="openModal(${prod.id})" title="Detail Barang">
+                        <button class="btn-eye" onclick="openModal('${prod.id}')" title="Detail Barang">
                             <i class="fas fa-eye"></i>
                         </button>
-                        <button class="neu-btn" onclick="addToCart(${prod.id}, '${qtyId}')">
+                        <button class="neu-btn" onclick="addToCart('${prod.id}', '${qtyId}')">
                             <i class="fas fa-cart-plus"></i> Beli
                         </button>
                     </div>
@@ -899,7 +899,7 @@
             }
         }
 
-        // --- FUNGSI MEMASUKKAN BARANG KE KERANJANG ---
+        // --- FUNGSI MEMASUKKAN BARANG KE KERANJANG (VERSI DEBUG & AMAN) ---
         async function addToCart(productId, qtyInputId) {
             const sessionData = localStorage.getItem('user_session');
             if (!sessionData) {
@@ -909,10 +909,17 @@
             }
             
             const session = JSON.parse(sessionData);
-            const prod = allProducts.find(p => p.id === productId);
+            
+            // Gunakan == agar aman jika ID berupa angka maupun teks (UUID)
+            const prod = allProducts.find(p => p.id == productId);
+            
+            if (!prod) {
+                alert("Gagal: Produk tidak ditemukan di tampilan.");
+                return;
+            }
+
             const qtyInput = document.getElementById(qtyInputId);
             const quantity = parseInt(qtyInput.value) || 1;
-            
             const finalPrice = (prod.is_promo && prod.promo_price) ? prod.promo_price : prod.price;
 
             try {
@@ -931,15 +938,17 @@
                     })
                 });
 
+                // BACA PESAN ERROR ASLI DARI SERVER JIKA GAGAL
                 if (!response.ok) {
                     const err = await response.json();
-                    throw new Error(err.error || "Gagal menambahkan barang");
+                    throw new Error(err.error || err.message || "Gagal terhubung ke Database Supabase");
                 }
                 
                 alert("Berhasil! Barang telah dimasukkan ke keranjang.");
             } catch (error) {
-                console.error(error);
-                alert("Terjadi kesalahan sistem saat memasukkan barang.");
+                console.error("Detail Error:", error);
+                // Tampilkan pesan error asli di Pop-up
+                alert("GAGAL MEMASUKKAN BARANG:\n\nAlasan: " + error.message);
             }
         }
 
@@ -1004,7 +1013,7 @@
 
         const modal = document.getElementById('productModal');
         window.openModal = function(productId) {
-            const prod = allProducts.find(p => p.id === productId);
+            const prod = allProducts.find(p => p.id == productId); // Gunakan ==
             if(prod) {
                 document.getElementById('modalTitle').innerText = prod.title;
                 document.getElementById('modalImg').src = prod.img;
@@ -1018,7 +1027,7 @@
                 document.getElementById('modalQty').value = 1;
 
                 document.getElementById('modalAddToCartBtn').onclick = function() {
-                    addToCart(productId, 'modalQty');
+                    addToCart(`${productId}`, 'modalQty');
                 };
 
                 modal.classList.add('active');
