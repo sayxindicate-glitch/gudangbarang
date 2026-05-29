@@ -87,7 +87,7 @@
 
         .neu-btn-icon { background: var(--bg-color); color: var(--text-main); border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative; }
         .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
-        .neu-btn-icon i { transition: transform 0.2s ease; } /* Untuk efek denyut saat barang ditambahkan */
+        .neu-btn-icon i { transition: transform 0.2s ease; }
 
         .nav-btn-cap { background: var(--bg-color); color: var(--text-main); text-decoration: none; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 50px; box-shadow: var(--neu-flat-sm); }
         .nav-btn-cap:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
@@ -102,6 +102,9 @@
         .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; flex-shrink: 0; }
         .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
         [data-theme="dark"] .switch-handle { transform: translateX(30px); }
+
+        /* Style chat admin default disembunyikan di layar besar */
+        .nav-btn-chat-mobile { display: none; }
 
         .floating-chat-desktop { position: fixed; bottom: 0; right: 0; background: var(--bg-color); border-radius: 16px 0 0 0; padding: 12px 20px; display: flex; flex-direction: row; align-items: center; gap: 12px; text-decoration: none; z-index: 1000; transition: all 0.3s ease; border-top: 1px solid rgba(255,255,255,0.2); border-left: 1px solid rgba(255,255,255,0.2); }
         .floating-chat-desktop i { color: #25d366; font-size: 22px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.1)); }
@@ -208,6 +211,24 @@
             .theme-switch { width: 50px; height: 26px; padding: 3px; }
             .switch-handle { width: 20px; height: 20px; font-size: 9px; }
             [data-theme="dark"] .switch-handle { transform: translateX(24px); } 
+
+            /* Chat admin khusus di layar hp (Neumorphic Style) */
+            .nav-btn-chat-mobile { 
+                display: flex !important; 
+                align-items: center; 
+                gap: 6px; 
+                background: var(--bg-color); 
+                color: var(--text-main); 
+                text-decoration: none; 
+                font-size: 11px; 
+                font-weight: 700; 
+                padding: 6px 12px; 
+                border-radius: 50px; 
+                box-shadow: var(--neu-flat-sm); 
+                transition: all 0.2s ease; 
+            }
+            .nav-btn-chat-mobile:active { box-shadow: var(--neu-pressed-sm); }
+            .nav-btn-chat-mobile i { color: #25d366; font-size: 14px; }
             
             .search-container { flex: 1 1 100%; order: 3; margin-top: 10px; position: relative; } 
             .filter-dropdown { top: calc(100% + 10px); left: 0; width: 100%; max-width: none; padding: 15px; }
@@ -224,7 +245,7 @@
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
             
             .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; position: relative; }
-            .bottom-nav-item i { font-size: 18px; transition: transform 0.2s ease; } /* Animasi Ikon Bottom Nav */
+            .bottom-nav-item i { font-size: 18px; transition: transform 0.2s ease; } 
             .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
             
             .footer-container { grid-template-columns: 1fr; gap: 30px; text-align: center; }
@@ -267,7 +288,7 @@
                     <div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div>
                 </div>
                 
-                <a href="https://wa.me/628153335000" class="nav-btn-chat-mobile" target="_blank" style="display: none;">
+                <a href="https://wa.me/628153335000" class="nav-btn-chat-mobile" target="_blank" title="Chat Admin">
                     <i class="fab fa-whatsapp"></i> <span>Chat Admin</span>
                 </a>
                 
@@ -507,7 +528,7 @@
                 if (cartRes.ok) {
                     const cartItems = await cartRes.json();
                     const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-                    updateCartBadgeDirectly(totalQty, false); // Sinkron tanpa animasi bounce
+                    updateCartBadgeDirectly(totalQty, false); 
                 }
             } catch (e) {}
 
@@ -564,7 +585,6 @@
             });
         }
 
-        // --- FUNGSI TAMPILKAN POP-UP NOTIFIKASI PROFESIONAL ---
         function showNotification(title, message, type, redirectUrl = null) {
             const notifModal = document.getElementById('notificationModal');
             const notifIcon = document.getElementById('notifIcon');
@@ -596,7 +616,6 @@
             notifModal.classList.add('active');
         }
 
-        // --- FUNGSI MENGAMBIL DATA PRODUK ---
         async function fetchProductsFromAPI() {
             try {
                 const response = await fetch('/api/products');
@@ -723,7 +742,6 @@
             }
         }
 
-        // --- Render UI Produk (Perhatikan penambahan parameter 'event' di tombol Beli) ---
         function renderProducts(isLoadMore = false) {
             if (!isLoadMore) productContainer.innerHTML = '';
             if (currentProducts.length === 0) {
@@ -777,10 +795,6 @@
             }
         }
 
-        // =========================================================================
-        // SISTEM OPTIMISTIC UI & ANIMASI FLYING CART (KERANJANG TERBANG)
-        // =========================================================================
-
         function updateCartBadgeDirectly(totalQty, playBounce = true) {
             const cartBadge = document.getElementById('cartBadge');
             const mobileCartBadge = document.getElementById('mobileCartBadge');
@@ -799,7 +813,6 @@
                 if (mobileCartBadge) mobileCartBadge.style.display = 'none';
             }
 
-            // Memutar efek denyut (Bounce) pada ikon keranjang
             if (playBounce) {
                 const isMobile = window.innerWidth <= 768;
                 const targetIcon = isMobile 
@@ -829,32 +842,27 @@
             const endX = targetRect.left + (targetRect.width / 2);
             const endY = targetRect.top + (targetRect.height / 2);
 
-            // Buat elemen ikon keranjang kecil yang melayang
             const flyingCart = document.createElement('div');
             flyingCart.innerHTML = '<i class="fas fa-shopping-cart"></i>';
             flyingCart.style.position = 'fixed';
             flyingCart.style.left = startX + 'px';
             flyingCart.style.top = startY + 'px';
             flyingCart.style.fontSize = '22px';
-            flyingCart.style.color = '#ff4757'; // Warna merah mencolok
+            flyingCart.style.color = '#ff4757'; 
             flyingCart.style.zIndex = '9999';
             flyingCart.style.pointerEvents = 'none';
-            flyingCart.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)'; // Efek melesat cepat dan melambat di akhir
+            flyingCart.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)'; 
             flyingCart.style.transform = 'translate(-50%, -50%)';
             flyingCart.style.textShadow = '0 0 10px rgba(255, 71, 87, 0.5)';
 
             document.body.appendChild(flyingCart);
-
-            // Paksa browser membaca posisi awal sebelum menjalankan CSS Transition (Reflow)
             flyingCart.offsetWidth;
 
-            // Jalankan animasi ke titik tujuan
             flyingCart.style.left = endX + 'px';
             flyingCart.style.top = endY + 'px';
             flyingCart.style.transform = 'translate(-50%, -50%) scale(0.3)';
             flyingCart.style.opacity = '0';
 
-            // Bersihkan elemen setelah animasi selesai (0.8 detik)
             setTimeout(() => {
                 flyingCart.remove();
             }, 800);
@@ -863,7 +871,6 @@
         async function addToCart(productId, qtyInputId, event) {
             const sessionData = localStorage.getItem('user_session');
             
-            // JIKA BELUM LOGIN SAMA SEKALI
             if (!sessionData) {
                 showNotification("Wajib Login", "Anda wajib masuk (login) ke akun terlebih dahulu untuk bisa membeli barang.", "warning", "login.html");
                 return;
@@ -877,27 +884,23 @@
             const quantity = parseInt(qtyInput.value) || 1;
             const finalPrice = (prod.is_promo && prod.promo_price) ? prod.promo_price : prod.price;
 
-            // 1. Jalankan Animasi Keranjang Terbang (Berdasarkan posisi klik Mouse / Sentuhan)
             if (event && (event.clientX || event.touches)) {
                 const startX = event.clientX || event.touches[0].clientX;
                 const startY = event.clientY || event.touches[0].clientY;
                 flyToCart(startX, startY);
             }
 
-            // 2. Pembaruan UI Optimistis (Tambahkan angka ke lencana keranjang tanpa menunggu server)
             const currentBadge = document.getElementById('cartBadge').innerText;
             let currentTotal = parseInt(currentBadge) || 0;
-            if (currentBadge === '99+') currentTotal = 99; // Pembatasan aman
+            if (currentBadge === '99+') currentTotal = 99; 
             
             updateCartBadgeDirectly(currentTotal + quantity, true);
 
-            // Tutup Pop-Up Modal Jika Terbuka
             const productModal = document.getElementById('productModal');
             if(productModal.classList.contains('active')) {
                 closeModal();
             }
 
-            // 3. Kirim Data Ke Database Secara Diam-Diam (Background Sync)
             try {
                 const response = await fetch('/api/cart', {
                     method: 'POST',
@@ -918,14 +921,8 @@
                     const err = await response.json();
                     throw new Error(err.error || err.message || "Gagal terhubung ke Database");
                 }
-                
-                // Proses Sukses! Kita tidak perlu memunculkan alert apa pun, 
-                // karena pengguna sudah mendapatkan visual feedback dari animasi.
-
             } catch (error) {
                 console.error("Detail Error:", error);
-                
-                // JIKA GAGAL (Contoh: Sesi Habis) -> Kembalikan angka keranjang (Rollback) & Beri Notifikasi
                 syncBadges(session.access_token); 
 
                 if (error.message.toLowerCase().includes('sesi') || error.message.toLowerCase().includes('valid') || error.message.toLowerCase().includes('akses')) {
@@ -938,7 +935,6 @@
             }
         }
 
-        // --- INISIALISASI SAAT HALAMAN DIBUKA ---
         document.addEventListener('DOMContentLoaded', () => {
             productContainer.innerHTML = `<div class="empty-state">Menarik data dari gudang... <br><i class="fas fa-spinner fa-spin" style="margin-top: 15px; font-size: 24px;"></i></div>`;
             fetchProductsFromAPI(); 
@@ -946,11 +942,13 @@
             updateNavUI(); 
         });
 
-        // --- EVENT LISTENER PENCARIAN & FILTER ---
+        // --- TAMBAHAN AUTO-SCROLL KE ATAS DI EVENT LISTENER SEARCH ---
         searchInput.addEventListener('input', (e) => {
             const keyword = e.target.value.toLowerCase();
             clearSearchBtn.style.display = keyword.length > 0 ? 'block' : 'none';
             filterProducts();
+            // Scroll layar mulus ke paling atas saat mulai mengetik (mencari barang)
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
         clearSearchBtn.addEventListener('click', () => {
@@ -958,6 +956,8 @@
             clearSearchBtn.style.display = 'none';
             filterProducts();
             searchInput.focus();
+            // Scroll layar mulus ke atas saat hapus kata kunci pencarian
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
         filterBtn.addEventListener('click', (e) => {
@@ -1013,7 +1013,6 @@
                 document.getElementById('modalDesc').innerText = prod.desc;
                 document.getElementById('modalQty').value = 1;
 
-                // Tambahkan 'event' agar Pop-up Modal juga bisa meluncurkan animasi Flying Cart
                 document.getElementById('modalAddToCartBtn').onclick = function(event) {
                     addToCart(`${productId}`, 'modalQty', event);
                 };
@@ -1031,7 +1030,6 @@
             if (e.target === modal) closeModal();
         });
 
-        // --- MESIN PENGGESER KATEGORI (DRAG) ---
         let isDown = false;
         let startX;
         let scrollLeft;
