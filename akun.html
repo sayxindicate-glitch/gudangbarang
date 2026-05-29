@@ -200,9 +200,9 @@
                 document.getElementById('displayTitle').innerText = userData.name || "Pengguna Grosir";
                 document.getElementById('displayEmail').innerText = userData.email;
 
-                // Generator Avatar 3D Keren berdasarkan Nama!
+                // Generator Avatar 3D Keren berdasarkan Nama dengan warna kulit cerah (baseColor=f9c9b6)
                 const avatarName = encodeURIComponent(userData.name || userData.email);
-                document.getElementById('userAvatar').src = `https://api.dicebear.com/7.x/micah/svg?seed=${avatarName}&backgroundColor=e0e5ec`;
+                document.getElementById('userAvatar').src = `https://api.dicebear.com/7.x/micah/svg?seed=${avatarName}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
                 // Tampilkan Form, Sembunyikan Loading
                 document.getElementById('loadingArea').style.display = 'none';
@@ -237,9 +237,9 @@
 
                 if (!response.ok) throw new Error("Gagal menyimpan perubahan.");
                 
-                // Update UI Avatar dan Nama secara langsung
+                // Update UI Avatar dan Nama secara langsung dengan warna kulit cerah
                 document.getElementById('displayTitle').innerText = name || "Pengguna Grosir";
-                document.getElementById('userAvatar').src = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=e0e5ec`;
+                document.getElementById('userAvatar').src = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
                 
                 showAlert("Profil berhasil diperbarui!", "success");
 
