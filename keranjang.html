@@ -55,7 +55,8 @@
         .btn-back:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
 
         .cart-layout { display: flex; gap: 30px; align-items: flex-start; }
-        .cart-items-section { flex: 2; display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; }
+        /* Penambahan width: 100% di sini agar kotak selalu full menyesuaikan layar */
+        .cart-items-section { flex: 2; display: flex; flex-direction: column; gap: 15px; padding-bottom: 20px; width: 100%; }
         
         .cart-card { background: var(--bg-color); border-radius: 15px; padding: 12px 15px; box-shadow: var(--neu-flat); display: flex; gap: 15px; align-items: center; }
         .cart-img { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; box-shadow: var(--neu-pressed-sm); flex-shrink: 0; }
@@ -118,7 +119,9 @@
         .promo-pill-btn:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
         @media (max-width: 768px) {
-            .cart-layout { flex-direction: column; gap: 15px; }
+            /* Penambahan align-items: stretch; di sini menyelesaikan masalah tampilan yg tidak full */
+            .cart-layout { flex-direction: column; gap: 15px; align-items: stretch; }
+            
             .top-nav { padding: 12px 20px; }
             .hide-on-mobile { display: none !important; }
             .container { padding-bottom: 180px; margin-top: 15px; } 
@@ -407,7 +410,6 @@
             try {
                 const res = await fetch('/api/vouchers', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
                 
-                // --- PENAMBAHAN ERROR HANDLING SAAT DAFTAR KOSONG ---
                 if (!res.ok) throw new Error('API Gagal merespon');
                 const list = await res.json();
                 
@@ -552,4 +554,3 @@
     </script>
 </body>
 </html>
-}
