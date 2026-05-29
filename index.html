@@ -646,9 +646,15 @@
             } catch (error) {}
         }
 
-        function renderCategories() {
-            const uniqueCategories = new Set();
-            allProducts.forEach(prod => { if(prod.category) uniqueCategories.add(prod.category); });
+        // --- FUNGSI RENDER KATEGORI DIPERBARUI UNTUK MENDUKUNG KATEGORI DINAMIS ---
+        function renderCategories(customCategories = null) {
+            const uniqueCategories = customCategories || new Set();
+            
+            // Jika tidak ada custom category yang dikirim (misal saat load awal), pakai semua produk
+            if (!customCategories) {
+                allProducts.forEach(prod => { if(prod.category) uniqueCategories.add(prod.category); });
+            }
+            
             categoryContainer.innerHTML = ''; 
             const allBtn = document.createElement('button');
             allBtn.className = `cat-btn ${currentCategory === 'Semua Barang' ? 'active' : ''}`;
@@ -942,21 +948,44 @@
             updateNavUI(); 
         });
 
-        // --- TAMBAHAN AUTO-SCROLL KE ATAS DI EVENT LISTENER SEARCH ---
+        // --- PENYESUAIAN PADA EVENT LISTENER PENCARIAN ---
         searchInput.addEventListener('input', (e) => {
             const keyword = e.target.value.toLowerCase();
             clearSearchBtn.style.display = keyword.length > 0 ? 'block' : 'none';
+            
+            // 1. Cari produk yang cocok dengan kata kunci pencarian
+            const matchedProducts = allProducts.filter(prod => {
+                const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
+                return prod.title.toLowerCase().includes(keyword) || 
+                       (prod.info && prod.info.toLowerCase().includes(keyword)) || 
+                       flatTags.some(tag => tag.toLowerCase().includes(keyword));
+            });
+            
+            // 2. Kumpulkan kategori dari produk-produk yang cocok tersebut
+            const dynamicCategories = new Set();
+            matchedProducts.forEach(prod => { if(prod.category) dynamicCategories.add(prod.category); });
+            
+            // 3. Jika kategori yang sedang di-klik ternyata tidak ada dalam pencarian baru ini, reset ke Semua Barang
+            if (currentCategory !== "Semua Barang" && !dynamicCategories.has(currentCategory)) {
+                currentCategory = "Semua Barang";
+            }
+            
+            // 4. Update baris kategori menjadi dinamis
+            renderCategories(dynamicCategories);
+            
             filterProducts();
-            // Scroll layar mulus ke paling atas saat mulai mengetik (mencari barang)
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
         clearSearchBtn.addEventListener('click', () => {
             searchInput.value = '';
             clearSearchBtn.style.display = 'none';
+            
+            // Kembalikan ke seluruh kategori bawaan karena pencarian di-reset
+            renderCategories();
+            
             filterProducts();
             searchInput.focus();
-            // Scroll layar mulus ke atas saat hapus kata kunci pencarian
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
