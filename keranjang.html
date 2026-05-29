@@ -22,7 +22,6 @@
             --shadow-light: rgba(255, 255, 255, 0.05); --shadow-dark: rgba(0, 0, 0, 0.6);
             --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
             --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
-            --neu-hover: 12px 12px 20px var(--shadow-dark), -9px -9px 16px var(--shadow-light), 0 0 15px rgba(0, 229, 255, 0.2);
             --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
             --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
         }
@@ -30,7 +29,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
         body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
-        /* --- HEADER --- */
         .top-nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; background-color: var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
         
@@ -41,19 +39,16 @@
 
         .nav-link { color: var(--text-muted); text-decoration: none; position: relative; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
         .nav-link:hover { color: var(--accent-color); }
-        
         .neu-btn-icon { background: var(--bg-color); color: var(--text-main); border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative; }
         .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
-
+        
         .nav-profile-badge { display: flex; flex-direction: row; align-items: center; justify-content: center; text-decoration: none; gap: 10px; transition: transform 0.2s ease; cursor: pointer; background: var(--bg-color); padding: 5px 15px 5px 5px; border-radius: 50px; box-shadow: var(--neu-flat-sm); }
         .nav-profile-badge:active { box-shadow: var(--neu-pressed-sm); }
         .nav-profile-badge img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; box-shadow: var(--neu-pressed-sm); border: 2px solid transparent; }
         [data-theme="dark"] .nav-profile-badge img { border-color: rgba(255,255,255,0.1); }
         .nav-profile-badge span { font-size: 13px; font-weight: 700; color: var(--text-main); max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
         .badge-count { position: absolute; top: -8px; right: -12px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; }
 
-        /* --- KONTEN UTAMA --- */
         .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; flex: 1; width: 100%; }
         .page-title { display: flex; align-items: center; gap: 15px; font-size: 24px; font-weight: 700; margin-bottom: 25px; }
         .btn-back { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--bg-color); color: var(--text-main); text-decoration: none; box-shadow: var(--neu-flat); transition: transform 0.2s; }
@@ -67,20 +62,20 @@
         .cart-details { flex: 1; display: flex; flex-direction: column; justify-content: center; }
         .cart-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .cart-price { font-size: 14px; font-weight: 700; color: var(--accent-color); }
-        
         .cart-actions-inline { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+        
         .qty-control { display: flex; align-items: center; gap: 5px; background: var(--bg-color); padding: 4px; border-radius: 12px; box-shadow: var(--neu-pressed-sm); }
         .qty-btn { width: 24px; height: 24px; border-radius: 50%; border: none; background: var(--bg-color); box-shadow: var(--neu-flat-sm); cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 10px; font-weight: bold; color: var(--text-main); }
         .qty-btn:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         .qty-input { width: 30px; text-align: center; border: none; background: transparent; font-weight: 700; font-size: 12px; color: var(--text-main); outline: none; }
+        
         .btn-delete { background: var(--bg-color); color: #ff4757; border: none; width: 30px; height: 30px; border-radius: 50%; box-shadow: var(--neu-flat-sm); cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 12px; }
         .btn-delete:active { box-shadow: var(--neu-pressed-sm); }
 
-        /* --- RINGKASAN CHECKOUT --- */
         .checkout-summary { flex: 1; background: var(--bg-color); border-radius: 25px; padding: 25px; box-shadow: var(--neu-flat); position: sticky; top: 100px; }
         .summary-actions { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px; }
         
-        .summary-action-btn { background: var(--bg-color); border: none; padding: 12px 15px; border-radius: 15px; box-shadow: var(--neu-flat-sm); display: flex; align-items: center; gap: 12px; cursor: pointer; text-align: left; overflow: hidden; width: 100%; }
+        .summary-action-btn { background: var(--bg-color); border: none; padding: 12px 15px; border-radius: 15px; box-shadow: var(--neu-flat-sm); display: flex; align-items: center; gap: 12px; cursor: pointer; text-align: left; overflow: hidden; width: 100%; transition: all 0.2s; }
         .summary-action-btn:active { box-shadow: var(--neu-pressed-sm); }
         .summary-action-btn.active-promo { border: 2px solid #27ae60; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05); }
         .summary-action-btn i.icon-main { font-size: 16px; color: var(--accent-color); width: 18px; text-align: center; }
@@ -95,14 +90,15 @@
         .total-price { font-size: 22px; font-weight: 700; color: var(--accent-color); line-height: 1; }
         .strike-price { font-size: 11px; text-decoration: line-through; color: var(--text-muted); margin-bottom: 2px; display: block; }
 
-        .btn-checkout { width: 100%; padding: 15px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); font-size: 15px; font-weight: 700; box-shadow: var(--neu-flat); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-checkout { width: 100%; padding: 15px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); font-size: 15px; font-weight: 700; box-shadow: var(--neu-flat); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: all 0.3s; }
         .btn-checkout:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
+        [data-theme="dark"] .btn-checkout { color: var(--accent-color); }
 
         .empty-cart { text-align: center; padding: 50px; color: var(--text-muted); font-size: 16px; font-weight: 600; }
         .bottom-nav { display: none; }
 
-        /* --- STYLING MODAL (POP-UP) --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; opacity: 0; transition: opacity 0.3s ease; }
+        /* --- STYLING MODAL (POP-UP KUSTOM) --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 3000; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.active { display: flex; opacity: 1; }
         .modal-content { background: var(--bg-color); width: 90%; max-width: 400px; border-radius: 25px; padding: 25px; box-shadow: var(--neu-flat); transform: translateY(30px); transition: transform 0.3s ease; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         .modal-overlay.active .modal-content { transform: translateY(0); }
@@ -113,11 +109,14 @@
         .input-group { margin-bottom: 15px; position: relative; }
         .input-label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; margin-left: 10px; text-transform: uppercase; letter-spacing: 0.5px;}
         .neu-input { width: 100%; padding: 12px 20px; border-radius: 15px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed-sm); outline: none; font-size: 13px; font-weight: 600; }
-        
+        .neu-btn { padding: 12px 20px; border-radius: 15px; border: none; background: var(--bg-color); color: var(--text-main); font-size: 13px; font-weight: 700; box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.3s; }
+        .neu-btn:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+
         .promo-pill { background: var(--bg-color); border: 2px dashed rgba(9, 132, 227, 0.4); padding: 12px 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; box-shadow: var(--neu-flat-sm); }
         .promo-pill-code { font-weight: 700; font-size: 13px; color: var(--accent-color); }
         .promo-pill-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
         .promo-pill-btn { font-size: 11px; padding: 6px 12px; border-radius: 10px; background: var(--bg-color); color: var(--text-main); border: none; box-shadow: var(--neu-flat-sm); cursor: pointer; font-weight: bold; flex-shrink: 0;}
+        .promo-pill-btn:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
         @media (max-width: 768px) {
             .cart-layout { flex-direction: column; gap: 15px; }
@@ -125,20 +124,13 @@
             .hide-on-mobile { display: none !important; }
             .container { padding-bottom: 180px; margin-top: 15px; } 
             
-            /* Checkout Bar Anti-Scroll & Rapi */
-            .checkout-summary {
-                position: fixed; bottom: 75px; left: 12px; width: calc(100% - 24px); top: auto;
-                border-radius: 20px; padding: 12px 15px;
-                box-shadow: 0 5px 25px rgba(0,0,0,0.1), var(--neu-flat); z-index: 998;
-                margin: 0; flex: none;
-            }
+            .checkout-summary { position: fixed; bottom: 75px; left: 12px; width: calc(100% - 24px); top: auto; border-radius: 20px; padding: 12px 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1), var(--neu-flat); z-index: 998; margin: 0; flex: none; }
+            [data-theme="dark"] .checkout-summary { box-shadow: 0 5px 25px rgba(0,0,0,0.7), var(--neu-flat); }
             
-            /* Grid Alamat & Promo Berjejer di HP agar tidak penuh */
             .summary-actions { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
             .summary-action-btn { padding: 10px 10px; gap: 8px; }
             .summary-action-btn i.icon-main { font-size: 13px; width: 14px; }
             .summary-action-value { font-size: 10px; }
-
             .summary-bottom-row { flex-direction: row; justify-content: space-between; align-items: center; gap: 10px; }
             .total-price { font-size: 18px; }
             .btn-checkout { padding: 10px 15px; width: auto; flex: 1; font-size: 13px; border-radius: 15px; }
@@ -158,6 +150,7 @@
             <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
             <a href="promo.html" class="nav-link hide-on-mobile"><i class="fas fa-tags"></i><span class="badge-count" id="promoBadge" style="display: none;">0</span></a>
             <a href="#" class="nav-link hide-on-mobile"><i class="fas fa-box"></i><span class="badge-count" id="orderBadge" style="display: none;">0</span></a>
+            <a href="keranjang.html" class="neu-btn-icon hide-on-mobile" style="box-shadow: var(--neu-pressed-sm); color: var(--accent-color);"><i class="fas fa-shopping-cart"></i><span class="badge-count" id="cartBadge" style="display: none; top: -5px; right: -5px;">0</span></a>
             <a href="login.html" class="nav-profile-badge hide-on-mobile" id="navLoginBtn" style="display: none;"><img id="navAvatar" src="" alt="Avatar"><span id="navNickname">Profil</span></a>
         </div>
     </div>
@@ -182,7 +175,6 @@
                             <div class="summary-action-value" id="summaryAddressVal">Belum Diatur</div>
                         </div>
                     </button>
-
                     <button class="summary-action-btn" id="promoSummaryBtn" onclick="openPromoModal()">
                         <i class="fas fa-ticket-alt icon-main"></i>
                         <div class="summary-action-text">
@@ -194,7 +186,7 @@
                 
                 <div class="summary-bottom-row">
                     <div class="total-info">
-                        <span class="total-label">Total</span>
+                        <span class="total-label">Total Tagihan</span>
                         <span class="strike-price" id="strikePriceDisplay" style="display: none;"></span>
                         <span class="total-price" id="totalPriceDisplay">Rp 0</span>
                     </div>
@@ -217,8 +209,19 @@
         <div class="modal-content" style="max-width: 400px;">
             <div class="modal-header"><div class="modal-title-box"><h2><i class="fas fa-ticket-alt"></i> Pilih Promo</h2></div><button class="modal-close" onclick="closePromoModal()"><i class="fas fa-times"></i></button></div>
             <div style="display: flex; gap: 10px; margin-bottom: 15px;"><input type="text" id="manualVoucherInput" class="neu-input" placeholder="Kode promo..." style="text-transform: uppercase;"><button class="neu-btn" onclick="applyVoucherManual()" id="btnApplyManual">Pakai</button></div>
+            
+            <div id="modalVoucherMsg" style="font-size: 11px; margin-bottom: 12px; font-weight: 600; text-align: center; color: #ff4757;"></div>
+            
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;"><span style="font-size: 11px; font-weight: 700; color: var(--text-muted);">Tersedia:</span><button onclick="resetVoucher()" style="background:none; border:none; color:#ff4757; font-size:10px; font-weight:bold; cursor:pointer;">Reset</button></div>
             <div style="overflow-y: auto; flex-grow: 1;" id="availablePromosContainer"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="confirmDeleteModal">
+        <div class="modal-content" style="max-width: 320px; text-align: center;">
+            <div class="modal-header" style="justify-content: center;"><div class="modal-title-box"><h2 style="color: #ff4757;"><i class="fas fa-trash-alt"></i> Hapus Barang</h2></div></div>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 10px 0 25px;">Yakin ingin menghapus barang ini dari keranjang?</p>
+            <div style="display: flex; gap: 10px;"><button class="neu-btn" onclick="closeDeleteModal()" style="flex: 1;">Batal</button><button class="neu-btn" onclick="executeDelete()" style="flex: 1; color: #ff4757;">Ya, Hapus</button></div>
         </div>
     </div>
 
@@ -231,11 +234,20 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="notificationModal" style="z-index: 4000;">
+        <div class="modal-content" style="max-width: 320px; text-align: center; padding: 30px 20px;">
+            <div id="notifIcon" style="font-size: 45px; margin-bottom: 15px;"></div>
+            <h3 id="notifTitle" style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Judul</h3>
+            <p id="notifMessage" style="font-size: 13px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.5;">Pesan</p>
+            <button class="neu-btn" id="notifBtn" style="width: 100%; padding: 12px; border-radius: 50px;">Mengerti</button>
+        </div>
+    </div>
+
     <nav class="bottom-nav">
         <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
-        <a href="promo.html" class="bottom-nav-item"><div style="position: relative;"><i class="fas fa-tags"></i><span class="badge-count" id="mobilePromoBadge" style="display: none;">0</span></div><span>Promo</span></a>
-        <a href="keranjang.html" class="bottom-nav-item active"><div style="position: relative;"><i class="fas fa-shopping-cart"></i><span class="badge-count" id="mobileCartBadge" style="display: none;">0</span></div><span>Keranjang</span></a>
-        <a href="#" class="bottom-nav-item"><div style="position: relative;"><i class="fas fa-box"></i><span class="badge-count" id="mobileOrderBadge" style="display: none;">0</span></div><span>Pesanan</span></a>
+        <a href="promo.html" class="bottom-nav-item"><div style="position: relative;"><i class="fas fa-tags"></i><span class="badge-count" id="mobilePromoBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span></div><span>Promo</span></a>
+        <a href="keranjang.html" class="bottom-nav-item active"><div style="position: relative;"><i class="fas fa-shopping-cart"></i><span class="badge-count" id="mobileCartBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span></div><span>Keranjang</span></a>
+        <a href="#" class="bottom-nav-item"><div style="position: relative;"><i class="fas fa-box"></i><span class="badge-count" id="mobileOrderBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span></div><span>Pesanan</span></a>
         <a href="akun.html" class="bottom-nav-item" id="mobileAccountBtn"><i class="fas fa-user"></i><span>Akun</span></a>
     </nav>
 
@@ -251,6 +263,38 @@
         let activeVouchers = []; 
         let globalAddress = "";
         let globalPhone = "";
+        let itemToDelete = null;
+
+        // --- SISTEM NOTIFIKASI KUSTOM ---
+        function showNotification(title, message, type, redirectUrl = null) {
+            const notifModal = document.getElementById('notificationModal');
+            const notifIcon = document.getElementById('notifIcon');
+            const notifTitle = document.getElementById('notifTitle');
+            const notifMessage = document.getElementById('notifMessage');
+            const notifBtn = document.getElementById('notifBtn');
+
+            if(type === 'success') {
+                notifIcon.innerHTML = '<i class="fas fa-check-circle" style="color: #27ae60;"></i>';
+                notifTitle.style.color = '#27ae60';
+                notifBtn.innerText = 'Lanjut';
+            } else if(type === 'error') {
+                notifIcon.innerHTML = '<i class="fas fa-times-circle" style="color: #ff4757;"></i>';
+                notifTitle.style.color = '#ff4757';
+                notifBtn.innerText = 'Tutup';
+            } else if(type === 'warning') {
+                notifIcon.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #e67e22;"></i>';
+                notifTitle.style.color = '#e67e22';
+                notifBtn.innerText = 'Mengerti';
+            }
+
+            notifTitle.innerText = title;
+            notifMessage.innerText = message;
+            notifBtn.onclick = function() { 
+                notifModal.classList.remove('active'); 
+                if(redirectUrl) window.location.href = redirectUrl;
+            };
+            notifModal.classList.add('active');
+        }
 
         // --- UPDATE UI NAVIGASI & NOTIFIKASI ---
         async function updateNavUI() {
@@ -274,7 +318,6 @@
                     mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 22px; height: 22px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${nickname}</span>`;
                 }
 
-                // Promo Badge
                 const vchRes = await fetch('/api/vouchers', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
                 if(vchRes.ok) {
                     const list = await vchRes.json();
@@ -306,7 +349,7 @@
                 total += (parsePrice(item.product_price) * item.quantity);
                 const card = document.createElement('div');
                 card.className = 'cart-card';
-                card.innerHTML = `<img src="${item.product_img}" class="cart-img"><div class="cart-details"><div class="cart-title">${item.product_name}</div><div class="cart-price">${item.product_price}</div><div class="cart-actions-inline"><div class="qty-control"><button class="qty-btn" onclick="changeQty('${item.id}', -1)"><i class="fas fa-minus"></i></button><input type="text" class="qty-input" value="${item.quantity}" readonly><button class="qty-btn" onclick="changeQty('${item.id}', 1)"><i class="fas fa-plus"></i></button></div><button class="btn-delete" onclick="deleteItem('${item.id}')"><i class="fas fa-trash-alt"></i></button></div></div>`;
+                card.innerHTML = `<img src="${item.product_img}" class="cart-img"><div class="cart-details"><div class="cart-title">${item.product_name}</div><div class="cart-price">${item.product_price}</div><div class="cart-actions-inline"><div class="qty-control"><button class="qty-btn" onclick="changeQty('${item.id}', -1)"><i class="fas fa-minus"></i></button><input type="text" class="qty-input" value="${item.quantity}" readonly><button class="qty-btn" onclick="changeQty('${item.id}', 1)"><i class="fas fa-plus"></i></button></div><button class="btn-delete" onclick="confirmDelete('${item.id}')"><i class="fas fa-trash-alt"></i></button></div></div>`;
                 container.appendChild(card);
             });
 
@@ -318,6 +361,8 @@
             const totalQty = cartItems.reduce((s, i) => s + i.quantity, 0);
             document.getElementById('mobileCartBadge').style.display = totalQty > 0 ? 'flex' : 'none';
             document.getElementById('mobileCartBadge').innerText = totalQty;
+            document.getElementById('cartBadge').style.display = totalQty > 0 ? 'flex' : 'none';
+            document.getElementById('cartBadge').innerText = totalQty > 99 ? '99+' : totalQty;
         }
 
         async function loadCart() {
@@ -332,17 +377,30 @@
             const i = cartItems.find(x => x.id === id);
             if(!i) return;
             const newQty = i.quantity + delta;
-            if(newQty < 1) return deleteItem(id);
+            if(newQty < 1) return confirmDelete(id);
             i.quantity = newQty;
             renderCartItems();
             await fetch('/api/cart', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` }, body: JSON.stringify({ product_id: i.product_id, product_name: i.product_name, product_price: i.product_price, product_img: i.product_img, quantity: delta }) });
         }
 
-        async function deleteItem(id) {
-            if(!confirm("Hapus barang?")) return;
-            await fetch('/api/cart', { method: 'DELETE', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` }, body: JSON.stringify({ id }) });
-            cartItems = cartItems.filter(x => x.id !== id);
-            renderCartItems();
+        // Fungsi Hapus Pakai Pop Up Kustom (Tanpa Confirm Native)
+        function confirmDelete(id) {
+            itemToDelete = id;
+            document.getElementById('confirmDeleteModal').classList.add('active');
+        }
+        function closeDeleteModal() {
+            itemToDelete = null;
+            document.getElementById('confirmDeleteModal').classList.remove('active');
+        }
+        async function executeDelete() {
+            if(!itemToDelete) return;
+            const id = itemToDelete;
+            closeDeleteModal();
+            try {
+                await fetch('/api/cart', { method: 'DELETE', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` }, body: JSON.stringify({ id }) });
+                cartItems = cartItems.filter(x => x.id !== id);
+                renderCartItems();
+            } catch (e) { showNotification("Gagal", "Gagal menghapus barang", "error"); }
         }
 
         // --- PROMO & ALAMAT ---
@@ -350,7 +408,7 @@
         function closeAddressModal() { document.getElementById('addressModal').classList.remove('active'); }
         function saveAddressInfo() { globalAddress = document.getElementById('modalShipAddress').value; globalPhone = document.getElementById('modalShipPhone').value; document.getElementById('summaryAddressVal').innerText = globalAddress ? "Sudah Sesuai" : "Belum Diatur"; closeAddressModal(); }
 
-        function openPromoModal() { document.getElementById('promoModal').classList.add('active'); loadAvailableVouchers(); }
+        function openPromoModal() { document.getElementById('promoModal').classList.add('active'); document.getElementById('modalVoucherMsg').innerText = ''; loadAvailableVouchers(); }
         function closePromoModal() { document.getElementById('promoModal').classList.remove('active'); }
 
         async function loadAvailableVouchers() {
@@ -366,16 +424,45 @@
 
         function resetVoucher() { activeVouchers = []; appliedDiscount = 0; finalTotalRp = rawSubtotal; document.getElementById('promoSummaryBtn').classList.remove('active-promo'); document.getElementById('summaryPromoVal').innerText = "Maksimal 2"; document.getElementById('summaryPromoVal').style.color = ""; renderCartItems(); }
 
+        function applyVoucherManual() {
+            const code = document.getElementById('manualVoucherInput').value.trim();
+            if(code) { executePromo(code); document.getElementById('manualVoucherInput').value = ''; }
+        }
+
         async function executePromo(code) {
-            if(activeVouchers.length >= 2) return alert("Maksimal 2 promo!");
-            const res = await fetch('/api/apply-voucher', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code, total_price: finalTotalRp }) });
-            const result = await res.json();
-            if(!res.ok) return alert(result.error);
-            activeVouchers.push({ code, discount: result.discount_amount });
-            appliedDiscount += result.discount_amount;
-            finalTotalRp = rawSubtotal - appliedDiscount;
-            updatePromoUI();
-            closePromoModal();
+            if(rawSubtotal === 0) return showNotification("Keranjang Kosong", "Masukkan barang ke keranjang terlebih dahulu.", "warning");
+            if(activeVouchers.length >= 2) return showNotification("Batas Maksimal", "Anda hanya dapat menggunakan maksimal 2 promo sekaligus.", "warning");
+            if(activeVouchers.some(v => v.code === code)) return;
+
+            const msgBox = document.getElementById('modalVoucherMsg');
+            const btnManual = document.getElementById('btnApplyManual');
+            msgBox.innerText = "Memeriksa kode promo...";
+            msgBox.style.color = "var(--accent-color)";
+            btnManual.disabled = true;
+
+            try {
+                const res = await fetch('/api/apply-voucher', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code, total_price: finalTotalRp }) });
+                const result = await res.json();
+                
+                // Pesan Error Langsung Ditulis Di Dalam Pop Up Tanpa Alert Kaku
+                if(!res.ok) {
+                    msgBox.innerText = result.error;
+                    msgBox.style.color = "#ff4757";
+                    return;
+                }
+
+                activeVouchers.push({ code, discount: result.discount_amount });
+                appliedDiscount += result.discount_amount;
+                finalTotalRp = rawSubtotal - appliedDiscount;
+                updatePromoUI();
+                closePromoModal();
+                showNotification("Berhasil", `Promo ${code} berhasil dipakai!`, "success");
+            } catch (error) {
+                msgBox.innerText = "Terjadi kesalahan jaringan.";
+                msgBox.style.color = "#ff4757";
+            } finally {
+                btnManual.disabled = false;
+            }
         }
 
         function updatePromoUI() {
@@ -398,17 +485,28 @@
 
         // --- CHECKOUT ---
         function processCheckout() {
-            if(!globalAddress) return openAddressModal();
+            if(!globalAddress) return showNotification("Alamat Belum Diatur", "Harap atur alamat pengiriman Anda terlebih dahulu.", "warning");
             document.getElementById('confirmAddressDisplay').innerText = globalAddress + "\n(Telp: " + globalPhone + ")";
             document.getElementById('confirmCheckoutModal').classList.add('active');
         }
         function closeConfirmModal() { document.getElementById('confirmCheckoutModal').classList.remove('active'); }
+        
         async function executeCheckout() {
+            closeConfirmModal();
             const btn = document.getElementById('checkoutBtn');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` }, body: JSON.stringify({ shipping_address: globalAddress, phone_number: globalPhone, total_price: formatRupiah(finalTotalRp), items: cartItems }) });
-            if(res.ok) { alert("Checkout Berhasil!"); window.location.href = 'index.html'; }
-            else { alert("Gagal checkout."); btn.innerText = "Buat Pesanan"; }
+            btn.disabled = true;
+            try {
+                const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` }, body: JSON.stringify({ shipping_address: globalAddress, phone_number: globalPhone, total_price: formatRupiah(finalTotalRp), items: cartItems }) });
+                if(res.ok) { 
+                    showNotification("Pesanan Berhasil!", "Terima kasih! Pesanan Anda sedang diproses oleh tim kami.", "success", "index.html");
+                }
+                else { throw new Error("Gagal memproses pesanan."); }
+            } catch(e) {
+                showNotification("Gagal", "Gagal melakukan checkout. Silakan coba beberapa saat lagi.", "error");
+                btn.innerText = "Buat Pesanan";
+                btn.disabled = false;
+            }
         }
 
         const themeToggle = document.getElementById('themeToggle');
