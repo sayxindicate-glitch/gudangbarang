@@ -151,7 +151,7 @@
         /* --- KONTROL NAVIGASI KANAN (DIPERBAIKI) --- */
         /* ========================================================= */
         .controls {
-            display: flex; align-items: center; gap: 20px; /* Jarak dibuat seragam */
+            display: flex; align-items: center; gap: 20px; 
             flex: 1; justify-content: flex-end;
         }
         .nav-link {
@@ -160,13 +160,21 @@
         }
         .nav-link:hover { color: var(--accent-color); }
         
-        /* Gaya Universal Untuk Badge Merah (Notifikasi) */
         .badge-count {
             position: absolute; top: -10px; right: -15px; 
             background: #ff4757; color: white; font-size: 10px; font-weight: bold; 
             padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color);
             display: flex; justify-content: center; align-items: center;
         }
+
+        /* Tombol Keranjang Bulat */
+        .neu-btn-icon {
+            background: var(--bg-color); color: var(--text-main); border: none;
+            width: 48px; height: 48px; border-radius: 50%; 
+            font-size: 18px; display: flex; justify-content: center; align-items: center;
+            box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative;
+        }
+        .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
         /* Tombol Login Lonjong (Standar) */
         .nav-btn-cap {
@@ -178,7 +186,7 @@
         .nav-btn-cap:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         [data-theme="dark"] .nav-btn-cap:hover { color: var(--accent-color); text-shadow: 0 0 5px var(--accent-color); }
 
-        /* Desain Profil (Mode Pil Horizontal agar sejajar rapi) */
+        /* Desain Profil Horizontal */
         .nav-profile-badge {
             display: flex; flex-direction: row; align-items: center; justify-content: center;
             text-decoration: none; gap: 10px; transition: transform 0.2s ease; cursor: pointer;
@@ -195,14 +203,6 @@
             font-size: 13px; font-weight: 700; color: var(--text-main);
             max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-
-        .neu-btn-icon {
-            background: var(--bg-color); color: var(--text-main); border: none;
-            width: 48px; height: 48px; border-radius: 50%; 
-            font-size: 18px; display: flex; justify-content: center; align-items: center;
-            box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative;
-        }
-        .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
         .theme-switch {
             width: 60px; height: 30px; border-radius: 50px; 
@@ -473,13 +473,13 @@
                     <span class="badge-count" id="orderBadge" style="display: none;">0</span>
                 </a>
                 
-                <a href="login.html" class="nav-btn-cap hide-on-mobile" id="navLoginBtn">
-                    <i class="fas fa-sign-in-alt"></i> <span>Login</span>
-                </a>
-                
                 <a href="keranjang.html" class="neu-btn-icon hide-on-mobile">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="badge-count" id="cartBadge" style="display: none; top: -5px; right: -5px; width: 18px; height: 18px; padding: 0;">0</span>
+                </a>
+                
+                <a href="login.html" class="nav-btn-cap hide-on-mobile" id="navLoginBtn">
+                    <i class="fas fa-sign-in-alt"></i> <span>Login</span>
                 </a>
             </div>
         </nav>
@@ -680,7 +680,7 @@
                         
                         const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(fullName)}&backgroundColor=e0e5ec`;
 
-                        // Ubah Tombol Login Menjadi Badge Profil Pil Horizontal
+                        // Ubah Tombol Login Menjadi Badge Profil Pil Horizontal (Desktop)
                         loginBtn.className = 'nav-profile-badge hide-on-mobile';
                         loginBtn.href = 'akun.html';
                         loginBtn.innerHTML = `
@@ -688,10 +688,13 @@
                             <span>${nickname}</span>
                         `;
 
-                        // Ubah Teks Menu Akun (Mobile) menjadi Nama Panggilan
+                        // Ubah Teks & Tambahkan Avatar di Menu Akun (Mobile)
                         if (mobileAccountBtn) {
                             mobileAccountBtn.href = 'akun.html';
-                            mobileAccountBtn.querySelector('span').innerText = nickname;
+                            mobileAccountBtn.innerHTML = `
+                                <img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;">
+                                <span>${nickname}</span>
+                            `;
                         }
                     }
                 } catch (e) { console.error("Gagal memuat data profil", e); }
@@ -764,7 +767,6 @@
                     }
                 } catch (e) { 
                     // Abaikan secara diam-diam jika file api/orders belum dibuat
-                    console.log("Notifikasi pesanan siap aktif setelah api/orders.js dibuat."); 
                 }
 
             } else {
@@ -783,7 +785,7 @@
                 
                 if (mobileAccountBtn) {
                      mobileAccountBtn.href = 'login.html';
-                     mobileAccountBtn.querySelector('span').innerText = 'Login';
+                     mobileAccountBtn.innerHTML = '<i class="fas fa-user"></i><span>Login</span>';
                 }
             }
         }
