@@ -28,9 +28,10 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
 
-        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; position: relative; }
+        /* Dibuat scrollable karena kolom form semakin banyak */
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 20px; position: relative; overflow-y: auto; }
 
-        .top-nav { position: absolute; top: 0; left: 0; width: 100%; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+        .top-nav { position: absolute; top: 0; left: 0; width: 100%; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 50;}
         .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
         .logo:hover { opacity: 0.8; }
         
@@ -38,13 +39,14 @@
         .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
         [data-theme="dark"] .switch-handle { transform: translateX(30px); }
 
-        .auth-container { background: var(--bg-color); width: 100%; max-width: 400px; border-radius: 30px; padding: 40px 30px; box-shadow: var(--neu-flat); text-align: center; z-index: 10; margin-top: 50px; margin-bottom: 50px; }
+        /* Margin top dan bottom disesuaikan agar tidak menabrak header/footer di HP */
+        .auth-container { background: var(--bg-color); width: 100%; max-width: 450px; border-radius: 30px; padding: 40px 30px; box-shadow: var(--neu-flat); text-align: center; z-index: 10; margin-top: 100px; margin-bottom: 100px; }
         .auth-title { font-size: 24px; font-weight: 700; margin-bottom: 5px; color: var(--accent-color); }
         .auth-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 30px; }
 
         .input-group { margin-bottom: 20px; position: relative; }
-        .input-group i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; }
-        .neu-input { width: 100%; padding: 15px 20px 15px 50px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed); outline: none; font-size: 14px; font-weight: 600; }
+        .input-group i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; width: 20px; text-align: center; }
+        .neu-input { width: 100%; padding: 15px 20px 15px 55px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed); outline: none; font-size: 14px; font-weight: 600; }
         .neu-input::placeholder { color: var(--text-muted); font-weight: 400; }
 
         /* Syarat Password */
@@ -71,8 +73,7 @@
         @media (max-width: 768px) {
             .top-nav { padding: 15px 20px; }
             .auth-container { padding: 30px 20px; border-radius: 25px; box-shadow: none; background: transparent; margin-top: 60px; margin-bottom: 80px; }
-            .neu-input { padding: 12px 20px 12px 45px; }
-            body { padding-bottom: 80px; justify-content: flex-start; }
+            .neu-input { padding: 12px 20px 12px 50px; }
             .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px 10px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
             .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; }
@@ -93,8 +94,23 @@
         <p class="auth-subtitle">Daftar untuk mulai berbelanja grosir</p>
 
         <div class="input-group">
-            <i class="fas fa-user"></i>
+            <i class="fas fa-id-card"></i>
             <input type="text" id="name" class="neu-input" placeholder="Nama Lengkap" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-user-tag"></i>
+            <input type="text" id="nickname" class="neu-input" placeholder="Nama Panggilan" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-phone-alt"></i>
+            <input type="tel" id="phone" class="neu-input" placeholder="Nomor WhatsApp / Telepon" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-map-marker-alt"></i>
+            <input type="text" id="address" class="neu-input" placeholder="Alamat Pengiriman Utama" required>
         </div>
 
         <div class="input-group">
@@ -107,6 +123,7 @@
             <input type="password" id="password" class="neu-input" placeholder="Password" required>
         </div>
 
+        <!-- AREA VALIDASI PASSWORD -->
         <div class="password-rules">
             <div class="rule-item" id="rule-length"><i class="fas fa-times"></i> Minimal 8 karakter</div>
             <div class="rule-item" id="rule-upper"><i class="fas fa-times"></i> Mengandung huruf besar (A-Z)</div>
@@ -207,11 +224,16 @@
 
         // --- FUNGSI SUBMIT REGISTER KE VERCEL ---
         submitBtn.addEventListener('click', async () => {
+            // Menangkap SEMUA input
             const name = document.getElementById('name').value;
+            const nickname = document.getElementById('nickname').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
             const email = document.getElementById('email').value;
             const password = passInput.value;
 
-            if (!name || !email || !isPasswordValid) {
+            // Validasi apakah ada yang kosong
+            if (!name || !nickname || !phone || !address || !email || !isPasswordValid) {
                 showAlert("Harap isi semua kolom dengan benar!", false);
                 return;
             }
@@ -223,7 +245,8 @@
                 const response = await fetch('/api/auth', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'register', name, email, password })
+                    // Mengirimkan semua data termasuk nickname, phone, dan address
+                    body: JSON.stringify({ action: 'register', name, nickname, phone, address, email, password })
                 });
 
                 const result = await response.json();
