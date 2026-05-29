@@ -147,16 +147,27 @@
         .filter-tag:active { box-shadow: var(--neu-pressed-sm); }
         .filter-tag.active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
+        /* ========================================================= */
+        /* --- KONTROL NAVIGASI KANAN (DIPERBAIKI) --- */
+        /* ========================================================= */
         .controls {
-            display: flex; align-items: center; gap: 15px;
+            display: flex; align-items: center; gap: 20px; /* Jarak dibuat seragam */
             flex: 1; justify-content: flex-end;
         }
         .nav-link {
-            color: var(--text-muted); text-decoration: none;
+            color: var(--text-muted); text-decoration: none; position: relative;
             font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px;
         }
         .nav-link:hover { color: var(--accent-color); }
         
+        /* Gaya Universal Untuk Badge Merah (Notifikasi) */
+        .badge-count {
+            position: absolute; top: -10px; right: -15px; 
+            background: #ff4757; color: white; font-size: 10px; font-weight: bold; 
+            padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color);
+            display: flex; justify-content: center; align-items: center;
+        }
+
         /* Tombol Login Lonjong (Standar) */
         .nav-btn-cap {
             background: var(--bg-color); color: var(--text-main);
@@ -167,20 +178,22 @@
         .nav-btn-cap:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         [data-theme="dark"] .nav-btn-cap:hover { color: var(--accent-color); text-shadow: 0 0 5px var(--accent-color); }
 
-        /* --- DESAIN BARU: BADGE AVATAR PROFIL --- */
+        /* Desain Profil (Mode Pil Horizontal agar sejajar rapi) */
         .nav-profile-badge {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-decoration: none; gap: 4px; transition: transform 0.2s ease; cursor: pointer;
+            display: flex; flex-direction: row; align-items: center; justify-content: center;
+            text-decoration: none; gap: 10px; transition: transform 0.2s ease; cursor: pointer;
+            background: var(--bg-color); padding: 5px 15px 5px 5px; border-radius: 50px;
+            box-shadow: var(--neu-flat-sm);
         }
-        .nav-profile-badge:active { transform: scale(0.95); }
+        .nav-profile-badge:active { box-shadow: var(--neu-pressed-sm); }
         .nav-profile-badge img {
-            width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
-            box-shadow: var(--neu-flat-sm); border: 2px solid transparent;
+            width: 36px; height: 36px; border-radius: 50%; object-fit: cover;
+            box-shadow: var(--neu-pressed-sm); border: 2px solid transparent;
         }
         [data-theme="dark"] .nav-profile-badge img { border-color: rgba(255,255,255,0.1); }
         .nav-profile-badge span {
-            font-size: 11px; font-weight: 700; color: var(--text-main);
-            max-width: 65px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center;
+            font-size: 13px; font-weight: 700; color: var(--text-main);
+            max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
         .neu-btn-icon {
@@ -226,7 +239,6 @@
         .categories-wrapper { 
             position: relative; width: 100%; background-color: var(--bg-color); display: flex; align-items: center;
         }
-
         .categories { 
             display: flex; gap: 15px; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; 
             padding: 15px 120px 30px 120px; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none;
@@ -446,19 +458,28 @@
                 <div class="theme-switch" id="themeToggle" title="Toggle Dark Mode">
                     <div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div>
                 </div>
+                
                 <a href="https://wa.me/628153335000" class="nav-btn-chat-mobile" target="_blank">
                     <i class="fab fa-whatsapp"></i> <span>Chat Admin</span>
                 </a>
-                <a href="promo.html" class="nav-link hide-on-mobile"><i class="fas fa-tags"></i> <span>Promo</span></a>
-                <a href="#" class="nav-link hide-on-mobile"><i class="fas fa-box"></i> <span>Pesanan</span></a>
+                
+                <a href="promo.html" class="nav-link hide-on-mobile">
+                    <i class="fas fa-tags"></i> <span>Promo</span>
+                    <span class="badge-count" id="promoBadge" style="display: none;">0</span>
+                </a>
+                
+                <a href="#" class="nav-link hide-on-mobile">
+                    <i class="fas fa-box"></i> <span>Pesanan</span>
+                    <span class="badge-count" id="orderBadge" style="display: none;">0</span>
+                </a>
                 
                 <a href="login.html" class="nav-btn-cap hide-on-mobile" id="navLoginBtn">
                     <i class="fas fa-sign-in-alt"></i> <span>Login</span>
                 </a>
                 
-                <a href="keranjang.html" class="neu-btn-icon hide-on-mobile" style="text-decoration: none; position: relative;">
+                <a href="keranjang.html" class="neu-btn-icon hide-on-mobile">
                     <i class="fas fa-shopping-cart"></i>
-                    <span id="cartBadge" style="display: none; position: absolute; top: -5px; right: -5px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; justify-content: center; align-items: center; border: 2px solid var(--bg-color);">0</span>
+                    <span class="badge-count" id="cartBadge" style="display: none; top: -5px; right: -5px; width: 18px; height: 18px; padding: 0;">0</span>
                 </a>
             </div>
         </nav>
@@ -486,17 +507,30 @@
 
     <nav class="bottom-nav">
         <a href="index.html" class="bottom-nav-item active"><i class="fas fa-home"></i><span>Beranda</span></a>
-        <a href="promo.html" class="bottom-nav-item"><i class="fas fa-tags"></i><span>Promo</span></a>
+        
+        <a href="promo.html" class="bottom-nav-item">
+            <div style="position: relative;">
+                <i class="fas fa-tags"></i>
+                <span class="badge-count" id="mobilePromoBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span>
+            </div>
+            <span>Promo</span>
+        </a>
         
         <a href="keranjang.html" class="bottom-nav-item">
             <div style="position: relative;">
                 <i class="fas fa-shopping-cart"></i>
-                <span id="mobileCartBadge" style="display: none; position: absolute; top: -5px; right: -10px; background: #ff4757; color: white; font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; border: 2px solid var(--bg-color);">0</span>
+                <span class="badge-count" id="mobileCartBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span>
             </div>
             <span>Keranjang</span>
         </a>
         
-        <a href="#" class="bottom-nav-item"><i class="fas fa-box"></i><span>Pesanan</span></a>
+        <a href="#" class="bottom-nav-item">
+            <div style="position: relative;">
+                <i class="fas fa-box"></i>
+                <span class="badge-count" id="mobileOrderBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span>
+            </div>
+            <span>Pesanan</span>
+        </a>
         
         <a href="akun.html" class="bottom-nav-item" id="mobileAccountBtn">
             <i class="fas fa-user"></i><span>Akun</span>
@@ -616,7 +650,7 @@
         const clearFiltersBtn = document.getElementById('clearFilters');
 
         // =========================================================================
-        // FUNGSI UPDATE UI HEADER DENGAN AVATAR UNIK & KERANJANG
+        // FUNGSI UPDATE UI HEADER: AVATAR HORIZONTAL & BADGE PROMO/PESANAN/KERANJANG
         // =========================================================================
         async function updateNavUI() {
             const sessionData = localStorage.getItem('user_session');
@@ -624,12 +658,16 @@
             const cartBadge = document.getElementById('cartBadge');
             const mobileCartBadge = document.getElementById('mobileCartBadge');
             const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+            const promoBadge = document.getElementById('promoBadge');
+            const mobilePromoBadge = document.getElementById('mobilePromoBadge');
+            const orderBadge = document.getElementById('orderBadge');
+            const mobileOrderBadge = document.getElementById('mobileOrderBadge');
 
             if (sessionData) {
                 // JIKA PENGGUNA SUDAH LOGIN
                 const session = JSON.parse(sessionData);
                 
-                // 1. Tarik Data Profil dari Backend untuk Avatar & Nama Panggilan
+                // 1. Tarik Data Profil (Untuk Avatar & Nama Horizontal)
                 try {
                     const userRes = await fetch('/api/user', {
                         headers: { 'Authorization': `Bearer ${session.access_token}` }
@@ -640,10 +678,9 @@
                         const fullName = userData.name || "User";
                         const nickname = fullName.split(' ')[0]; // Mengambil kata pertama saja
                         
-                        // Generate Avatar Keren menggunakan DiceBear
                         const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(fullName)}&backgroundColor=e0e5ec`;
 
-                        // Ubah Tombol Login Menjadi Badge Profil (Desktop)
+                        // Ubah Tombol Login Menjadi Badge Profil Pil Horizontal
                         loginBtn.className = 'nav-profile-badge hide-on-mobile';
                         loginBtn.href = 'akun.html';
                         loginBtn.innerHTML = `
@@ -657,11 +694,9 @@
                             mobileAccountBtn.querySelector('span').innerText = nickname;
                         }
                     }
-                } catch (e) {
-                    console.error("Gagal memuat data profil", e);
-                }
+                } catch (e) { console.error("Gagal memuat data profil", e); }
                 
-                // 2. Cek jumlah barang di keranjang dari database secara diam-diam (background)
+                // 2. Cek jumlah barang di keranjang
                 try {
                     const response = await fetch('/api/cart', {
                         headers: { 'Authorization': `Bearer ${session.access_token}` }
@@ -674,9 +709,8 @@
                             const displayText = totalQty > 99 ? '99+' : totalQty;
                             cartBadge.style.display = 'flex';
                             cartBadge.innerText = displayText;
-                            
                             if (mobileCartBadge) {
-                                mobileCartBadge.style.display = 'inline-block';
+                                mobileCartBadge.style.display = 'flex';
                                 mobileCartBadge.innerText = displayText;
                             }
                         } else {
@@ -684,18 +718,68 @@
                             if (mobileCartBadge) mobileCartBadge.style.display = 'none';
                         }
                     }
-                } catch (e) {
-                    console.error("Gagal memperbarui notifikasi keranjang", e);
+                } catch (e) { console.error("Gagal memperbarui notifikasi keranjang", e); }
+
+                // 3. Cek jumlah Promo/Voucher khusus pengguna
+                try {
+                    const promoRes = await fetch('/api/vouchers', {
+                        headers: { 'Authorization': `Bearer ${session.access_token}` }
+                    });
+                    if (promoRes.ok) {
+                        const promos = await promoRes.json();
+                        if (promos.length > 0) {
+                            promoBadge.style.display = 'flex';
+                            promoBadge.innerText = promos.length;
+                            if (mobilePromoBadge) {
+                                mobilePromoBadge.style.display = 'flex';
+                                mobilePromoBadge.innerText = promos.length;
+                            }
+                        } else {
+                            promoBadge.style.display = 'none';
+                            if (mobilePromoBadge) mobilePromoBadge.style.display = 'none';
+                        }
+                    }
+                } catch (e) { console.error("Gagal cek promo", e); }
+
+                // 4. Cek jumlah Pesanan Aktif (Simulasi Pengecekan Aman)
+                try {
+                    const orderRes = await fetch('/api/orders', {
+                        headers: { 'Authorization': `Bearer ${session.access_token}` }
+                    });
+                    if (orderRes.ok) {
+                        const orders = await orderRes.json();
+                        // Hanya hitung pesanan yang belum selesai
+                        const activeOrders = orders.filter(o => o.status !== 'Selesai' && o.status !== 'Dibatalkan');
+                        if (activeOrders.length > 0) {
+                            orderBadge.style.display = 'flex';
+                            orderBadge.innerText = activeOrders.length;
+                            if (mobileOrderBadge) {
+                                mobileOrderBadge.style.display = 'flex';
+                                mobileOrderBadge.innerText = activeOrders.length;
+                            }
+                        } else {
+                            orderBadge.style.display = 'none';
+                            if (mobileOrderBadge) mobileOrderBadge.style.display = 'none';
+                        }
+                    }
+                } catch (e) { 
+                    // Abaikan secara diam-diam jika file api/orders belum dibuat
+                    console.log("Notifikasi pesanan siap aktif setelah api/orders.js dibuat."); 
                 }
 
             } else {
-                // JIKA BELUM LOGIN: Kembalikan tampilan tombol Login normal seperti semula
+                // JIKA BELUM LOGIN: Kembalikan semua ke mode standar dan sembunyikan semua badge merah
                 loginBtn.className = 'nav-btn-cap hide-on-mobile';
                 loginBtn.href = 'login.html';
                 loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span>Login</span>';
                 
                 cartBadge.style.display = 'none';
+                promoBadge.style.display = 'none';
+                orderBadge.style.display = 'none';
+                
                 if (mobileCartBadge) mobileCartBadge.style.display = 'none';
+                if (mobilePromoBadge) mobilePromoBadge.style.display = 'none';
+                if (mobileOrderBadge) mobileOrderBadge.style.display = 'none';
                 
                 if (mobileAccountBtn) {
                      mobileAccountBtn.href = 'login.html';
