@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang Belanja | Goedang Grosir</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #e0e5ec; --text-main: #2d3436; --text-muted: #636e72; --accent-color: #0984e3;
+            --shadow-light: #ffffff; --shadow-dark: #a3b1c6;
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1b1e; --text-main: #f5f6fa; --text-muted: #a4b0be; --accent-color: #00e5ff;
+            --shadow-light: rgba(255, 255, 255, 0.05); --shadow-dark: rgba(0, 0, 0, 0.6);
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+        .top-nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; background-color: var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; flex: 1; width: 100%; }
+        .page-title { font-size: 24px; font-weight: 700; margin-bottom: 30px; display: flex; align-items: center; gap: 15px; }
+
+        .cart-layout { display: flex; gap: 40px; align-items: flex-start; }
+        .cart-items-section { flex: 2; display: flex; flex-direction: column; gap: 20px; }
+        
+        .cart-card { background: var(--bg-color); border-radius: 20px; padding: 20px; box-shadow: var(--neu-flat); display: flex; gap: 20px; align-items: center; }
+        .cart-img { width: 100px; height: 100px; border-radius: 15px; object-fit: cover; box-shadow: var(--neu-pressed-sm); flex-shrink: 0; }
+        .cart-details { flex: 1; }
+        .cart-title { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
+        .cart-price { font-size: 16px; font-weight: 700; color: var(--accent-color); margin-bottom: 15px; }
+        .cart-actions { display: flex; align-items: center; justify-content: space-between; }
+        .qty-badge { background: var(--bg-color); padding: 5px 15px; border-radius: 10px; box-shadow: var(--neu-pressed-sm); font-size: 14px; font-weight: 700; }
+        .btn-delete { background: var(--bg-color); color: #ff4757; border: none; width: 35px; height: 35px; border-radius: 50%; box-shadow: var(--neu-flat-sm); cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .btn-delete:active { box-shadow: var(--neu-pressed-sm); }
+
+        .checkout-summary { flex: 1; background: var(--bg-color); border-radius: 25px; padding: 30px; box-shadow: var(--neu-flat); position: sticky; top: 100px; }
+        .summary-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; border-bottom: 2px solid rgba(128,128,128,0.1); padding-bottom: 15px; }
+        
+        .input-group { margin-bottom: 15px; position: relative; }
+        .input-label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; margin-left: 10px; text-transform: uppercase; letter-spacing: 0.5px;}
+        .neu-input { width: 100%; padding: 12px 20px; border-radius: 15px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed-sm); outline: none; font-size: 13px; font-weight: 600; }
+        
+        .neu-btn { padding: 12px 20px; border-radius: 15px; border: none; background: var(--bg-color); color: var(--text-main); font-size: 13px; font-weight: 700; box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.3s; }
+        .neu-btn:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+        
+        /* DESAIN RINCIAN TOTAL */
+        .bill-row { display: flex; justify-content: space-between; font-size: 14px; margin-top: 15px; color: var(--text-muted); font-weight: 600;}
+        .bill-discount { color: #27ae60; font-weight: 700; display: none; }
+        
+        .total-box { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border-top: 2px dashed rgba(128,128,128,0.2); padding-top: 15px; font-size: 18px; font-weight: 700; }
+        .total-price { color: var(--accent-color); font-size: 24px; }
+
+        .btn-checkout { width: 100%; margin-top: 25px; padding: 15px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); font-size: 15px; font-weight: 700; box-shadow: var(--neu-flat); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: all 0.3s; }
+        .btn-checkout:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
+        [data-theme="dark"] .btn-checkout { color: var(--accent-color); }
+
+        .empty-cart { text-align: center; padding: 50px; color: var(--text-muted); font-size: 16px; font-weight: 600; }
+        .bottom-nav { display: none; }
+
+        @media (max-width: 768px) {
+            .cart-layout { flex-direction: column; }
+            .checkout-summary { position: static; width: 100%; }
+            .cart-card { flex-direction: column; align-items: stretch; text-align: center; }
+            .cart-img { width: 100%; height: 180px; margin: 0 auto; }
+            .top-nav { padding: 15px 20px; }
+            body { padding-bottom: 90px; }
+            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px 10px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
+            [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
+            .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; }
+            .bottom-nav-item i { font-size: 18px; }
+            .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <a href="index.html" class="logo"><i class="fas fa-box-open"></i> GOEDANG</a>
+    </div>
+
+    <div class="container">
+        <div class="page-title"><i class="fas fa-shopping-cart"></i> Keranjang Anda</div>
+
+        <div class="cart-layout">
+            <div class="cart-items-section" id="cartContainer">
+                <div class="empty-cart"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Memuat keranjang...</div>
+            </div>
+
+            <div class="checkout-summary">
+                <div class="summary-title">Pengiriman & Tagihan</div>
+                
+                <div class="input-group">
+                    <span class="input-label">Alamat Pengiriman</span>
+                    <textarea id="shipAddress" class="neu-input" rows="2" placeholder="Masukkan alamat lengkap..."></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <span class="input-label">Nomor WhatsApp</span>
+                    <input type="tel" id="shipPhone" class="neu-input" placeholder="08123456789">
+                </div>
+
+                <div class="input-group" style="margin-top: 25px;">
+                    <span class="input-label" style="color: var(--accent-color);"><i class="fas fa-ticket-alt"></i> Makin Hemat Pakai Promo</span>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="voucherInput" class="neu-input" placeholder="Ketik HEMAT50" style="text-transform: uppercase;">
+                        <button class="neu-btn" id="btnApplyVoucher" onclick="applyVoucher()" style="flex-shrink: 0;">Pakai</button>
+                    </div>
+                    <div id="voucherMsg" style="font-size: 11px; margin-top: 8px; font-weight: 600; margin-left: 10px;"></div>
+                </div>
+
+                <div class="bill-row">
+                    <span>Subtotal Barang:</span>
+                    <span id="subtotalDisplay">Rp 0</span>
+                </div>
+                <div class="bill-row bill-discount" id="discountRow">
+                    <span>Diskon Promo:</span>
+                    <span id="discountDisplay">- Rp 0</span>
+                </div>
+
+                <div class="total-box">
+                    <span>Total Tagihan:</span>
+                    <span class="total-price" id="totalPriceDisplay">Rp 0</span>
+                </div>
+
+                <button class="btn-checkout" id="checkoutBtn" onclick="processCheckout()">
+                    <i class="fas fa-check-circle"></i> Buat Pesanan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
+        <a href="promo.html" class="bottom-nav-item"><i class="fas fa-tags"></i><span>Promo</span></a>
+        <a href="keranjang.html" class="bottom-nav-item active"><i class="fas fa-shopping-cart"></i><span>Keranjang</span></a>
+        <a href="#" class="bottom-nav-item"><i class="fas fa-box"></i><span>Pesanan</span></a>
+        <a href="akun.html" class="bottom-nav-item"><i class="fas fa-user"></i><span>Akun</span></a>
+    </nav>
+
+    <script>
+        const sessionData = localStorage.getItem('user_session');
+        if (!sessionData) {
+            alert("Anda harus login untuk melihat keranjang.");
+            window.location.href = 'login.html';
+        }
+        const session = JSON.parse(sessionData);
+
+        let cartItems = [];
+        let rawSubtotal = 0; // Harga asli sebelum diskon
+        let finalTotalRp = 0; // Harga akhir setelah diskon
+        let appliedDiscount = 0;
+
+        async function loadUserProfile() {
+            try {
+                const response = await fetch('/api/user', {
+                    method: 'GET', headers: { 'Authorization': `Bearer ${session.access_token}` }
+                });
+                if(response.ok) {
+                    const user = await response.json();
+                    document.getElementById('shipAddress').value = user.address || '';
+                    document.getElementById('shipPhone').value = user.phone || '';
+                }
+            } catch (e) { console.log("Gagal memuat profil otomatis"); }
+        }
+
+        function parsePrice(priceString) { return parseInt(priceString.replace(/[^0-9]/g, '')) || 0; }
+        function formatRupiah(number) { return "Rp " + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+
+        async function loadCart() {
+            try {
+                const response = await fetch('/api/cart', {
+                    method: 'GET', headers: { 'Authorization': `Bearer ${session.access_token}` }
+                });
+                if(!response.ok) throw new Error("Gagal mengambil keranjang");
+                
+                cartItems = await response.json();
+                const container = document.getElementById('cartContainer');
+                
+                if(cartItems.length === 0) {
+                    container.innerHTML = `<div class="empty-cart"><i class="fas fa-box-open fa-3x"></i><br><br>Keranjang Anda masih kosong.<br><a href="index.html" style="color:var(--accent-color); font-size:14px; text-decoration:none; margin-top:10px; display:inline-block;">Mulai Belanja</a></div>`;
+                    document.getElementById('subtotalDisplay').innerText = "Rp 0";
+                    document.getElementById('totalPriceDisplay').innerText = "Rp 0";
+                    document.getElementById('checkoutBtn').disabled = true;
+                    return;
+                }
+
+                container.innerHTML = '';
+                let totalCalculation = 0;
+
+                cartItems.forEach(item => {
+                    const priceNum = parsePrice(item.product_price);
+                    totalCalculation += (priceNum * item.quantity);
+
+                    const card = document.createElement('div');
+                    card.className = 'cart-card';
+                    card.innerHTML = `
+                        <img src="${item.product_img}" alt="${item.product_name}" class="cart-img">
+                        <div class="cart-details">
+                            <div class="cart-title">${item.product_name}</div>
+                            <div class="cart-price">${item.product_price}</div>
+                            <div class="cart-actions">
+                                <div class="qty-badge">Jumlah: ${item.quantity}</div>
+                                <button class="btn-delete" onclick="deleteItem('${item.id}')" title="Hapus Barang"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+                // Reset diskon setiap kali keranjang dimuat ulang (mencegah bug manipulasi harga)
+                resetVoucher();
+                
+                rawSubtotal = totalCalculation;
+                finalTotalRp = totalCalculation;
+                
+                document.getElementById('subtotalDisplay').innerText = formatRupiah(rawSubtotal);
+                document.getElementById('totalPriceDisplay').innerText = formatRupiah(finalTotalRp);
+                document.getElementById('checkoutBtn').disabled = false;
+
+            } catch (e) {
+                document.getElementById('cartContainer').innerHTML = `<div class="empty-cart" style="color:#ff4757;">Terjadi kesalahan saat memuat keranjang.</div>`;
+            }
+        }
+
+        async function deleteItem(cartItemId) {
+            if(!confirm("Yakin ingin menghapus barang ini?")) return;
+            try {
+                await fetch('/api/cart', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+                    body: JSON.stringify({ id: cartItemId })
+                });
+                loadCart(); 
+            } catch (e) { alert("Gagal menghapus barang"); }
+        }
+
+        // --- SISTEM VALIDASI VOUCHER KE VERCEL ---
+        function resetVoucher() {
+            appliedDiscount = 0;
+            document.getElementById('voucherInput').value = '';
+            document.getElementById('voucherMsg').innerText = '';
+            document.getElementById('discountRow').style.display = 'none';
+        }
+
+        async function applyVoucher() {
+            const code = document.getElementById('voucherInput').value.trim();
+            const msgBox = document.getElementById('voucherMsg');
+            const btn = document.getElementById('btnApplyVoucher');
+            
+            if(!code) {
+                msgBox.innerText = "Masukkan kode promo terlebih dahulu.";
+                msgBox.style.color = "#ff4757";
+                return;
+            }
+
+            if(rawSubtotal === 0) return;
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            try {
+                // Mengetuk server Vercel untuk menghitung diskon dengan aman
+                const response = await fetch('/api/apply-voucher', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: code, total_price: rawSubtotal })
+                });
+
+                const result = await response.json();
+
+                if(!response.ok) throw new Error(result.error);
+
+                // Jika Voucher Sukses Diterapkan
+                appliedDiscount = result.discount_amount;
+                finalTotalRp = result.final_total;
+
+                msgBox.innerText = result.message;
+                msgBox.style.color = "#27ae60"; // Hijau
+
+                // Munculkan baris rincian diskon
+                document.getElementById('discountRow').style.display = 'flex';
+                document.getElementById('discountDisplay').innerText = "- " + formatRupiah(appliedDiscount);
+                
+                // Update Total Tagihan
+                document.getElementById('totalPriceDisplay').innerText = formatRupiah(finalTotalRp);
+
+            } catch (error) {
+                resetVoucher();
+                msgBox.innerText = error.message;
+                msgBox.style.color = "#ff4757"; // Merah
+                document.getElementById('totalPriceDisplay').innerText = formatRupiah(rawSubtotal);
+            } finally {
+                btn.innerHTML = 'Pakai';
+                btn.disabled = false;
+            }
+        }
+
+        // --- CHECKOUT PESANAN ---
+        async function processCheckout() {
+            const address = document.getElementById('shipAddress').value;
+            const phone = document.getElementById('shipPhone').value;
+            const finalTotalText = document.getElementById('totalPriceDisplay').innerText;
+            const btn = document.getElementById('checkoutBtn');
+
+            if(!address || !phone) { alert("Harap isi Alamat dan Nomor Telepon pengiriman!"); return; }
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+                    body: JSON.stringify({
+                        shipping_address: address,
+                        phone_number: phone,
+                        total_price: finalTotalText, // Mengirim harga yang sudah didiskon
+                        items: cartItems
+                    })
+                });
+
+                if(!response.ok) throw new Error("Gagal melakukan checkout");
+                
+                alert("Checkout Berhasil! Pesanan Anda sedang diproses oleh admin.");
+                window.location.href = 'index.html'; 
+            } catch (error) {
+                alert(error.message);
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Buat Pesanan';
+                btn.disabled = false;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadUserProfile();
+            loadCart();
+        });
+    </script>
+</body>
+</html>

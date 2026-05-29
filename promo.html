@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promo & Voucher | Goedang Grosir</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #e0e5ec; --text-main: #2d3436; --text-muted: #636e72; --accent-color: #0984e3;
+            --shadow-light: #ffffff; --shadow-dark: #a3b1c6;
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1b1e; --text-main: #f5f6fa; --text-muted: #a4b0be; --accent-color: #00e5ff;
+            --shadow-light: rgba(255, 255, 255, 0.05); --shadow-dark: rgba(0, 0, 0, 0.6);
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+        .top-nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; background-color: var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        
+        .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; }
+        .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
+        [data-theme="dark"] .switch-handle { transform: translateX(30px); }
+
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; flex: 1; width: 100%; }
+        .page-header { text-align: center; margin-bottom: 50px; }
+        .page-title { font-size: 28px; font-weight: 700; margin-bottom: 10px; color: var(--accent-color); }
+        .page-subtitle { font-size: 14px; color: var(--text-muted); font-weight: 600; }
+
+        /* GRID VOUCHER */
+        .voucher-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
+        
+        /* DESAIN KARTU VOUCHER */
+        .voucher-card {
+            background: var(--bg-color); border-radius: 20px; padding: 25px;
+            box-shadow: var(--neu-flat); display: flex; flex-direction: column;
+            position: relative; overflow: hidden; border-left: 8px solid var(--accent-color);
+            transition: transform 0.3s ease;
+        }
+        .voucher-card:hover { transform: translateY(-5px); box-shadow: var(--neu-hover); }
+        
+        /* Hiasan Bolong ala Tiket Kertas */
+        .voucher-card::before, .voucher-card::after {
+            content: ''; position: absolute; width: 30px; height: 30px;
+            background-color: var(--bg-color); border-radius: 50%;
+            top: 50%; transform: translateY(-50%); box-shadow: var(--neu-pressed-sm);
+        }
+        .voucher-card::before { left: -15px; }
+        .voucher-card::after { right: -15px; }
+
+        .voucher-title { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; padding-left: 10px; }
+        .voucher-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.6; padding-left: 10px; flex-grow: 1; }
+        
+        .voucher-code-box {
+            background: var(--bg-color); padding: 12px 20px; border-radius: 12px;
+            box-shadow: var(--neu-pressed-sm); display: flex; justify-content: space-between; align-items: center;
+            border: 2px dashed rgba(128,128,128,0.3); margin: 0 10px;
+        }
+        .voucher-code { font-family: monospace; font-size: 18px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; }
+        .btn-copy {
+            background: var(--bg-color); color: var(--text-main); border: none; border-radius: 8px;
+            padding: 8px 15px; font-size: 12px; font-weight: 700; box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.2s;
+        }
+        .btn-copy:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+        .btn-copy.copied { color: #27ae60; box-shadow: var(--neu-pressed-sm); }
+
+        .loading-state, .empty-state { text-align: center; padding: 50px; color: var(--text-muted); font-size: 16px; font-weight: 600; grid-column: 1 / -1; }
+
+        .bottom-nav { display: none; }
+
+        @media (max-width: 768px) {
+            .voucher-grid { grid-template-columns: 1fr; gap: 25px; }
+            .top-nav { padding: 15px 20px; }
+            body { padding-bottom: 90px; }
+            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px 10px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
+            [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
+            .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; }
+            .bottom-nav-item i { font-size: 18px; }
+            .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <a href="index.html" class="logo"><i class="fas fa-box-open"></i> GOEDANG</a>
+        <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title"><i class="fas fa-ticket-alt"></i> Voucher Spesial Anda</h1>
+            <p class="page-subtitle">Pilih dan salin kode voucher untuk dipakai saat checkout!</p>
+        </div>
+
+        <div class="voucher-grid" id="voucherContainer">
+            <div class="loading-state"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Memeriksa promo yang tersedia...</div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
+        <a href="promo.html" class="bottom-nav-item active"><i class="fas fa-tags"></i><span>Promo</span></a>
+        <a href="keranjang.html" class="bottom-nav-item"><i class="fas fa-shopping-cart"></i><span>Keranjang</span></a>
+        <a href="#" class="bottom-nav-item"><i class="fas fa-box"></i><span>Pesanan</span></a>
+        <a href="akun.html" class="bottom-nav-item"><i class="fas fa-user"></i><span>Akun</span></a>
+    </nav>
+
+    <script>
+        // --- CEK KEAMANAN ---
+        const sessionData = localStorage.getItem('user_session');
+        if (!sessionData) {
+            alert("Silakan masuk/login terlebih dahulu untuk melihat voucher khusus Anda.");
+            window.location.href = 'login.html';
+        }
+        const session = JSON.parse(sessionData);
+
+        // --- DARK MODE ---
+        const themeToggle = document.getElementById('themeToggle');
+        const switchIcon = document.getElementById('switchIcon');
+        const html = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); switchIcon.classList.replace('fa-sun', 'fa-moon'); }
+
+        themeToggle.addEventListener('click', () => {
+            if (html.getAttribute('data-theme') === 'light') { html.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); switchIcon.classList.replace('fa-sun', 'fa-moon'); } 
+            else { html.setAttribute('data-theme', 'light'); localStorage.setItem('theme', 'light'); switchIcon.classList.replace('fa-moon', 'fa-sun'); }
+        });
+
+        // --- FETCH VOUCHER DARI VERCEL ---
+        async function loadVouchers() {
+            const container = document.getElementById('voucherContainer');
+            
+            try {
+                // Mengetuk pintu server dengan membawa tiket keamanan
+                const response = await fetch('/api/vouchers', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                });
+
+                if(!response.ok) throw new Error("Gagal mengambil data promo");
+                
+                const vouchers = await response.json();
+                container.innerHTML = '';
+
+                if (vouchers.length === 0) {
+                    container.innerHTML = `<div class="empty-state">Maaf, saat ini belum ada promo yang tersedia untuk Anda.</div>`;
+                    return;
+                }
+
+                // Render Kartu Voucher
+                vouchers.forEach(vch => {
+                    const card = document.createElement('div');
+                    card.className = 'voucher-card';
+                    card.style.borderLeftColor = vch.color;
+
+                    card.innerHTML = `
+                        <div class="voucher-title" style="color: ${vch.color};">${vch.title}</div>
+                        <div class="voucher-desc">${vch.desc}</div>
+                        <div class="voucher-code-box">
+                            <span class="voucher-code" id="code-${vch.id}">${vch.code}</span>
+                            <button class="btn-copy" onclick="copyCode('${vch.id}', this)">
+                                <i class="fas fa-copy"></i> Salin
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                container.innerHTML = `<div class="empty-state" style="color:#ff4757;"><i class="fas fa-exclamation-triangle"></i> Terjadi kesalahan jaringan.</div>`;
+            }
+        }
+
+        // --- FUNGSI SALIN KODE KE CLIPBOARD ---
+        function copyCode(id, btnElement) {
+            const codeText = document.getElementById(`code-${id}`).innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                const originalText = btnElement.innerHTML;
+                btnElement.innerHTML = '<i class="fas fa-check"></i> Tersalin!';
+                btnElement.classList.add('copied');
+                
+                // Kembalikan tombol seperti semula setelah 2 detik
+                setTimeout(() => {
+                    btnElement.innerHTML = originalText;
+                    btnElement.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', loadVouchers);
+    </script>
+</body>
+</html>
