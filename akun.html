@@ -66,6 +66,8 @@
         .alert-error { background: rgba(255, 71, 87, 0.1); color: #ff4757; border: 1px solid #ff4757; }
         .alert-loading { background: rgba(9, 132, 227, 0.1); color: #0984e3; border: 1px solid #0984e3; }
 
+        .badge-count { position: absolute; top: -10px; right: -15px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
         .bottom-nav { display: none; }
 
         @media (max-width: 768px) {
@@ -74,10 +76,11 @@
             .neu-input { padding: 12px 20px 12px 45px; }
             .input-group i { top: 35px; }
             body { padding-bottom: 80px; justify-content: flex-start; }
+            
             .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px 10px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
-            .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; }
-            .bottom-nav-item i { font-size: 18px; }
+            .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; position: relative; }
+            .bottom-nav-item i { font-size: 18px; transition: transform 0.2s ease; }
             .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
         }
     </style>
@@ -140,11 +143,37 @@
     </div>
 
     <nav class="bottom-nav">
-        <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
-        <a href="#" class="bottom-nav-item"><i class="fas fa-tags"></i><span>Promo</span></a>
-        <a href="#" class="bottom-nav-item"><i class="fas fa-shopping-cart"></i><span>Keranjang</span></a>
-        <a href="#" class="bottom-nav-item"><i class="fas fa-box"></i><span>Pesanan</span></a>
-        <a href="akun.html" class="bottom-nav-item active"><i class="fas fa-user"></i><span>Akun</span></a>
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i><span>Beranda</span>
+        </a>
+        
+        <a href="promo.html" class="bottom-nav-item">
+            <div style="position: relative;">
+                <i class="fas fa-tags"></i>
+                <span class="badge-count" id="mobilePromoBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span>
+            </div>
+            <span>Promo</span>
+        </a>
+        
+        <a href="keranjang.html" class="bottom-nav-item">
+            <div style="position: relative;">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge-count" id="mobileCartBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span>
+            </div>
+            <span>Keranjang</span>
+        </a>
+        
+        <a href="#" class="bottom-nav-item">
+            <div style="position: relative;">
+                <i class="fas fa-box"></i>
+                <span class="badge-count" id="mobileOrderBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span>
+            </div>
+            <span>Pesanan</span>
+        </a>
+        
+        <a href="akun.html" class="bottom-nav-item active" id="mobileAccountBtn">
+            <i class="fas fa-user"></i><span>Akun</span>
+        </a>
     </nav>
 
     <script>
@@ -178,6 +207,50 @@
             alertMsg.className = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : 'alert-loading';
         }
 
+        // --- FUNGSI SINKRONISASI ANGKA BADGE ---
+        async function syncBadges(token) {
+            // Cek jumlah keranjang
+            try {
+                const cartRes = await fetch('/api/cart', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (cartRes.ok) {
+                    const cartItems = await cartRes.json();
+                    const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+                    const mcb = document.getElementById('mobileCartBadge');
+                    if (mcb) {
+                        mcb.style.display = totalQty > 0 ? 'flex' : 'none';
+                        mcb.innerText = totalQty > 99 ? '99+' : totalQty;
+                    }
+                }
+            } catch (e) {}
+
+            // Cek jumlah promo
+            try {
+                const promoRes = await fetch('/api/vouchers', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (promoRes.ok) {
+                    const promos = await promoRes.json();
+                    const mpb = document.getElementById('mobilePromoBadge');
+                    if (mpb) {
+                        mpb.style.display = promos.length > 0 ? 'flex' : 'none';
+                        mpb.innerText = promos.length;
+                    }
+                }
+            } catch (e) {}
+
+            // Cek jumlah pesanan aktif
+            try {
+                const orderRes = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (orderRes.ok) {
+                    const orders = await orderRes.json();
+                    const activeOrders = orders.filter(o => o.status !== 'Selesai' && o.status !== 'Dibatalkan');
+                    const mob = document.getElementById('mobileOrderBadge');
+                    if (mob) {
+                        mob.style.display = activeOrders.length > 0 ? 'flex' : 'none';
+                        mob.innerText = activeOrders.length;
+                    }
+                }
+            } catch (e) {}
+        }
+
         // --- FETCH DATA PENGGUNA SAAT HALAMAN DIBUKA ---
         async function loadProfile() {
             try {
@@ -202,7 +275,18 @@
 
                 // Generator Avatar 3D Keren berdasarkan Nama dengan warna kulit cerah (baseColor=f9c9b6)
                 const avatarName = encodeURIComponent(userData.name || userData.email);
-                document.getElementById('userAvatar').src = `https://api.dicebear.com/7.x/micah/svg?seed=${avatarName}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
+                const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${avatarName}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
+                document.getElementById('userAvatar').src = avatarUrl;
+
+                // MENGUBAH IKON AKUN DI NAVIGASI BAWAH MENJADI AVATAR & PANGGILAN
+                const nickname = userData.name ? userData.name.split(' ')[0] : "User";
+                const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+                if (mobileAccountBtn) {
+                    mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${nickname}</span>`;
+                }
+
+                // SINKRONKAN ANGKA BADGE SETELAH LOGIN BERHASIL
+                syncBadges(session.access_token);
 
                 // Tampilkan Form, Sembunyikan Loading
                 document.getElementById('loadingArea').style.display = 'none';
@@ -239,7 +323,16 @@
                 
                 // Update UI Avatar dan Nama secara langsung dengan warna kulit cerah
                 document.getElementById('displayTitle').innerText = name || "Pengguna Grosir";
-                document.getElementById('userAvatar').src = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
+                
+                const updatedAvatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
+                document.getElementById('userAvatar').src = updatedAvatarUrl;
+                
+                // Update Avatar di navigasi bawah juga saat disave
+                const updatedNickname = name ? name.split(' ')[0] : "User";
+                const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+                if (mobileAccountBtn) {
+                    mobileAccountBtn.innerHTML = `<img src="${updatedAvatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${updatedNickname}</span>`;
+                }
                 
                 showAlert("Profil berhasil diperbarui!", "success");
 
