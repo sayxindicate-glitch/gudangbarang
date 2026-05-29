@@ -78,10 +78,7 @@
             flex: 1; white-space: nowrap; display: flex; align-items: center; gap: 10px;
         }
 
-        /* --- SEARCH BAR & DYNAMIC FILTER --- */
-        .search-container {
-            flex: 2; position: relative; max-width: 500px;
-        }
+        .search-container { flex: 2; position: relative; max-width: 500px; }
         .search-container input {
             width: 100%; padding: 12px 85px 12px 45px; 
             border-radius: 50px; border: none;
@@ -111,7 +108,6 @@
         .filter-toggle-btn:active { box-shadow: var(--neu-pressed-sm); }
         .filter-toggle-btn.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
 
-        /* Dropdown Filter */
         .filter-dropdown {
             position: absolute; top: calc(100% + 15px); right: 0;
             width: 100%; max-width: 380px; background: var(--bg-color);
@@ -208,7 +204,6 @@
         [data-theme="dark"] .floating-chat-desktop:hover i { text-shadow: 0 0 10px #25d366; }
 
         .nav-btn-chat-mobile { display: none; }
-
 
         /* ========================================================= */
         /* --- KATEGORI FULL WIDTH DENGAN MASKING SEMPURNA --- */
@@ -420,7 +415,7 @@
         .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; color: #a4b0be; font-size: 13px; margin-bottom: 15px; line-height: 1.5; }
         .footer-contact-item i { color: #00e5ff; margin-top: 3px; }
 
-        /* Desain Kotak Logo Partner Pembayaran (Siap untuk Gambar URL) */
+        /* Desain Kotak Logo Partner Pembayaran */
         .payment-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -436,12 +431,11 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             transition: transform 0.2s ease;
             cursor: default;
-            padding: 5px 8px; /* Memberi ruang bernapas pada gambar */
+            padding: 5px 8px;
         }
         .pay-box:hover {
             transform: scale(1.08);
         }
-        /* Gambar akan ter-resize otomatis rapi berkat object-fit */
         .pay-img {
             width: 100%;
             height: 100%;
@@ -677,7 +671,7 @@
             }
         });
 
-        // --- Variabel Logika (Data ditarik dari Serverless Vercel) ---
+        // --- Variabel Logika ---
         let allProducts = []; 
         let itemsPerPage = 10;
         let currentPage = 1;
@@ -697,7 +691,7 @@
         const filterTagsContainer = document.getElementById('filterTagsContainer');
         const clearFiltersBtn = document.getElementById('clearFilters');
 
-        // --- FUNGSI MENGAMBIL DATA PRODUK DARI BACKEND VERCEL ---
+        // --- FUNGSI MENGAMBIL DATA PRODUK ---
         async function fetchProductsFromAPI() {
             try {
                 const response = await fetch('/api/products');
@@ -715,7 +709,7 @@
             }
         }
 
-        // --- FUNGSI MENGAMBIL LOGO PEMBAYARAN DARI BUCKET SUPABASE ---
+        // --- FUNGSI MENGAMBIL LOGO PEMBAYARAN DARI SUPABASE ---
         async function fetchLogosFromAPI() {
             try {
                 const response = await fetch('/api/logos');
@@ -921,7 +915,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             productContainer.innerHTML = `<div class="empty-state">Menarik data dari gudang... <br><i class="fas fa-spinner fa-spin" style="margin-top: 15px; font-size: 24px;"></i></div>`;
             fetchProductsFromAPI(); 
-            fetchLogosFromAPI(); // Memanggil fungsi penarik Logo dari Supabase
+            fetchLogosFromAPI(); 
         });
 
         // --- EVENT LISTENER PENCARIAN & FILTER ---
