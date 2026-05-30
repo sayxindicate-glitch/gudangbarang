@@ -303,17 +303,17 @@
                     <i class="fab fa-whatsapp"></i> <span>Chat Admin</span>
                 </a>
                 
-                <a href="promo.html" class="nav-link hide-on-mobile">
+                <a href="promo.html" class="nav-link hide-on-mobile" title="Promo">
                     <i class="fas fa-tags"></i> <span>Promo</span>
                     <span class="badge-count" id="promoBadge" style="display: none;">0</span>
                 </a>
                 
-                <a href="#" class="nav-link hide-on-mobile">
+                <a href="pesanan.html" class="nav-link hide-on-mobile" title="Pesanan">
                     <i class="fas fa-box"></i> <span>Pesanan</span>
                     <span class="badge-count" id="orderBadge" style="display: none;">0</span>
                 </a>
                 
-                <a href="keranjang.html" class="neu-btn-icon hide-on-mobile" id="desktopCartIconTarget">
+                <a href="keranjang.html" class="neu-btn-icon hide-on-mobile" id="desktopCartIconTarget" title="Keranjang">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="badge-count" id="cartBadge" style="display: none; top: -5px; right: -5px; width: 18px; height: 18px; padding: 0;">0</span>
                 </a>
@@ -364,7 +364,7 @@
             <span>Keranjang</span>
         </a>
         
-        <a href="#" class="bottom-nav-item">
+        <a href="pesanan.html" class="bottom-nav-item">
             <div style="position: relative;">
                 <i class="fas fa-box"></i>
                 <span class="badge-count" id="mobileOrderBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span>
@@ -383,9 +383,9 @@
                 <div class="footer-logo"><i class="fas fa-box-open"></i> GOEDANG GROSIR</div>
                 <p class="footer-desc">Platform e-commerce grosir terpercaya di Batam. Menyediakan berbagai kebutuhan usaha Anda dengan harga terbaik.</p>
                 <div class="footer-socials">
-                    <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://facebook.com/goedanggrosir" target="_blank" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com/goedanggrosir" target="_blank" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://tiktok.com/@goedanggrosir" target="_blank" class="social-icon" title="TikTok"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
             <div>
@@ -397,18 +397,18 @@
             <div>
                 <h4 class="footer-title">Kategori</h4>
                 <ul class="footer-links">
-                    <li><a href="#">Sembako Grosir</a></li>
-                    <li><a href="#">Alat Tulis Kantor (ATK)</a></li>
-                    <li><a href="#">Elektronik & Gadget</a></li>
-                    <li><a href="#">Fashion Grosir</a></li>
+                    <li><a href="index.html">Sembako Grosir</a></li>
+                    <li><a href="index.html">Alat Tulis Kantor (ATK)</a></li>
+                    <li><a href="index.html">Elektronik & Gadget</a></li>
+                    <li><a href="index.html">Fashion Grosir</a></li>
                 </ul>
             </div>
             <div>
                 <h4 class="footer-title">Perusahaan</h4>
                 <ul class="footer-links">
-                    <li><a href="#">Tentang Kami</a></li>
-                    <li><a href="#">Cara Berbelanja</a></li>
-                    <li><a href="#">Bantuan (FAQ)</a></li>
+                    <li><a href="index.html">Tentang Kami</a></li>
+                    <li><a href="index.html">Cara Berbelanja</a></li>
+                    <li><a href="index.html">Bantuan (FAQ)</a></li>
                 </ul>
             </div>
             <div>
@@ -794,6 +794,7 @@
                 const qtyId = `qty-${prod.id}`; 
                 const isPromoActive = prod.is_promo && prod.promo_price;
                 
+                // Gunakan div / span class agar tertata vertikal oleh Flexbox .price
                 const priceHTML = isPromoActive 
                     ? `<span class="price-strike">${prod.price}</span><span class="price-final">${prod.promo_price}</span>` 
                     : `<span class="price-final">${prod.price}</span>`;
