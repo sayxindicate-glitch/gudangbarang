@@ -101,8 +101,7 @@
         [data-theme="dark"] .btn-checkout { color: var(--accent-color); }
 
         .empty-cart { text-align: center; padding: 50px; color: var(--text-muted); font-size: 16px; font-weight: 600; }
-        .bottom-nav { display: none; }
-
+        
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 3000; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.active { display: flex; opacity: 1; }
         .modal-content { background: var(--bg-color); width: 90%; max-width: 400px; border-radius: 25px; padding: 25px; box-shadow: var(--neu-flat); transform: translateY(30px); transition: transform 0.3s ease; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; position: relative; }
@@ -123,13 +122,18 @@
         .promo-pill-btn { font-size: 11px; padding: 6px 12px; border-radius: 10px; background: var(--bg-color); color: var(--text-main); border: none; box-shadow: var(--neu-flat-sm); cursor: pointer; font-weight: bold; flex-shrink: 0;}
         .promo-pill-btn:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
+        /* ========================================================= */
+        /* MASTER BOTTOM NAV MOBILE (Rapi, Kompak, & Profesional) */
+        /* ========================================================= */
+        .bottom-nav { display: none; }
+        
         @media (max-width: 768px) {
             .cart-layout { flex-direction: column; gap: 15px; align-items: stretch; }
             .top-nav { padding: 12px 20px; }
             .hide-on-mobile { display: none !important; }
             .container { padding-bottom: 180px; margin-top: 15px; } 
             
-            .checkout-summary { position: fixed; bottom: 75px; left: 12px; width: calc(100% - 24px); top: auto; border-radius: 20px; padding: 12px 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1), var(--neu-flat); z-index: 998; margin: 0; flex: none; }
+            .checkout-summary { position: fixed; bottom: 85px; left: 12px; width: calc(100% - 24px); top: auto; border-radius: 20px; padding: 12px 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1), var(--neu-flat); z-index: 998; margin: 0; flex: none; }
             [data-theme="dark"] .checkout-summary { box-shadow: 0 5px 25px rgba(0,0,0,0.7), var(--neu-flat); }
             
             .summary-actions { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
@@ -140,10 +144,53 @@
             .total-price { font-size: 18px; }
             .btn-checkout { padding: 10px 15px; width: auto; flex: 1; font-size: 13px; border-radius: 15px; }
 
-            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 20px 20px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px; justify-content: space-between; }
-            .bottom-nav-item { flex: 1; text-align: center; text-decoration: none; color: var(--text-muted); font-size: 9px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-            .bottom-nav-item i { font-size: 18px; }
-            .bottom-nav-item.active { color: var(--accent-color); }
+            /* ---> MASTER BOTTOM NAV IMPLEMENTATION <--- */
+            .bottom-nav { 
+                display: flex; position: fixed; bottom: 0; left: 0; width: 100%; 
+                background-color: var(--bg-color); border-radius: 25px 25px 0 0; 
+                box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; 
+                padding: 10px 15px; 
+                justify-content: space-between; 
+                padding-bottom: max(15px, env(safe-area-inset-bottom)); 
+                gap: 8px; 
+            }
+            [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
+            
+            .bottom-nav-item { 
+                flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+                text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; 
+                padding: 10px 0; border-radius: 18px; 
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: transparent; 
+            }
+            
+            .bottom-nav-item i { 
+                font-size: 20px; margin-bottom: 4px; 
+                transition: transform 0.2s ease, color 0.2s ease; 
+            }
+            
+            /* Efek "Bolong" saat item aktif */
+            .bottom-nav-item.active { 
+                color: var(--accent-color); 
+                background: var(--bg-color); 
+                box-shadow: var(--neu-pressed-sm); 
+            }
+            
+            .bottom-nav-item.active i { 
+                transform: scale(1.15); 
+            }
+            
+            /* Kontainer untuk menjaga ikon dan angka notifikasi tetap menyatu */
+            .badge-container {
+                position: relative;
+                display: inline-flex;
+            }
+            
+            /* Posisi angka notifikasi statis yang presisi */
+            .bottom-nav-item .badge-count { 
+                position: absolute; top: -5px; right: -12px; background: #ff4757; color: white; 
+                font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; 
+                border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 2;
+            }
         }
     </style>
 </head>
@@ -264,12 +311,39 @@
         </div>
     </div>
 
+    MASTER BOTTOM NAV HTML <--- -->
     <nav class="bottom-nav">
-        <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
-        <a href="promo.html" class="bottom-nav-item"><div style="position: relative;"><i class="fas fa-tags"></i><span class="badge-count" id="mobilePromoBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span></div><span>Promo</span></a>
-        <a href="keranjang.html" class="bottom-nav-item active"><div style="position: relative;"><i class="fas fa-shopping-cart"></i><span class="badge-count" id="mobileCartBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span></div><span>Keranjang</span></a>
-        <a href="pesanan.html" class="bottom-nav-item"><div style="position: relative;"><i class="fas fa-box"></i><span class="badge-count" id="mobileOrderBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span></div><span>Pesanan</span></a>
-        <a href="akun.html" class="bottom-nav-item" id="mobileAccountBtn"><i class="fas fa-user"></i><span>Akun</span></a>
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i><span>Beranda</span>
+        </a>
+        
+        <a href="promo.html" class="bottom-nav-item">
+            <div class="badge-container">
+                <i class="fas fa-tags"></i>
+                <span class="badge-count" id="mobilePromoBadge" style="display: none;">0</span>
+            </div>
+            <span>Promo</span>
+        </a>
+        
+        <a href="keranjang.html" class="bottom-nav-item active">
+            <div class="badge-container">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge-count" id="mobileCartBadge" style="display: none;">0</span>
+            </div>
+            <span>Keranjang</span>
+        </a>
+        
+        <a href="pesanan.html" class="bottom-nav-item">
+            <div class="badge-container">
+                <i class="fas fa-box"></i>
+                <span class="badge-count" id="mobileOrderBadge" style="display: none;">0</span>
+            </div>
+            <span>Pesanan</span>
+        </a>
+        
+        <a href="akun.html" class="bottom-nav-item" id="mobileAccountBtn">
+            <i class="fas fa-user"></i><span>Akun</span>
+        </a>
     </nav>
 
     <script>
@@ -320,11 +394,13 @@
             notifModal.classList.add('active');
         }
 
+        // --- SINKRONISASI NAVIGASI CERDAS (AVATAR & ALAMAT) ---
         async function updateNavUI() {
             const loginBtn = document.getElementById('navLoginBtn');
             const mobileAccountBtn = document.getElementById('mobileAccountBtn');
 
             try {
+                // Tarik profil user (nama, no_wa, alamat_lengkap)
                 const userRes = await fetch('/api/user', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
                 
                 if (userRes.status === 401 || userRes.status === 403) {
@@ -345,12 +421,14 @@
                         document.getElementById('summaryAddressVal').innerText = "Sudah Sesuai";
                     }
 
+                    // Terapkan Badge Desktop
                     loginBtn.className = 'nav-profile-badge hide-on-mobile';
                     loginBtn.href = 'akun.html';
                     loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${displayName}</span>`;
 
+                    // Terapkan Badge Mobile (Menyatu dengan ukuran Master Bottom Nav)
                     if (mobileAccountBtn) {
-                        mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 22px; height: 22px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
+                        mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
                     }
                 }
                 
@@ -361,6 +439,7 @@
             }
         }
 
+        // --- SINKRONISASI BADGE (PROMO & PESANAN) ---
         async function syncBadges(token) {
             try {
                 const promoRes = await fetch('/api/vouchers', { headers: { 'Authorization': `Bearer ${token}` } });
@@ -444,8 +523,7 @@
 
             rawSubtotal = total;
             
-            // PENTING: Jika kuantitas berubah, kita WAJIB me-request ulang ke API 
-            // untuk mendapatkan update nilai diskon persentase terbaru
+            // PENTING: Jika ada voucher aktif, sinkronkan ulang diskonnya saat Qty berubah
             if(activeVouchers.length > 0) {
                 syncPromosAndApply();
             } else { 
@@ -456,6 +534,7 @@
             
             document.getElementById('checkoutBtn').disabled = false;
             
+            // Update Badge Keranjang
             const totalQty = cartItems.reduce((s, i) => s + i.quantity, 0);
             document.getElementById('mobileCartBadge').style.display = totalQty > 0 ? 'flex' : 'none';
             document.getElementById('mobileCartBadge').innerText = totalQty > 99 ? '99+' : totalQty;
@@ -487,7 +566,7 @@
             }
             
             i.quantity = newQty;
-            renderCartItems(); // Ini sekarang otomatis sinkron API Promo via syncPromosAndApply
+            renderCartItems(); 
             
             try {
                 await fetch('/api/cart', { 
@@ -553,7 +632,7 @@
             closeAddressModal(); 
         }
 
-        // --- SISTEM VOUCHER PROMO (DIPERBAIKI) ---
+        // --- SISTEM VOUCHER PROMO ---
         function openPromoModal() { 
             document.getElementById('promoModal').classList.add('active'); 
             document.getElementById('modalVoucherMsg').innerText = ''; 
@@ -651,7 +730,6 @@
 
                 const discountReturned = parseInt(result.discount_amount) || 0;
 
-                // VALIDASI KEAMANAN: Cek jika database menghasilkan 0
                 if (discountReturned === 0) {
                     closePromoModal();
                     showNotification(
@@ -675,7 +753,7 @@
             }
         }
 
-        // FUNGSI BARU: Sinkronisasi API Ulang (Berjalan saat QTY Barang berubah)
+        // FUNGSI SINKRONISASI API ULANG SAAT QTY BERUBAH
         async function syncPromosAndApply() {
             for (let i = 0; i < activeVouchers.length; i++) {
                 try {
@@ -715,7 +793,6 @@
             
             const strikeDisplay = document.getElementById('strikePriceDisplay');
             
-            // PERBAIKAN VISUAL: Hanya coret harga jika Diskon Benar-Benar Diterapkan
             if (appliedDiscount > 0) {
                 strikeDisplay.style.display = 'block';
                 strikeDisplay.innerText = formatRupiah(rawSubtotal);
