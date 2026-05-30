@@ -258,10 +258,11 @@
             .bottom-nav-item i { font-size: 18px; transition: transform 0.2s ease; } 
             .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
             
-            .footer-container { grid-template-columns: 1fr; gap: 30px; text-align: center; }
-            .footer-contact-item { justify-content: center; }
-            .footer-socials { justify-content: center; }
-            .payment-grid { grid-template-columns: repeat(4, 60px); justify-content: center; margin: 0 auto; }
+            /* --- PERBAIKAN FOOTER HP RATA KIRI --- */
+            .footer-container { grid-template-columns: 1fr; gap: 30px; text-align: left; }
+            .footer-contact-item { justify-content: flex-start; }
+            .footer-socials { justify-content: flex-start; }
+            .payment-grid { grid-template-columns: repeat(4, 60px); justify-content: flex-start; margin: 0; }
             
             body { padding-bottom: 90px; }
         }
@@ -491,7 +492,6 @@
         // SINKRONISASI NAVIGASI CERDAS (AVATAR & BADGE)
         // =========================================================================
         async function updateNavUI() {
-            // Memastikan data sesi tersimpan di memori permanen browser (localStorage)
             const sessionData = localStorage.getItem('user_session');
             const loginBtn = document.getElementById('navLoginBtn');
             const mobileAccountBtn = document.getElementById('mobileAccountBtn');
@@ -499,7 +499,8 @@
             if (sessionData) {
                 const session = JSON.parse(sessionData);
                 
-                // Menerapkan perubahan warna kulit langsung dari cache lokal agar terasa instan
+                // --- PERBAIKAN: Ubah UI langsung jadi mode "Profil" dari penyimpanan lokal ---
+                // Agar tidak muncul sekilas tombol "Login" saat menunggu respon API yang lambat/error
                 const savedName = session.name || (session.user && session.user.name) || "User";
                 const tempNickname = savedName.split(' ')[0]; 
                 const tempAvatar = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(savedName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
@@ -517,8 +518,6 @@
                     const userRes = await fetch('/api/user', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
                     
                     if (userRes.status === 401 || userRes.status === 403) {
-                        // Jika backend benar-benar menolak token karena kedaluwarsa, 
-                        // barulah sistem log out demi keamanan akun pengguna.
                         localStorage.removeItem('user_session');
                         setLoggedOutUI();
                         return;
@@ -536,7 +535,8 @@
                         }
                     }
                 } catch (e) { 
-                    console.error("Mode Offline atau Server Lambat: Menggunakan sesi lokal secara aman.", e); 
+                    console.error("Mode Offline atau Server Lambat: Menggunakan sesi lokal.", e); 
+                    // Tombol tetap aman menampilkan Profil berdasarkan data lokal (fallback)
                 }
                 
                 // Sinkronisasi Angka Background (Keranjang dkk)
@@ -671,9 +671,11 @@
             } catch (error) {}
         }
 
+        // --- FUNGSI RENDER KATEGORI DIPERBARUI UNTUK MENDUKUNG KATEGORI DINAMIS ---
         function renderCategories(customCategories = null) {
             const uniqueCategories = customCategories || new Set();
             
+            // Jika tidak ada custom category yang dikirim (misal saat load awal), pakai semua kategori bawaan
             if (!customCategories) {
                 allProducts.forEach(prod => { if(prod.category) uniqueCategories.add(prod.category); });
             }
@@ -709,6 +711,7 @@
             const scopeProducts = allProducts.filter(prod => {
                 const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
                 
+                // --- PENYESUAIAN AGAR BISA MEMBACA CATEGORY DARI TAG FILTER ---
                 const matchCategory = currentCategory === "Semua Barang" || 
                                       prod.category === currentCategory || 
                                       flatTags.includes(currentCategory);
@@ -976,10 +979,12 @@
             updateNavUI(); 
         });
 
+        // --- PENYESUAIAN PADA EVENT LISTENER PENCARIAN (MENGAMBIL DARI FILTER) ---
         searchInput.addEventListener('input', (e) => {
             const keyword = e.target.value.toLowerCase();
             clearSearchBtn.style.display = keyword.length > 0 ? 'block' : 'none';
             
+            // 1. Cari produk yang cocok dengan kata kunci pencarian
             const matchedProducts = allProducts.filter(prod => {
                 const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
                 return prod.title.toLowerCase().includes(keyword) || 
@@ -987,6 +992,7 @@
                        flatTags.some(tag => tag.toLowerCase().includes(keyword));
             });
             
+            // 2. Kumpulkan tag dari filter produk yang cocok (bukan kategori bawaannya) jika ada kata kunci
             const dynamicCategories = new Set();
             if (keyword.length > 0) {
                 matchedProducts.forEach(prod => { 
@@ -995,15 +1001,18 @@
                     }
                 });
             } else {
+                // Jika input kosong, kembalikan ke kategori utama bawaan
                 matchedProducts.forEach(prod => { 
                     if(prod.category) dynamicCategories.add(prod.category); 
                 });
             }
             
+            // 3. Jika kategori yang sedang di-klik ternyata tidak ada dalam list dinamis, reset ke Semua Barang
             if (currentCategory !== "Semua Barang" && !dynamicCategories.has(currentCategory)) {
                 currentCategory = "Semua Barang";
             }
             
+            // 4. Update baris kategori menjadi dinamis
             renderCategories(dynamicCategories);
             
             filterProducts();
@@ -1014,6 +1023,7 @@
             searchInput.value = '';
             clearSearchBtn.style.display = 'none';
             
+            // Kembalikan ke seluruh kategori bawaan karena pencarian di-reset
             currentCategory = "Semua Barang"; 
             renderCategories();
             
