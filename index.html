@@ -9,33 +9,21 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
         :root {
-            --bg-color: #e0e5ec;
-            --text-main: #2d3436;
-            --text-muted: #636e72;
-            --accent-color: #0984e3;
-            --shadow-light: #ffffff;
-            --shadow-dark: #a3b1c6;
-            
+            --bg-color: #e0e5ec; --text-main: #2d3436; --text-muted: #636e72; --accent-color: #0984e3;
+            --shadow-light: #ffffff; --shadow-dark: #a3b1c6;
             --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
             --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
             --neu-hover: 12px 12px 20px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
-            
             --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
             --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
         }
 
         [data-theme="dark"] {
-            --bg-color: #1a1b1e;
-            --text-main: #f5f6fa;
-            --text-muted: #a4b0be;
-            --accent-color: #00e5ff;
-            --shadow-light: rgba(255, 255, 255, 0.05);
-            --shadow-dark: rgba(0, 0, 0, 0.6);
-            
+            --bg-color: #1a1b1e; --text-main: #f5f6fa; --text-muted: #a4b0be; --accent-color: #00e5ff;
+            --shadow-light: rgba(255, 255, 255, 0.05); --shadow-dark: rgba(0, 0, 0, 0.6);
             --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
             --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
             --neu-hover: 12px 12px 20px var(--shadow-dark), -12px -12px 20px var(--shadow-light), 0 0 15px rgba(0, 229, 255, 0.2);
-            
             --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
             --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
         }
@@ -103,7 +91,6 @@
         .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
         [data-theme="dark"] .switch-handle { transform: translateX(30px); }
 
-        /* Style chat admin default disembunyikan di layar besar */
         .nav-btn-chat-mobile { display: none; }
 
         .floating-chat-desktop { position: fixed; bottom: 0; right: 0; background: var(--bg-color); border-radius: 16px 0 0 0; padding: 12px 20px; display: flex; flex-direction: row; align-items: center; gap: 12px; text-decoration: none; z-index: 1000; transition: all 0.3s ease; border-top: 1px solid rgba(255,255,255,0.2); border-left: 1px solid rgba(255,255,255,0.2); }
@@ -158,7 +145,6 @@
 
         .bottom-nav { display: none; }
 
-        /* --- STYLING MODAL UMUM --- */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.active { display: flex; opacity: 1; }
         .modal-content { background: var(--bg-color); width: 90%; max-width: 400px; border-radius: 25px; padding: 25px; box-shadow: var(--neu-flat); transform: translateY(30px); transition: transform 0.3s ease; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; position: relative; }
@@ -186,12 +172,13 @@
         .footer-logo { font-size: 20px; font-weight: 700; color: #00e5ff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
         .footer-desc { font-size: 13px; color: #a4b0be; line-height: 1.6; margin-bottom: 20px; }
         .footer-socials { display: flex; gap: 15px; }
+        /* PENGAMANAN TABNABBING DENGAN REL=NOOPENER NOREFERRER */
         .social-icon { width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.05); color: #f5f6fa; display: flex; justify-content: center; align-items: center; text-decoration: none; transition: background 0.3s; }
         .social-icon:hover { background: #00e5ff; color: #1a1b1e; }
         .footer-title { font-size: 15px; font-weight: 600; margin-bottom: 20px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
         .footer-links { list-style: none; padding: 0; }
         .footer-links li { margin-bottom: 12px; }
-        .footer-links a { color: #a4b0be; text-decoration: none; font-size: 13px; transition: color 0.3s; }
+        .footer-links a { color: #a4b0be; text-decoration: none; font-size: 13px; transition: color 0.3s; cursor: pointer; }
         .footer-links a:hover { color: #00e5ff; }
         .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; color: #a4b0be; font-size: 13px; margin-bottom: 15px; line-height: 1.5; }
         .footer-contact-item i { color: #00e5ff; margin-top: 3px; }
@@ -215,21 +202,7 @@
             .switch-handle { width: 20px; height: 20px; font-size: 9px; }
             [data-theme="dark"] .switch-handle { transform: translateX(24px); } 
 
-            /* Chat admin khusus di layar hp (Neumorphic Style) */
-            .nav-btn-chat-mobile { 
-                display: flex !important; 
-                align-items: center; 
-                gap: 6px; 
-                background: var(--bg-color); 
-                color: var(--text-main); 
-                text-decoration: none; 
-                font-size: 11px; 
-                font-weight: 700; 
-                padding: 6px 12px; 
-                border-radius: 50px; 
-                box-shadow: var(--neu-flat-sm); 
-                transition: all 0.2s ease; 
-            }
+            .nav-btn-chat-mobile { display: flex !important; align-items: center; gap: 6px; background: var(--bg-color); color: var(--text-main); text-decoration: none; font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 50px; box-shadow: var(--neu-flat-sm); transition: all 0.2s ease; }
             .nav-btn-chat-mobile:active { box-shadow: var(--neu-pressed-sm); }
             .nav-btn-chat-mobile i { color: #25d366; font-size: 14px; }
             
@@ -242,7 +215,6 @@
             .product-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 5px; }
             .neu-card { padding: 12px; }
             
-            /* Penyesuaian ukuran teks harga untuk layar HP DENGAN RATA BAWAH */
             .price { min-height: 40px; margin-bottom: 12px; justify-content: flex-end; }
             .price-strike { font-size: 10px; margin-bottom: 2px; }
             .price-final { font-size: 15px; }
@@ -250,7 +222,6 @@
             .btn-eye { width: 35px; font-size: 12px; }
             .neu-btn { font-size: 11px; padding: 8px; }
 
-            /* --- PERBAIKAN TATA LETAK NAVIGASI BAWAH HP --- */
             .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px 10px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
             
@@ -258,7 +229,6 @@
             .bottom-nav-item i { font-size: 18px; transition: transform 0.2s ease; } 
             .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
             
-            /* --- PERBAIKAN FOOTER HP RATA KIRI --- */
             .footer-container { grid-template-columns: 1fr; gap: 30px; text-align: left; }
             .footer-contact-item { justify-content: flex-start; }
             .footer-socials { justify-content: flex-start; }
@@ -299,7 +269,7 @@
                     <div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div>
                 </div>
                 
-                <a href="https://wa.me/628153335000" class="nav-btn-chat-mobile" target="_blank" title="Chat Admin">
+                <a href="https://wa.me/628153335000" class="nav-btn-chat-mobile" target="_blank" rel="noopener noreferrer" title="Chat Admin">
                     <i class="fab fa-whatsapp"></i> <span>Chat Admin</span>
                 </a>
                 
@@ -340,7 +310,7 @@
         </div>
     </div>
 
-    <a href="https://wa.me/628153335000" class="floating-chat-desktop" target="_blank" title="Hubungi Support via WhatsApp">
+    <a href="https://wa.me/628153335000" class="floating-chat-desktop" target="_blank" rel="noopener noreferrer" title="Hubungi Support via WhatsApp">
         <i class="fab fa-whatsapp"></i>
         <span>SUPPORT</span>
     </a>
@@ -383,9 +353,9 @@
                 <div class="footer-logo"><i class="fas fa-box-open"></i> GOEDANG GROSIR</div>
                 <p class="footer-desc">Platform e-commerce grosir terpercaya di Batam. Menyediakan berbagai kebutuhan usaha Anda dengan harga terbaik.</p>
                 <div class="footer-socials">
-                    <a href="https://facebook.com/goedanggrosir" target="_blank" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://instagram.com/goedanggrosir" target="_blank" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="https://tiktok.com/@goedanggrosir" target="_blank" class="social-icon" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://facebook.com/goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com/goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://tiktok.com/@goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="TikTok"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
             <div>
@@ -397,18 +367,18 @@
             <div>
                 <h4 class="footer-title">Kategori</h4>
                 <ul class="footer-links">
-                    <li><a href="index.html">Sembako Grosir</a></li>
-                    <li><a href="index.html">Alat Tulis Kantor (ATK)</a></li>
-                    <li><a href="index.html">Elektronik & Gadget</a></li>
-                    <li><a href="index.html">Fashion Grosir</a></li>
+                    <li><a onclick="handleCategoryClick(null, 'Semua Barang'); window.scrollTo(0,0); return false;">Sembako Grosir</a></li>
+                    <li><a onclick="handleCategoryClick(null, 'Alat Tulis'); window.scrollTo(0,0); return false;">Alat Tulis Kantor (ATK)</a></li>
+                    <li><a onclick="handleCategoryClick(null, 'Elektronik'); window.scrollTo(0,0); return false;">Elektronik & Gadget</a></li>
+                    <li><a onclick="handleCategoryClick(null, 'Fashion'); window.scrollTo(0,0); return false;">Fashion Grosir</a></li>
                 </ul>
             </div>
             <div>
                 <h4 class="footer-title">Perusahaan</h4>
                 <ul class="footer-links">
-                    <li><a href="index.html">Tentang Kami</a></li>
-                    <li><a href="index.html">Cara Berbelanja</a></li>
-                    <li><a href="index.html">Bantuan (FAQ)</a></li>
+                    <li><a onclick="showNotification('Informasi', 'Halaman Tentang Kami sedang dalam tahap pengembangan.', 'warning'); return false;">Tentang Kami</a></li>
+                    <li><a onclick="showNotification('Informasi', 'Panduan Cara Berbelanja akan segera hadir.', 'warning'); return false;">Cara Berbelanja</a></li>
+                    <li><a onclick="showNotification('Informasi', 'Halaman Bantuan (FAQ) sedang diperbarui.', 'warning'); return false;">Bantuan (FAQ)</a></li>
                 </ul>
             </div>
             <div>
@@ -499,8 +469,6 @@
             if (sessionData) {
                 const session = JSON.parse(sessionData);
                 
-                // --- PERBAIKAN: Ubah UI langsung jadi mode "Profil" dari penyimpanan lokal ---
-                // Agar tidak muncul sekilas tombol "Login" saat menunggu respon API yang lambat/error
                 const savedName = session.name || (session.user && session.user.name) || "User";
                 const tempNickname = savedName.split(' ')[0]; 
                 const tempAvatar = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(savedName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
@@ -536,10 +504,8 @@
                     }
                 } catch (e) { 
                     console.error("Mode Offline atau Server Lambat: Menggunakan sesi lokal.", e); 
-                    // Tombol tetap aman menampilkan Profil berdasarkan data lokal (fallback)
                 }
                 
-                // Sinkronisasi Angka Background (Keranjang dkk)
                 syncBadges(session.access_token);
 
             } else {
@@ -675,7 +641,6 @@
         function renderCategories(customCategories = null) {
             const uniqueCategories = customCategories || new Set();
             
-            // Jika tidak ada custom category yang dikirim (misal saat load awal), pakai semua kategori bawaan
             if (!customCategories) {
                 allProducts.forEach(prod => { if(prod.category) uniqueCategories.add(prod.category); });
             }
@@ -698,9 +663,17 @@
             });
         }
 
-        function handleCategoryClick(clickedBtn, categoryName) {
+        // PERBAIKAN: Menerima "null" agar bisa dipanggil dari link Footer
+        window.handleCategoryClick = function(clickedBtn, categoryName) {
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            clickedBtn.classList.add('active');
+            
+            if (clickedBtn) {
+                clickedBtn.classList.add('active');
+            } else {
+                const targetBtn = document.querySelector(`.cat-btn[data-category="${categoryName}"]`);
+                if (targetBtn) targetBtn.classList.add('active');
+            }
+            
             currentCategory = categoryName;
             activeTags = []; 
             filterProducts();
@@ -711,7 +684,6 @@
             const scopeProducts = allProducts.filter(prod => {
                 const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
                 
-                // --- PENYESUAIAN AGAR BISA MEMBACA CATEGORY DARI TAG FILTER ---
                 const matchCategory = currentCategory === "Semua Barang" || 
                                       prod.category === currentCategory || 
                                       flatTags.includes(currentCategory);
@@ -794,7 +766,6 @@
                 const qtyId = `qty-${prod.id}`; 
                 const isPromoActive = prod.is_promo && prod.promo_price;
                 
-                // Gunakan div / span class agar tertata vertikal oleh Flexbox .price
                 const priceHTML = isPromoActive 
                     ? `<span class="price-strike">${prod.price}</span><span class="price-final">${prod.promo_price}</span>` 
                     : `<span class="price-final">${prod.price}</span>`;
@@ -980,12 +951,10 @@
             updateNavUI(); 
         });
 
-        // --- PENYESUAIAN PADA EVENT LISTENER PENCARIAN (MENGAMBIL DARI FILTER) ---
         searchInput.addEventListener('input', (e) => {
             const keyword = e.target.value.toLowerCase();
             clearSearchBtn.style.display = keyword.length > 0 ? 'block' : 'none';
             
-            // 1. Cari produk yang cocok dengan kata kunci pencarian
             const matchedProducts = allProducts.filter(prod => {
                 const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
                 return prod.title.toLowerCase().includes(keyword) || 
@@ -993,7 +962,6 @@
                        flatTags.some(tag => tag.toLowerCase().includes(keyword));
             });
             
-            // 2. Kumpulkan tag dari filter produk yang cocok (bukan kategori bawaannya) jika ada kata kunci
             const dynamicCategories = new Set();
             if (keyword.length > 0) {
                 matchedProducts.forEach(prod => { 
@@ -1002,20 +970,16 @@
                     }
                 });
             } else {
-                // Jika input kosong, kembalikan ke kategori utama bawaan
                 matchedProducts.forEach(prod => { 
                     if(prod.category) dynamicCategories.add(prod.category); 
                 });
             }
             
-            // 3. Jika kategori yang sedang di-klik ternyata tidak ada dalam list dinamis, reset ke Semua Barang
             if (currentCategory !== "Semua Barang" && !dynamicCategories.has(currentCategory)) {
                 currentCategory = "Semua Barang";
             }
             
-            // 4. Update baris kategori menjadi dinamis
             renderCategories(dynamicCategories);
-            
             filterProducts();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
@@ -1023,11 +987,8 @@
         clearSearchBtn.addEventListener('click', () => {
             searchInput.value = '';
             clearSearchBtn.style.display = 'none';
-            
-            // Kembalikan ke seluruh kategori bawaan karena pencarian di-reset
             currentCategory = "Semua Barang"; 
             renderCategories();
-            
             filterProducts();
             searchInput.focus();
             window.scrollTo({ top: 0, behavior: 'smooth' });
