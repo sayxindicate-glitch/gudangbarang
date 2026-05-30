@@ -320,13 +320,11 @@
             notifModal.classList.add('active');
         }
 
-        // --- SINKRONISASI NAVIGASI CERDAS (AVATAR & ALAMAT) ---
         async function updateNavUI() {
             const loginBtn = document.getElementById('navLoginBtn');
             const mobileAccountBtn = document.getElementById('mobileAccountBtn');
 
             try {
-                // Tarik profil user (nama, no_wa, alamat_lengkap)
                 const userRes = await fetch('/api/user', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
                 
                 if (userRes.status === 401 || userRes.status === 403) {
@@ -337,11 +335,9 @@
                 if (userRes.ok) {
                     const userData = await userRes.json();
                     
-                    // PERBAIKAN: Gunakan nama kolom database terbaru dan baseColor seragam
                     const displayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
                     const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
-                    // Simpan variabel Alamat global berdasarkan data asli DB
                     globalAddress = userData.alamat_lengkap || "";
                     globalPhone = userData.no_wa || "";
                     
@@ -349,12 +345,10 @@
                         document.getElementById('summaryAddressVal').innerText = "Sudah Sesuai";
                     }
 
-                    // Terapkan Badge Desktop
                     loginBtn.className = 'nav-profile-badge hide-on-mobile';
                     loginBtn.href = 'akun.html';
                     loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${displayName}</span>`;
 
-                    // Terapkan Badge Mobile
                     if (mobileAccountBtn) {
                         mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 22px; height: 22px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
                     }
@@ -367,7 +361,6 @@
             }
         }
 
-        // --- SINKRONISASI BADGE (PROMO & PESANAN) ---
         async function syncBadges(token) {
             try {
                 const promoRes = await fetch('/api/vouchers', { headers: { 'Authorization': `Bearer ${token}` } });
@@ -451,9 +444,10 @@
 
             rawSubtotal = total;
             
-            // Evaluasi Diskon Otomatis Jika Ada Voucher
+            // PENTING: Jika kuantitas berubah, kita WAJIB me-request ulang ke API 
+            // untuk mendapatkan update nilai diskon persentase terbaru
             if(activeVouchers.length > 0) {
-                recalculatePromo();
+                syncPromosAndApply();
             } else { 
                 finalTotalRp = total; 
                 document.getElementById('strikePriceDisplay').style.display = 'none'; 
@@ -462,7 +456,6 @@
             
             document.getElementById('checkoutBtn').disabled = false;
             
-            // Update Badge Keranjang
             const totalQty = cartItems.reduce((s, i) => s + i.quantity, 0);
             document.getElementById('mobileCartBadge').style.display = totalQty > 0 ? 'flex' : 'none';
             document.getElementById('mobileCartBadge').innerText = totalQty > 99 ? '99+' : totalQty;
@@ -494,7 +487,7 @@
             }
             
             i.quantity = newQty;
-            renderCartItems();
+            renderCartItems(); // Ini sekarang otomatis sinkron API Promo via syncPromosAndApply
             
             try {
                 await fetch('/api/cart', { 
@@ -560,7 +553,7 @@
             closeAddressModal(); 
         }
 
-        // --- SISTEM VOUCHER PROMO ---
+        // --- SISTEM VOUCHER PROMO (DIPERBAIKI) ---
         function openPromoModal() { 
             document.getElementById('promoModal').classList.add('active'); 
             document.getElementById('modalVoucherMsg').innerText = ''; 
@@ -645,7 +638,6 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${session.access_token}`
                     }, 
-                    // Penting: Mengirim total_price = rawSubtotal murni, bukan finalTotalRp
                     body: JSON.stringify({ code, total_price: rawSubtotal }) 
                 });
                 
@@ -657,11 +649,24 @@
                     return;
                 }
 
-                activeVouchers.push({ code, discount: result.discount_amount });
-                recalculatePromo();
+                const discountReturned = parseInt(result.discount_amount) || 0;
+
+                // VALIDASI KEAMANAN: Cek jika database menghasilkan 0
+                if (discountReturned === 0) {
+                    closePromoModal();
+                    showNotification(
+                        "Konfigurasi Promo Gagal", 
+                        `Sistem mendeteksi kode ${code} valid, namun potongan diskon Rp 0. Periksa kolom 'type' di database Supabase (harus berisi 'percent' atau 'fixed').`, 
+                        "warning"
+                    );
+                    return;
+                }
+
+                activeVouchers.push({ code, discount: discountReturned });
+                applyPromoMath();
                 
                 closePromoModal();
-                showNotification("Berhasil", `Promo ${code} berhasil dipakai! Diskon: ${formatRupiah(result.discount_amount)}`, "success");
+                showNotification("Berhasil", `Promo ${code} berhasil dipakai! Diskon: ${formatRupiah(discountReturned)}`, "success");
             } catch (error) {
                 msgBox.innerText = "Terjadi kesalahan jaringan/sistem.";
                 msgBox.style.color = "#ff4757";
@@ -670,9 +675,28 @@
             }
         }
 
-        function recalculatePromo() {
+        // FUNGSI BARU: Sinkronisasi API Ulang (Berjalan saat QTY Barang berubah)
+        async function syncPromosAndApply() {
+            for (let i = 0; i < activeVouchers.length; i++) {
+                try {
+                    const res = await fetch('/api/apply-voucher', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+                        body: JSON.stringify({ code: activeVouchers[i].code, total_price: rawSubtotal })
+                    });
+                    if (res.ok) {
+                        const result = await res.json();
+                        activeVouchers[i].discount = parseInt(result.discount_amount) || 0;
+                    }
+                } catch (e) {
+                    console.error("Gagal sinkron ulang diskon:", e);
+                }
+            }
+            applyPromoMath();
+        }
+
+        function applyPromoMath() {
             let disc = 0;
-            // Di sistem Goedang Grosir Vercel, kita mengizinkan multi-diskon digabungkan.
             activeVouchers.forEach(v => disc += v.discount);
             
             if (disc > rawSubtotal) disc = rawSubtotal;
@@ -690,8 +714,14 @@
             document.getElementById('summaryPromoVal').style.color = "#27ae60";
             
             const strikeDisplay = document.getElementById('strikePriceDisplay');
-            strikeDisplay.style.display = 'block';
-            strikeDisplay.innerText = formatRupiah(rawSubtotal);
+            
+            // PERBAIKAN VISUAL: Hanya coret harga jika Diskon Benar-Benar Diterapkan
+            if (appliedDiscount > 0) {
+                strikeDisplay.style.display = 'block';
+                strikeDisplay.innerText = formatRupiah(rawSubtotal);
+            } else {
+                strikeDisplay.style.display = 'none';
+            }
             
             document.getElementById('totalPriceDisplay').innerText = formatRupiah(finalTotalRp);
         }
@@ -717,7 +747,6 @@
             btn.disabled = true;
             
             try {
-                // Ekstrak string kode voucher saja
                 const voucherCodes = activeVouchers.map(v => v.code);
                 
                 const res = await fetch('/api/checkout', { 
