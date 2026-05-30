@@ -108,7 +108,6 @@
             .hide-on-mobile { display: none !important; }
             body { padding-bottom: 90px; }
             
-            /* ---> MASTER BOTTOM NAV IMPLEMENTATION <--- */
             .bottom-nav { 
                 display: flex; position: fixed; bottom: 0; left: 0; width: 100%; 
                 background-color: var(--bg-color); border-radius: 25px 25px 0 0; 
@@ -132,7 +131,6 @@
                 transition: transform 0.2s ease, color 0.2s ease; 
             }
             
-            /* Efek "Bolong" saat item aktif */
             .bottom-nav-item.active { 
                 color: var(--accent-color); 
                 background: var(--bg-color); 
@@ -143,13 +141,11 @@
                 transform: scale(1.15); 
             }
             
-            /* Kontainer untuk menjaga ikon dan angka notifikasi tetap menyatu */
             .badge-container {
                 position: relative;
                 display: inline-flex;
             }
             
-            /* Posisi angka notifikasi statis yang presisi */
             .bottom-nav-item .badge-count { 
                 position: absolute; top: -5px; right: -12px; background: #ff4757; color: white; 
                 font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; 
@@ -196,7 +192,6 @@
         </div>
     </div>
 
-    MASTER BOTTOM NAV HTML <--- -->
     <nav class="bottom-nav">
         <a href="index.html" class="bottom-nav-item">
             <i class="fas fa-home"></i><span>Beranda</span>
@@ -254,7 +249,6 @@
 
                     if (userRes.ok) {
                         const userData = await userRes.json();
-                        // PERBAIKAN: Selalu gunakan nama panggilan untuk Navbar agar pas di spasi
                         const displayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
                         const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
@@ -264,7 +258,6 @@
 
                         if (mobileAccountBtn) {
                             mobileAccountBtn.href = 'akun.html';
-                            // Menyesuaikan ukuran avatar dengan Master Bottom Nav yang baru
                             mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
                         }
                     }
