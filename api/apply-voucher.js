@@ -15,26 +15,38 @@ export default async function handler(req, res) {
     });
 
     try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError || !user) return res.status(401).json({ error: 'Sesi tidak valid' });
 
-        const { data: alreadyClaimed } = await supabase
-            .from('gg_claimed_vouchers').select('*')
-            .eq('user_id', user.id).eq('voucher_code', code.toUpperCase()).maybeSingle();
+        const upperCode = code.toUpperCase();
 
-        if (alreadyClaimed) {
+        // 1. Cek riwayat penggunaan di database gg_claimed_vouchers
+        const { data: claimStatus } = await supabase
+            .from('gg_claimed_vouchers')
+            .select('is_used')
+            .eq('user_id', user.id)
+            .eq('voucher_code', upperCode)
+            .maybeSingle();
+
+        if (claimStatus && claimStatus.is_used) {
             return res.status(400).json({ error: 'Anda sudah pernah menggunakan promo ini sebelumnya.' });
         }
 
-        const { data: voucher, error } = await supabase.from('gg_vouchers').select('*').eq('code', code.toUpperCase()).maybeSingle(); 
-        if (error || !voucher) return res.status(400).json({ error: 'Kode promo tidak valid.' });
+        // 2. Ambil spesifikasi voucher asli dari brankas database
+        const { data: voucher, error: vError } = await supabase.from('gg_vouchers').select('*').eq('code', upperCode).maybeSingle(); 
+        if (vError || !voucher) return res.status(400).json({ error: 'Kode promo tidak ditemukan di database.' });
 
-        // PENJAGA KEDALUWARSA: Tolak jika sudah lewat waktu
+        // Cek Batas Kadaluarsa Tanggal
         if (voucher.expires_at && new Date(voucher.expires_at) < new Date()) {
             return res.status(400).json({ error: 'Maaf, kode promo ini sudah kadaluarsa.' });
         }
 
-        if (subtotal < voucher.min_purchase) return res.status(400).json({ error: `Minimal belanja Rp ${parseInt(voucher.min_purchase).toLocaleString('id-ID')}` });
+        // Cek Syarat Minimal Belanja
+        if (subtotal < voucher.min_purchase) {
+            return res.status(400).json({ error: `Minimal belanja Rp ${parseInt(voucher.min_purchase).toLocaleString('id-ID')} untuk pakai kode ini.` });
+        }
 
+        // 3. Eksekusi Rumus Perhitungan Diskon Aman
         let discountAmount = 0;
         if (voucher.type === 'percent') {
             discountAmount = subtotal * parseFloat(voucher.value);
@@ -51,8 +63,7 @@ export default async function handler(req, res) {
             discount_amount: parseInt(discountAmount),
             final_total: parseInt(finalTotal)
         });
-
-    } catch (error) {
-        return res.status(500).json({ error: 'Terjadi kesalahan sistem' });
+    } catch (err) { 
+        return res.status(500).json({ error: 'Terjadi kesalahan sistem kasir.' }); 
     }
 }
