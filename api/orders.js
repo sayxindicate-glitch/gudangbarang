@@ -1,75 +1,71 @@
 import { createClient } from '@supabase/supabase-js';
 
 export default async function handler(req, res) {
-    // ANTI-CACHE BRUTAL: Memaksa Vercel/Browser mengambil file terbaru
-    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', '0');
-
     if (req.method !== 'GET') return res.status(405).json({ error: 'Metode tidak diizinkan' });
 
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) return res.status(401).json({ error: 'Akses ditolak' });
     const token = authHeader.split(' ')[1];
 
-    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY, {
+    // Client 1: Mengecek Sesi User secara aman (Kunci Biasa)
+    const supabaseAuth = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY, {
         global: { headers: { Authorization: `Bearer ${token}` } }
     });
 
     try {
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        const { data: { user }, error: authError } = await supabaseAuth.auth.getUser();
         if (authError || !user) return res.status(401).json({ error: 'Sesi tidak valid' });
 
-        // 1. Ambil Data Pesanan
-        const { data: orders, error: dbError } = await supabase
+        // Client 2: KUNCI MASTER (Service Role) - Digunakan khusus untuk menembus RLS dan menarik relasi produk
+        const supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+
+        // Supabase Magic JOIN: Menarik Pesanan, Rincian Barang, dan Info Produk sekaligus!
+        const { data: orders, error: dbError } = await supabaseAdmin
             .from('gg_orders')
-            .select('*')
+            .select(`
+                *,
+                gg_order_items (
+                    id, quantity, price_at_buy, product_id,
+                    gg_products ( id, product_name, product_img )
+                )
+            `)
             .eq('user_id', user.id)
             .order('created_at', { ascending: false });
 
         if (dbError) throw dbError;
         if (!orders || orders.length === 0) return res.status(200).json([]);
 
-        const orderIds = orders.map(o => o.id);
-
-        // 2. Ambil Rincian Barang
-        const { data: items, error: itemsError } = await supabase
-            .from('gg_order_items')
-            .select('*')
-            .in('order_id', orderIds);
-
-        if (itemsError) throw itemsError;
-
-        // 3. Ambil Nama & Foto dari Produk Asli (Berdasarkan ID)
-        const productIds = [...new Set(items.map(i => i.product_id).filter(id => id != null))];
-        let productsDict = {};
-        if (productIds.length > 0) {
-            const { data: products } = await supabase.from('gg_products').select('*').in('id', productIds);
-            if (products) {
-                products.forEach(p => { productsDict[String(p.id)] = p; });
-            }
-        }
-
-        // 4. Gabungkan Data (PENTING: Membaca price_at_buy)
+        // Merapikan format JSON agar sesuai standar bacaan pesanan.html
         const finalOrders = orders.map(order => {
-            const orderItems = items ? items.filter(i => i.order_id === order.id) : [];
-            const mappedItems = orderItems.map(item => {
-                const prod = productsDict[String(item.product_id)] || {};
+            const items = order.gg_order_items || [];
+            
+            const formattedItems = items.map(item => {
+                const prod = item.gg_products || {};
                 return {
-                    product_id: item.product_id, 
-                    product_name: prod.product_name || prod.name || item.product_name || 'Barang Grosir',
-                    product_img: prod.product_img || prod.image || prod.img_url || item.product_img || '',
-                    // Ini yang akan memperbaiki bug "Rp 0"
-                    product_price: item.price_at_buy || item.product_price || prod.product_price || prod.price || 0,
+                    product_id: item.product_id,
+                    // Tarik nama dari relasi tabel produk
+                    product_name: prod.product_name || 'Barang Grosir',
+                    // Tarik gambar dari relasi tabel produk
+                    product_img: prod.product_img || '',
+                    // Gunakan harga asli saat dibeli
+                    product_price: item.price_at_buy || 0,
                     quantity: item.quantity
                 };
             });
-            return { ...order, items: mappedItems };
+
+            // Hapus properti bawaan Supabase agar output lebih bersih
+            delete order.gg_order_items; 
+            
+            return {
+                ...order,
+                items: formattedItems
+            };
         });
 
         return res.status(200).json(finalOrders);
+
     } catch (error) {
-        console.error("Orders API Error:", error);
-        return res.status(500).json({ error: 'Kesalahan Server Internal' });
+        console.error("Fetch Orders Error:", error);
+        return res.status(500).json({ error: 'Gagal memperoleh data secara akurat' });
     }
 }
