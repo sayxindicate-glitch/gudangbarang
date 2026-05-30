@@ -172,7 +172,6 @@
         .footer-logo { font-size: 20px; font-weight: 700; color: #00e5ff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
         .footer-desc { font-size: 13px; color: #a4b0be; line-height: 1.6; margin-bottom: 20px; }
         .footer-socials { display: flex; gap: 15px; }
-        
         .social-icon { width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.05); color: #f5f6fa; display: flex; justify-content: center; align-items: center; text-decoration: none; transition: background 0.3s; }
         .social-icon:hover { background: #00e5ff; color: #1a1b1e; }
         .footer-title { font-size: 15px; font-weight: 600; margin-bottom: 20px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
@@ -457,7 +456,7 @@
         const clearFiltersBtn = document.getElementById('clearFilters');
 
         // =========================================================================
-        // PEMBERSIHAN SESI & UPDATE UI
+        // PEMBERSIHAN SESI & UPDATE UI (DIPERBAIKI)
         // =========================================================================
         async function updateNavUI() {
             const sessionData = localStorage.getItem('user_session');
@@ -467,11 +466,9 @@
             if (sessionData) {
                 let session;
                 try {
-                    // PENGAMANAN: Cek jika format memori sudah usang atau rusak
                     session = JSON.parse(sessionData);
                     if (!session || !session.access_token) throw new Error("Format sesi lama");
                 } catch(e) {
-                    // Jika terdeteksi rusak, hapus dan kembalikan ke tombol Login
                     localStorage.removeItem('user_session');
                     setLoggedOutUI();
                     return;
@@ -501,13 +498,16 @@
 
                     if (userRes.ok) {
                         const userData = await userRes.json();
-                        const fullName = userData.name || "User";
-                        const nickname = fullName.split(' ')[0]; 
-                        const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(fullName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
+                        
+                        // PERBAIKAN: Baca dari nama_panggilan atau nama_lengkap yang dikirim backend
+                        const displayName = userData.nama_panggilan || 
+                                          (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
 
-                        loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${nickname}</span>`;
+                        const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
+
+                        loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${displayName}</span>`;
                         if (mobileAccountBtn) {
-                            mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${nickname}</span>`;
+                            mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
                         }
                     }
                 } catch (e) { 
