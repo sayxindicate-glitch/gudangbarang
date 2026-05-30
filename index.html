@@ -130,7 +130,11 @@
         .product-img { width: 100%; aspect-ratio: 1 / 1; border-radius: 12px; object-fit: cover; margin-bottom: 15px; box-shadow: var(--neu-flat-sm); }
         .product-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; line-height: 1.3;}
         .product-info { font-size: 11px; color: var(--text-muted); margin-bottom: 15px; flex-grow: 1; }
-        .price { font-size: 18px; font-weight: 700; color: var(--accent-color); margin-bottom: 15px; }
+        
+        /* --- PERBAIKAN TATA LETAK HARGA --- */
+        .price { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 45px; margin-bottom: 15px; }
+        .price-strike { font-size: 12px; color: var(--text-muted); text-decoration: line-through; font-weight: 400; line-height: 1; margin-bottom: 4px; }
+        .price-final { font-size: 18px; font-weight: 700; color: var(--accent-color); line-height: 1; }
 
         .qty-wrapper { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px; width: 100%; }
         .qty-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--bg-color); color: var(--text-main); border: none; box-shadow: var(--neu-flat-sm); cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 12px; }
@@ -238,6 +242,12 @@
             
             .product-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 5px; }
             .neu-card { padding: 12px; }
+            
+            /* Penyesuaian ukuran teks harga untuk layar HP */
+            .price { min-height: 40px; margin-bottom: 12px; }
+            .price-strike { font-size: 10px; margin-bottom: 2px; }
+            .price-final { font-size: 15px; }
+
             .btn-eye { width: 35px; font-size: 12px; }
             .neu-btn { font-size: 11px; padding: 8px; }
 
@@ -488,8 +498,6 @@
             if (sessionData) {
                 const session = JSON.parse(sessionData);
                 
-                // --- PERBAIKAN: Ubah UI langsung jadi mode "Profil" dari penyimpanan lokal ---
-                // Agar tidak muncul sekilas tombol "Login" saat menunggu respon API yang lambat/error
                 const savedName = session.name || (session.user && session.user.name) || "User";
                 const tempNickname = savedName.split(' ')[0]; 
                 const tempAvatar = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(savedName)}&backgroundColor=e0e5ec`;
@@ -525,7 +533,6 @@
                     }
                 } catch (e) { 
                     console.error("Mode Offline atau Server Lambat: Menggunakan sesi lokal.", e); 
-                    // Tombol tetap aman menampilkan Profil berdasarkan data lokal (fallback)
                 }
                 
                 // Sinkronisasi Angka Background (Keranjang dkk)
@@ -660,11 +667,9 @@
             } catch (error) {}
         }
 
-        // --- FUNGSI RENDER KATEGORI DIPERBARUI UNTUK MENDUKUNG KATEGORI DINAMIS ---
         function renderCategories(customCategories = null) {
             const uniqueCategories = customCategories || new Set();
             
-            // Jika tidak ada custom category yang dikirim (misal saat load awal), pakai semua kategori bawaan
             if (!customCategories) {
                 allProducts.forEach(prod => { if(prod.category) uniqueCategories.add(prod.category); });
             }
@@ -700,7 +705,6 @@
             const scopeProducts = allProducts.filter(prod => {
                 const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
                 
-                // --- PENYESUAIAN AGAR BISA MEMBACA CATEGORY DARI TAG FILTER ---
                 const matchCategory = currentCategory === "Semua Barang" || 
                                       prod.category === currentCategory || 
                                       flatTags.includes(currentCategory);
@@ -767,6 +771,7 @@
             }
         }
 
+        // --- PENYESUAIAN PADA JS RENDER PRODUCTS HARGA BERTUMPUK ---
         function renderProducts(isLoadMore = false) {
             if (!isLoadMore) productContainer.innerHTML = '';
             if (currentProducts.length === 0) {
@@ -782,9 +787,11 @@
             productsToShow.forEach(prod => {
                 const qtyId = `qty-${prod.id}`; 
                 const isPromoActive = prod.is_promo && prod.promo_price;
+                
+                // Gunakan div / span class agar tertata vertikal oleh Flexbox .price
                 const priceHTML = isPromoActive 
-                    ? `<span style="text-decoration: line-through; font-size:13px; color:var(--text-muted); margin-right:5px;">${prod.price}</span> ${prod.promo_price}` 
-                    : `${prod.price}`;
+                    ? `<span class="price-strike">${prod.price}</span><span class="price-final">${prod.promo_price}</span>` 
+                    : `<span class="price-final">${prod.price}</span>`;
 
                 const card = document.createElement('div');
                 card.className = 'neu-card';
@@ -967,12 +974,10 @@
             updateNavUI(); 
         });
 
-        // --- PENYESUAIAN PADA EVENT LISTENER PENCARIAN (MENGAMBIL DARI FILTER) ---
         searchInput.addEventListener('input', (e) => {
             const keyword = e.target.value.toLowerCase();
             clearSearchBtn.style.display = keyword.length > 0 ? 'block' : 'none';
             
-            // 1. Cari produk yang cocok dengan kata kunci pencarian
             const matchedProducts = allProducts.filter(prod => {
                 const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
                 return prod.title.toLowerCase().includes(keyword) || 
@@ -980,7 +985,6 @@
                        flatTags.some(tag => tag.toLowerCase().includes(keyword));
             });
             
-            // 2. Kumpulkan tag dari filter produk yang cocok (bukan kategori bawaannya) jika ada kata kunci
             const dynamicCategories = new Set();
             if (keyword.length > 0) {
                 matchedProducts.forEach(prod => { 
@@ -989,18 +993,15 @@
                     }
                 });
             } else {
-                // Jika input kosong, kembalikan ke kategori utama bawaan
                 matchedProducts.forEach(prod => { 
                     if(prod.category) dynamicCategories.add(prod.category); 
                 });
             }
             
-            // 3. Jika kategori yang sedang di-klik ternyata tidak ada dalam list dinamis, reset ke Semua Barang
             if (currentCategory !== "Semua Barang" && !dynamicCategories.has(currentCategory)) {
                 currentCategory = "Semua Barang";
             }
             
-            // 4. Update baris kategori menjadi dinamis
             renderCategories(dynamicCategories);
             
             filterProducts();
@@ -1011,7 +1012,6 @@
             searchInput.value = '';
             clearSearchBtn.style.display = 'none';
             
-            // Kembalikan ke seluruh kategori bawaan karena pencarian di-reset
             currentCategory = "Semua Barang"; 
             renderCategories();
             
@@ -1067,7 +1067,7 @@
                 
                 const isPromoActive = prod.is_promo && prod.promo_price;
                 document.getElementById('modalPrice').innerHTML = isPromoActive 
-                    ? `<span style="text-decoration: line-through; font-size:16px; color:var(--text-muted); margin-right:5px;">${prod.price}</span> ${prod.promo_price}`
+                    ? `<span style="text-decoration: line-through; font-size:16px; color:var(--text-muted); margin-right:5px; font-weight:400;">${prod.price}</span> ${prod.promo_price}`
                     : prod.price;
                     
                 document.getElementById('modalDesc').innerText = prod.desc;
