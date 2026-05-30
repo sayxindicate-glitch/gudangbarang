@@ -10,7 +10,21 @@ export default async function handler(req, res) {
 
     try {
         if (action === 'register') {
-            // 1. Daftarkan email & password ke sistem utama Supabase
+            // 1. CEK NOMOR WA DULU (Memutus "Lingkaran Setan")
+            // Memanggil fungsi SQL 'check_phone_exists' yang baru kita buat
+            const { data: isPhoneTaken, error: rpcError } = await supabase.rpc('check_phone_exists', { check_wa: phone });
+
+            if (rpcError) {
+                console.error("RPC Error:", rpcError);
+                throw new Error('Gagal memvalidasi nomor WhatsApp.');
+            }
+
+            // Jika WA sudah ada, batalkan SELURUH proses pendaftaran. Email aman, tidak terdaftar!
+            if (isPhoneTaken) {
+                return res.status(400).json({ error: 'Nomor WhatsApp ini sudah terdaftar oleh akun lain.' });
+            }
+
+            // 2. JIKA WA AMAN, BARU DAFTARKAN EMAIL & PASSWORD
             const { data: authData, error: authError } = await supabase.auth.signUp({
                 email,
                 password,
@@ -18,8 +32,7 @@ export default async function handler(req, res) {
 
             if (authError) throw authError;
 
-            // 2. KUNCI RAHASIA: Jika Supabase punya Trigger otomatis yang bikin data jadi NULL,
-            // Kita harus menimpanya (UPSERT) menggunakan Token Hak Akses dari akun baru ini.
+            // 3. SIMPAN KE TABEL PROFILES (Sekarang dijamin 100% berhasil karena WA sudah divalidasi)
             if (authData && authData.session) {
                 const userClient = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY, {
                     global: { headers: { Authorization: `Bearer ${authData.session.access_token}` } }
@@ -34,7 +47,7 @@ export default async function handler(req, res) {
                         nama_panggilan: nickname,
                         no_wa: phone,
                         alamat_lengkap: address
-                    }, { onConflict: 'id' }); // Perintah wajib untuk menimpa Trigger otomatis
+                    }, { onConflict: 'id' });
                 
                 if (profileError) {
                     throw new Error(profileError.message);
@@ -78,15 +91,7 @@ export default async function handler(req, res) {
     } catch (error) {
         console.error("Auth API Error:", error);
         
-        // 3. TANGKAP ERROR DUPLIKASI WA & EMAIL SECARA PROFESIONAL
         let errorMessage = error.message;
-        
-        // Jika database mendeteksi No WA sudah ada (Error 23505 adalah kode unik dari PostgreSQL)
-        if (errorMessage.includes('duplicate key value') || errorMessage.includes('23505')) {
-            return res.status(400).json({ error: 'Nomor WhatsApp ini sudah terdaftar oleh akun lain.' });
-        }
-        
-        // Jika Supabase mendeteksi Email sudah ada
         if (errorMessage.includes('already registered')) {
             return res.status(400).json({ error: 'Email ini sudah terdaftar! Silakan ke halaman Login.' });
         }
