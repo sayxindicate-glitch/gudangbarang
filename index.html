@@ -172,7 +172,7 @@
         .footer-logo { font-size: 20px; font-weight: 700; color: #00e5ff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
         .footer-desc { font-size: 13px; color: #a4b0be; line-height: 1.6; margin-bottom: 20px; }
         .footer-socials { display: flex; gap: 15px; }
-        /* PENGAMANAN TABNABBING DENGAN REL=NOOPENER NOREFERRER */
+        
         .social-icon { width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.05); color: #f5f6fa; display: flex; justify-content: center; align-items: center; text-decoration: none; transition: background 0.3s; }
         .social-icon:hover { background: #00e5ff; color: #1a1b1e; }
         .footer-title { font-size: 15px; font-weight: 600; margin-bottom: 20px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
@@ -417,7 +417,6 @@
     </div>
 
     <script>
-        // --- Theme Logic ---
         const themeToggle = document.getElementById('themeToggle');
         const switchIcon = document.getElementById('switchIcon');
         const html = document.documentElement;
@@ -439,7 +438,6 @@
             }
         });
 
-        // --- Variabel Logika ---
         let allProducts = []; 
         let itemsPerPage = 10;
         let currentPage = 1;
@@ -459,7 +457,7 @@
         const clearFiltersBtn = document.getElementById('clearFilters');
 
         // =========================================================================
-        // SINKRONISASI NAVIGASI CERDAS (AVATAR & BADGE)
+        // PEMBERSIHAN SESI & UPDATE UI
         // =========================================================================
         async function updateNavUI() {
             const sessionData = localStorage.getItem('user_session');
@@ -467,7 +465,17 @@
             const mobileAccountBtn = document.getElementById('mobileAccountBtn');
 
             if (sessionData) {
-                const session = JSON.parse(sessionData);
+                let session;
+                try {
+                    // PENGAMANAN: Cek jika format memori sudah usang atau rusak
+                    session = JSON.parse(sessionData);
+                    if (!session || !session.access_token) throw new Error("Format sesi lama");
+                } catch(e) {
+                    // Jika terdeteksi rusak, hapus dan kembalikan ke tombol Login
+                    localStorage.removeItem('user_session');
+                    setLoggedOutUI();
+                    return;
+                }
                 
                 const savedName = session.name || (session.user && session.user.name) || "User";
                 const tempNickname = savedName.split(' ')[0]; 
@@ -503,7 +511,7 @@
                         }
                     }
                 } catch (e) { 
-                    console.error("Mode Offline atau Server Lambat: Menggunakan sesi lokal.", e); 
+                    console.error("Server Timeout: Menggunakan sesi lokal.", e); 
                 }
                 
                 syncBadges(session.access_token);
@@ -637,7 +645,6 @@
             } catch (error) {}
         }
 
-        // --- FUNGSI RENDER KATEGORI DIPERBARUI UNTUK MENDUKUNG KATEGORI DINAMIS ---
         function renderCategories(customCategories = null) {
             const uniqueCategories = customCategories || new Set();
             
@@ -663,7 +670,6 @@
             });
         }
 
-        // PERBAIKAN: Menerima "null" agar bisa dipanggil dari link Footer
         window.handleCategoryClick = function(clickedBtn, categoryName) {
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
             
@@ -931,7 +937,6 @@
                     throw new Error(err.error || err.message || "Gagal terhubung ke Database");
                 }
             } catch (error) {
-                console.error("Detail Error:", error);
                 syncBadges(session.access_token); 
 
                 if (error.message.toLowerCase().includes('sesi') || error.message.toLowerCase().includes('valid') || error.message.toLowerCase().includes('akses')) {
