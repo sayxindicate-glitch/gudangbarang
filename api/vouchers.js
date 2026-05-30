@@ -21,11 +21,17 @@ export default async function handler(req, res) {
             safeOrderCount = count || 0;
         } catch(e) {}
 
-        let claimedCodes = [];
+        // Memisahkan daftar voucher yang sudah terpakai dan yang baru dialokasikan oleh admin
+        let usedCodes = [];
+        let assignedCodes = [];
         try {
-            // Ambil data voucher yang SUDAH PERNAH DIPAKAI oleh user ini
-            const { data } = await supabase.from('gg_claimed_vouchers').select('voucher_code').eq('user_id', user.id);
-            if (data) claimedCodes = data.map(d => d.voucher_code);
+            const { data: claims } = await supabase.from('gg_claimed_vouchers').select('voucher_code, is_used').eq('user_id', user.id);
+            if (claims) {
+                claims.forEach(c => {
+                    if (c.is_used) usedCodes.push(c.voucher_code);
+                    else assignedCodes.push(c.voucher_code);
+                });
+            }
         } catch(e) {}
 
         const now = new Date();
@@ -34,22 +40,26 @@ export default async function handler(req, res) {
         const daysSinceCreated = Math.max(0, (now - createdDate) / (1000 * 60 * 60 * 24));
         const daysSinceLastSignIn = Math.max(0, (now - lastSignInDate) / (1000 * 60 * 60 * 24));
 
-        // PERBAIKAN: Menghapus .order('created_at') yang menyebabkan Supabase Crash
+        // Ambil data murni dari database gg_vouchers
         const { data: dbVouchers, error: dbError } = await supabase.from('gg_vouchers').select('*');
-        
         if (dbError) throw dbError;
 
         const filteredVouchers = (dbVouchers || []).filter(vch => {
-            // Jika target kosong di database, otomatis jadikan 'all'
             const segment = (vch.target_segment || 'all').trim().toLowerCase();
             
-            // CEK 1: Sembunyikan jika tanggal sudah lewat
+            // Aturan 1: Jangan tampilkan jika sudah melewati waktu kedaluwarsa
             if (vch.expires_at && new Date(vch.expires_at) < now) return false;
 
-            // CEK 2: Sembunyikan jika sudah pernah dipakai user ini (Mencegah pemakaian berkali-kali)
-            if (claimedCodes.includes(vch.code)) return false;
+            // Aturan 2: Jangan tampilkan jika status is_used sudah TRUE (Sudah pernah dipakai checkout)
+            if (usedCodes.includes(vch.code)) return false;
 
-            // CEK 3: Strategi Marketing
+            // Aturan 3: Jika masuk ke daftar alokasi manual oleh admin (is_used = false), PASTI MUNCUL!
+            if (assignedCodes.includes(vch.code)) return true;
+
+            // Aturan 4: Jika voucher bersifat target manual saja (bukan otomatis), sembunyikan dari pengguna lain
+            if (segment === 'targeted' || segment === 'private') return false;
+
+            // Aturan 5: Segmentasi Marketing Otomatis
             if (segment === 'all') return true;
             if (segment === 'new' && safeOrderCount === 0 && daysSinceCreated <= 14) return true;
             if (segment === 'comeback' && safeOrderCount === 0 && daysSinceCreated > 14 && daysSinceLastSignIn > 14) return true;
@@ -69,7 +79,7 @@ export default async function handler(req, res) {
         }));
 
         return res.status(200).json(responseData);
-    } catch (error) {
-        return res.status(400).json({ error: error.message });
+    } catch (error) { 
+        return res.status(400).json({ error: error.message }); 
     }
 }
