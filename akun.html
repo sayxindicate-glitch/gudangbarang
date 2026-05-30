@@ -7,6 +7,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
         :root {
             --bg-color: #e0e5ec; --text-main: #2d3436; --text-muted: #636e72; --accent-color: #0984e3;
             --shadow-light: #ffffff; --shadow-dark: #a3b1c6;
@@ -15,6 +16,7 @@
             --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
             --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
         }
+
         [data-theme="dark"] {
             --bg-color: #1a1b1e; --text-main: #f5f6fa; --text-muted: #a4b0be; --accent-color: #00e5ff;
             --shadow-light: rgba(255, 255, 255, 0.05); --shadow-dark: rgba(0, 0, 0, 0.6);
@@ -23,123 +25,399 @@
             --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
             --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
-        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; position: relative; }
-        .top-nav { position: absolute; top: 0; left: 0; width: 100%; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+        .top-nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; background-color: var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        
+        .controls { display: flex; align-items: center; gap: 20px; flex: 1; justify-content: flex-end; }
         .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; }
         .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
         [data-theme="dark"] .switch-handle { transform: translateX(30px); }
-        .profile-container { background: var(--bg-color); width: 100%; max-width: 450px; border-radius: 30px; padding: 40px 30px; box-shadow: var(--neu-flat); text-align: center; z-index: 10; margin-top: 60px; margin-bottom: 60px; }
-        .avatar-box { margin: 0 auto 20px auto; width: 100px; height: 100px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-pressed); display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; border: 4px solid var(--bg-color); }
-        .avatar-box img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; }
-        .profile-title { font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 5px; }
-        .profile-email { font-size: 13px; color: var(--text-muted); margin-bottom: 30px; font-weight: 600; }
-        .input-group { margin-bottom: 20px; position: relative; text-align: left; }
-        .input-label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; margin-left: 20px; text-transform: uppercase; letter-spacing: 1px; }
-        .input-group i { position: absolute; left: 20px; top: 38px; color: var(--text-muted); font-size: 16px; }
-        .neu-input { width: 100%; padding: 15px 20px 15px 50px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed); outline: none; font-size: 14px; font-weight: 600; }
-        .neu-input::placeholder { color: var(--text-muted); font-weight: 400; opacity: 0.6; }
+
+        .nav-link { color: var(--text-muted); text-decoration: none; position: relative; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: color 0.3s ease;}
+        .nav-link:hover { color: var(--accent-color); }
+        .badge-count { position: absolute; top: -10px; right: -15px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; }
+        
+        .neu-btn-icon { background: var(--bg-color); color: var(--text-main); border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative; }
+        .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+        .nav-profile-badge { display: flex; flex-direction: row; align-items: center; justify-content: center; text-decoration: none; gap: 10px; transition: transform 0.2s ease; cursor: pointer; background: var(--bg-color); padding: 5px 15px 5px 5px; border-radius: 50px; box-shadow: var(--neu-flat-sm); }
+        .nav-profile-badge img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; box-shadow: var(--neu-pressed-sm); border: 2px solid transparent; }
+        .nav-profile-badge span { font-size: 13px; font-weight: 700; color: var(--text-main); max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; flex: 1; width: 100%; }
+        
+        .profile-wrapper { background: var(--bg-color); border-radius: 30px; padding: 35px; box-shadow: var(--neu-flat); display: flex; flex-direction: column; align-items: center; gap: 30px; }
+        
+        .avatar-container { position: relative; width: 120px; height: 120px; border-radius: 50%; box-shadow: var(--neu-flat); display: flex; justify-content: center; align-items: center; background: var(--bg-color); }
+        .profile-avatar { width: 104px; height: 104px; border-radius: 50%; object-fit: cover; box-shadow: var(--neu-pressed); }
+        
+        .user-meta-box { text-align: center; }
+        .display-title { font-size: 22px; font-weight: 700; color: var(--accent-color); margin-bottom: 5px; }
+        .display-email { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+        .profile-form { width: 100%; display: flex; flex-direction: column; gap: 20px; margin-top: 10px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .input-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-left: 8px; }
+        
+        .neu-input { width: 100%; padding: 14px 20px; border-radius: 15px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed-sm); outline: none; font-size: 13px; font-weight: 600; }
         .neu-input:disabled { opacity: 0.6; cursor: not-allowed; }
-        .btn-group { display: flex; gap: 15px; margin-top: 30px; }
-        .neu-btn { flex: 1; padding: 15px; border-radius: 50px; border: none; background: var(--bg-color); font-size: 13px; font-weight: 700; box-shadow: var(--neu-flat); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.3s; }
-        .neu-btn:active { box-shadow: var(--neu-pressed); }
-        .btn-save { color: #27ae60; }
+        
+        .neu-select { width: 100%; padding: 14px 20px; border-radius: 15px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-flat-sm); outline: none; font-size: 13px; font-weight: 600; cursor: pointer; appearance: none; -webkit-appearance: none; }
+        .neu-select:focus { box-shadow: var(--neu-pressed-sm); }
+        .select-wrapper { position: relative; }
+        .select-wrapper::after { content: '\f078'; font-family: 'Font Awesome 5 Free'; font-weight: 900; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--text-muted); pointer-events: none; }
+
+        .action-buttons { display: flex; gap: 20px; width: 100%; margin-top: 15px; }
+        .btn-action { flex: 1; padding: 15px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); font-size: 14px; font-weight: 700; box-shadow: var(--neu-flat); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: all 0.2s; }
+        .btn-action:active { box-shadow: var(--neu-pressed); }
+        .btn-save { color: var(--accent-color); }
         .btn-logout { color: #ff4757; }
-        #alertMsg { margin-top: 20px; font-size: 12px; font-weight: 600; padding: 10px; border-radius: 10px; display: none; }
-        .alert-success { background: rgba(39, 174, 96, 0.1); color: #27ae60; border: 1px solid #27ae60; }
-        .alert-error { background: rgba(255, 71, 87, 0.1); color: #ff4757; border: 1px solid #ff4757; }
-        .alert-loading { background: rgba(9, 132, 227, 0.1); color: #0984e3; border: 1px solid #0984e3; }
+
+        .alert-toast { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); padding: 12px 30px; border-radius: 50px; background: var(--bg-color); font-size: 13px; font-weight: 700; box-shadow: var(--neu-flat); display: none; z-index: 2000; align-items: center; gap: 10px; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
         .bottom-nav { display: none; }
+
         @media (max-width: 768px) {
-            .top-nav { padding: 15px 20px; }
-            .profile-container { padding: 30px 20px; border-radius: 25px; box-shadow: none; background: transparent; margin-top: 40px; margin-bottom: 80px; }
-            .neu-input { padding: 12px 20px 12px 45px; }
-            .input-group i { top: 35px; }
-            body { padding-bottom: 80px; justify-content: flex-start; }
-            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px 10px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
+            .top-nav { padding: 12px 20px; }
+            .hide-on-mobile { display: none !important; }
+            .container { padding-bottom: 120px; margin-top: 10px; }
+            .profile-wrapper { padding: 25px 20px; gap: 20px; }
+            .form-row { grid-template-columns: 1fr; gap: 20px; }
+            .action-buttons { flex-direction: column; gap: 15px; }
+            .btn-action { padding: 12px; font-size: 13px; }
+
+            /* ---> MASTER BOTTOM NAV MOBILE <--- */
+            .bottom-nav { 
+                display: flex; position: fixed; bottom: 0; left: 0; width: 100%; 
+                background-color: var(--bg-color); border-radius: 25px 25px 0 0; 
+                box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; 
+                padding: 10px 15px; 
+                justify-content: space-between; 
+                padding-bottom: max(15px, env(safe-area-inset-bottom)); 
+                gap: 8px; 
+            }
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
-            .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; }
-            .bottom-nav-item i { font-size: 18px; }
-            .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
+            
+            .bottom-nav-item { 
+                flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+                text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; 
+                padding: 10px 0; border-radius: 18px; 
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: transparent; 
+            }
+            
+            .bottom-nav-item i { 
+                font-size: 20px; margin-bottom: 4px; 
+                transition: transform 0.2s ease, color 0.2s ease; 
+            }
+            
+            .bottom-nav-item.active { 
+                color: var(--accent-color); 
+                background: var(--bg-color); 
+                box-shadow: var(--neu-pressed-sm); 
+            }
+            
+            .bottom-nav-item.active i { 
+                transform: scale(1.15); 
+            }
+            
+            .badge-container { position: relative; display: inline-flex; }
+            
+            .bottom-nav-item .badge-count { 
+                position: absolute; top: -5px; right: -12px; background: #ff4757; color: white; 
+                font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; 
+                border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 2;
+            }
         }
     </style>
 </head>
 <body>
+
     <div class="top-nav">
         <a href="index.html" class="logo"><i class="fas fa-box-open"></i> GOEDANG</a>
-        <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
+        <div class="controls">
+            <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
+            
+            <a href="promo.html" class="nav-link hide-on-mobile" title="Promo">
+                <i class="fas fa-tags"></i> <span>Promo</span>
+                <span class="badge-count" id="promoBadge" style="display: none;">0</span>
+            </a>
+            
+            <a href="pesanan.html" class="nav-link hide-on-mobile" title="Pesanan">
+                <i class="fas fa-box"></i> <span>Pesanan</span>
+                <span class="badge-count" id="orderBadge" style="display: none;">0</span>
+            </a>
+            
+            <a href="keranjang.html" class="neu-btn-icon hide-on-mobile" title="Keranjang">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge-count" id="cartBadge" style="display: none; top: -5px; right: -5px;">0</span>
+            </a>
+            
+            <a href="akun.html" class="nav-profile-badge hide-on-mobile" id="navLoginBtn">
+                <img src="https://api.dicebear.com/7.x/micah/svg?seed=User&backgroundColor=e0e5ec" alt="Avatar" id="navAvatar">
+                <span id="navUsername">Memuat...</span>
+            </a>
+        </div>
     </div>
 
-    <div class="profile-container">
-        <div id="loadingArea" style="padding: 50px 0; color: var(--accent-color);">
-            <i class="fas fa-spinner fa-spin fa-3x"></i>
-            <p style="margin-top: 15px; font-size: 13px; font-weight: 600;">Memuat profil aman...</p>
-        </div>
-
-        <div id="formArea" style="display: none;">
-            <div class="avatar-box">
-                <img id="userAvatar" src="" alt="Avatar Profil">
-            </div>
-            <h2 class="profile-title" id="displayTitle">Memuat...</h2>
-            <p class="profile-email" id="displayEmail">Memuat email...</p>
-
-            <div class="input-group">
-                <span class="input-label">Nama Lengkap</span>
-                <i class="fas fa-id-card"></i>
-                <input type="text" id="name" class="neu-input" placeholder="Masukkan nama lengkap">
-            </div>
-
-            <div class="input-group">
-                <span class="input-label">Nama Panggilan</span>
-                <i class="fas fa-user-tag"></i>
-                <input type="text" id="nickname" class="neu-input" placeholder="Nama untuk sapaan">
-            </div>
-
-            <div class="input-group">
-                <span class="input-label">Nomor WhatsApp / HP</span>
-                <i class="fas fa-phone-alt"></i>
-                <input type="tel" id="phone" class="neu-input" placeholder="Contoh: 08123456789">
+    <div class="container">
+        <div class="profile-wrapper">
+            <div class="avatar-container">
+                <img src="https://api.dicebear.com/7.x/micah/svg?seed=User&backgroundColor=e0e5ec" alt="User Avatar" class="profile-avatar" id="userAvatar">
             </div>
             
-            <div class="input-group">
-                <span class="input-label">Alamat Pengiriman Utama</span>
-                <i class="fas fa-map-marker-alt"></i>
-                <input type="text" id="address" class="neu-input" placeholder="Jln. Raya, RT/RW, Kota, Kode Pos">
+            <div class="user-meta-box">
+                <div class="display-title" id="displayTitle">Memuat Nama...</div>
+                <div class="display-email" id="displayEmail">user@domain.com</div>
             </div>
 
-            <div class="input-group">
-                <span class="input-label">Alamat Email (Akun)</span>
-                <i class="fas fa-envelope"></i>
-                <input type="email" id="email" class="neu-input" disabled title="Email tidak bisa diubah di sini">
-            </div>
+            <div class="profile-form">
+                <div class="form-row">
+                    <div class="input-group">
+                        <span class="input-label">Nama Lengkap</span>
+                        <input type="text" id="namaLengkap" class="neu-input" placeholder="Nama lengkap Anda">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-label">Nama Panggilan</span>
+                        <input type="text" id="namaPanggilan" class="neu-input" placeholder="Nama panggilan">
+                    </div>
+                </div>
 
-            <div id="alertMsg"></div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <span class="input-label">Nomor WhatsApp</span>
+                        <input type="tel" id="noWa" class="neu-input" placeholder="Contoh: 08123456789">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-label">Jenis Kelamin</span>
+                        <div class="select-wrapper">
+                            <select id="jenisKelamin" class="neu-select">
+                                <option value="">Pilih Jenis Kelamin</option>
+                                <option value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="btn-group">
-                <button class="neu-btn btn-logout" onclick="handleLogout()">
-                    <i class="fas fa-sign-out-alt"></i> Keluar
-                </button>
-                <button class="neu-btn btn-save" id="saveBtn" onclick="saveProfile()">
-                    <i class="fas fa-save"></i> Simpan
-                </button>
+                <div class="input-group">
+                    <span class="input-label">Alamat Lengkap Pengiriman</span>
+                    <textarea id="alamatLengkap" class="neu-input" rows="3" placeholder="Nama jalan, nomor rumah, RT/RW, kecamatan, kota..." style="resize: none; font-family: inherit;"></textarea>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-action btn-logout" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                    <button class="btn-action btn-save" onclick="saveProfile()" id="btnSave"><i class="fas fa-save"></i> Simpan</button>
+                </div>
             </div>
         </div>
+    </div>
+
+    <div class="alert-toast" id="alertToast">
+        <span id="alertIcon"></span>
+        <span id="alertMessage">Pesan</span>
     </div>
 
     <nav class="bottom-nav">
-        <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
-        <a href="promo.html" class="bottom-nav-item"><i class="fas fa-tags"></i><span>Promo</span></a>
-        <a href="keranjang.html" class="bottom-nav-item"><i class="fas fa-shopping-cart"></i><span>Keranjang</span></a>
-        <a href="pesanan.html" class="bottom-nav-item"><i class="fas fa-box"></i><span>Pesanan</span></a>
-        <a href="akun.html" class="bottom-nav-item active" id="mobileAccountBtn"><i class="fas fa-user"></i><span>Akun</span></a>
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i><span>Beranda</span>
+        </a>
+        
+        <a href="promo.html" class="bottom-nav-item">
+            <div class="badge-container">
+                <i class="fas fa-tags"></i>
+                <span class="badge-count" id="mobilePromoBadge" style="display: none;">0</span>
+            </div>
+            <span>Promo</span>
+        </a>
+        
+        <a href="keranjang.html" class="bottom-nav-item">
+            <div class="badge-container">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge-count" id="mobileCartBadge" style="display: none;">0</span>
+            </div>
+            <span>Keranjang</span>
+        </a>
+        
+        <a href="pesanan.html" class="bottom-nav-item">
+            <div class="badge-container">
+                <i class="fas fa-box"></i>
+                <span class="badge-count" id="mobileOrderBadge" style="display: none;">0</span>
+            </div>
+            <span>Pesanan</span>
+        </a>
+        
+        <a href="akun.html" class="bottom-nav-item active" id="mobileAccountBtn">
+            <i class="fas fa-user"></i><span>Akun</span>
+        </a>
     </nav>
 
     <script>
+        "use strict";
+
         const sessionData = localStorage.getItem('user_session');
-        if (!sessionData) window.location.href = 'login.html'; 
+        if (!sessionData) { window.location.replace('login.html'); }
         const session = JSON.parse(sessionData);
 
+        const alertToast = document.getElementById('alertToast');
+        const alertIcon = document.getElementById('alertIcon');
+        const alertMessage = document.getElementById('alertMessage');
+
+        function showAlert(msg, type) {
+            alertMessage.innerText = msg;
+            if(type === 'success') {
+                alertIcon.innerHTML = '<i class="fas fa-check-circle" style="color: #27ae60;"></i>';
+                alertToast.style.color = '#27ae60';
+            } else {
+                alertIcon.innerHTML = '<i class="fas fa-times-circle" style="color: #ff4757;"></i>';
+                alertToast.style.color = '#ff4757';
+            }
+            alertToast.style.display = 'flex';
+            setTimeout(() => { alertToast.style.display = 'none'; }, 3000);
+        }
+
+        async function loadProfile() {
+            try {
+                document.getElementById('displayEmail').innerText = session.user?.email || "";
+                
+                const res = await fetch('/api/user', {
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                });
+
+                if (res.status === 401 || res.status === 403) {
+                    handleLogout();
+                    return;
+                }
+
+                if (!res.ok) throw new Error("Gagal mengambil data profil.");
+
+                const data = await res.json();
+                
+                if (data) {
+                    document.getElementById('namaLengkap').value = data.nama_lengkap || "";
+                    document.getElementById('namaPanggilan').value = data.nama_panggilan || "";
+                    document.getElementById('noWa').value = data.no_wa || "";
+                    document.getElementById('jenisKelamin').value = data.jenis_kelamin || "";
+                    document.getElementById('alamatLengkap').value = data.alamat_lengkap || "";
+
+                    const displayName = data.nama_panggilan || (data.nama_lengkap ? data.nama_lengkap.split(' ')[0] : "User");
+                    updateAvatarUI(displayName);
+                }
+                
+                syncBadges(session.access_token);
+
+            } catch (error) {
+                showAlert(error.message, "error");
+                const fallbackName = session.name || "User";
+                updateAvatarUI(fallbackName);
+            }
+        }
+
+        function updateAvatarUI(name) {
+            const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
+            
+            document.getElementById('displayTitle').innerText = name;
+            document.getElementById('userAvatar').src = avatarUrl;
+            document.getElementById('navAvatar').src = avatarUrl;
+            document.getElementById('navUsername').innerText = name;
+
+            const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+            if (mobileAccountBtn) {
+                mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${name}</span>`;
+            }
+        }
+
+        async function syncBadges(token) {
+            try {
+                const cartRes = await fetch('/api/cart', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (cartRes.ok) {
+                    const cartItems = await cartRes.json();
+                    const totalQty = cartItems.reduce((s, i) => s + i.quantity, 0);
+                    if (totalQty > 0) {
+                        const txt = totalQty > 99 ? '99+' : totalQty;
+                        document.getElementById('cartBadge').style.display = 'flex'; document.getElementById('cartBadge').innerText = txt;
+                        document.getElementById('mobileCartBadge').style.display = 'flex'; document.getElementById('mobileCartBadge').innerText = txt;
+                    }
+                }
+            } catch (e) {}
+
+            try {
+                const promoRes = await fetch('/api/vouchers', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (promoRes.ok) {
+                    const promos = await promoRes.json();
+                    if (promos.length > 0) {
+                        document.getElementById('promoBadge').style.display = 'flex'; document.getElementById('promoBadge').innerText = promos.length;
+                        document.getElementById('mobilePromoBadge').style.display = 'flex'; document.getElementById('mobilePromoBadge').innerText = promos.length;
+                    }
+                }
+            } catch (e) {}
+
+            try {
+                const orderRes = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (orderRes.ok) {
+                    const orders = await orderRes.json();
+                    const activeOrders = orders.filter(o => o.status !== 'Selesai' && o.status !== 'Dibatalkan');
+                    if (activeOrders.length > 0) {
+                        document.getElementById('orderBadge').style.display = 'flex'; document.getElementById('orderBadge').innerText = activeOrders.length;
+                        document.getElementById('mobileOrderBadge').style.display = 'flex'; document.getElementById('mobileOrderBadge').innerText = activeOrders.length;
+                    }
+                }
+            } catch (e) {}
+        }
+
+        async function saveProfile() {
+            const name = document.getElementById('namaLengkap').value.trim();
+            const nickname = document.getElementById('namaPanggilan').value.trim();
+            const phone = document.getElementById('noWa').value.trim();
+            const sex = document.getElementById('jenisKelamin').value;
+            const address = document.getElementById('alamatLengkap').value.trim();
+
+            if (!name || !phone || !address) {
+                showAlert("Nama, No WA, dan Alamat wajib diisi!", "error");
+                return;
+            }
+
+            const btn = document.getElementById('btnSave');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+                    body: JSON.stringify({ nama_lengkap: name, nama_panggilan: nickname, no_wa: phone, alamat_lengkap: address, jenis_kelamin: sex })
+                });
+
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.error || "Gagal menyimpan perubahan.");
+
+                const finalName = nickname || name.split(' ')[0];
+                updateAvatarUI(finalName);
+                
+                // Perbarui nama di sesi lokal
+                session.name = finalName;
+                localStorage.setItem('user_session', JSON.stringify(session));
+
+                showAlert("Profil berhasil diperbarui!", "success");
+            } catch (error) {
+                showAlert(error.message, "error");
+            } {
+                btn.innerHTML = '<i class="fas fa-save"></i> Simpan';
+                btn.disabled = false;
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('user_session');
+            window.location.href = 'login.html';
+        }
+
+        // --- THEME TOGGLE ---
         const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
         if (localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); document.getElementById('switchIcon').classList.replace('fa-sun', 'fa-moon'); }
@@ -149,107 +427,6 @@
             localStorage.setItem('theme', isDark ? 'light' : 'dark');
             document.getElementById('switchIcon').classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
         });
-
-        const alertMsg = document.getElementById('alertMsg');
-        function showAlert(message, type) {
-            alertMsg.style.display = 'block';
-            alertMsg.innerText = message;
-            alertMsg.className = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : 'alert-loading';
-        }
-
-        async function loadProfile() {
-            try {
-                const response = await fetch('/api/user', {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bearer ${session.access_token}` }
-                });
-
-                if (!response.ok) throw new Error("Gagal mengambil data, sesi mungkin kadaluarsa.");
-                const userData = await response.json();
-
-                document.getElementById('name').value = userData.nama_lengkap || '';
-                document.getElementById('nickname').value = userData.nama_panggilan || '';
-                document.getElementById('phone').value = userData.no_wa || '';
-                document.getElementById('address').value = userData.alamat_lengkap || '';
-                document.getElementById('email').value = userData.email || '';
-                
-                const displayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "Pengguna");
-                document.getElementById('displayTitle').innerText = displayName;
-                document.getElementById('displayEmail').innerText = userData.email;
-
-                const avatarName = encodeURIComponent(displayName);
-                const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${avatarName}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
-                document.getElementById('userAvatar').src = avatarUrl;
-                
-                const mobileAccountBtn = document.getElementById('mobileAccountBtn');
-                if (mobileAccountBtn) {
-                    mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
-                }
-
-                document.getElementById('loadingArea').style.display = 'none';
-                document.getElementById('formArea').style.display = 'block';
-
-            } catch (error) {
-                alert("Sesi login bermasalah. Silakan login kembali.");
-                handleLogout(); 
-            }
-        }
-
-        async function saveProfile() {
-            const btn = document.getElementById('saveBtn');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
-            btn.disabled = true;
-            showAlert("Menyimpan data...", "loading");
-
-            // PERBAIKAN: Tangkap data dengan benar
-            const name = document.getElementById('name').value;
-            const nickname = document.getElementById('nickname').value;
-            const phone = document.getElementById('phone').value;
-            const address = document.getElementById('address').value;
-
-            try {
-                const response = await fetch('/api/user', {
-                    method: 'PUT',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${session.access_token}` 
-                    },
-                    // PERBAIKAN: Cocokkan bahasa pengiriman (JSON) dengan permintaan Backend Vercel
-                    body: JSON.stringify({ 
-                        nama_lengkap: name, 
-                        nama_panggilan: nickname,
-                        no_wa: phone, 
-                        alamat_lengkap: address 
-                    })
-                });
-
-                const result = await response.json();
-                if (!response.ok) throw new Error(result.error || "Gagal menyimpan perubahan.");
-                
-                const displayName = nickname || name.split(' ')[0];
-                document.getElementById('displayTitle').innerText = displayName;
-                const newAvatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
-                document.getElementById('userAvatar').src = newAvatarUrl;
-                
-                const mobileAccountBtn = document.getElementById('mobileAccountBtn');
-                if (mobileAccountBtn) {
-                    mobileAccountBtn.innerHTML = `<img src="${newAvatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
-                }
-                
-                showAlert("Profil berhasil diperbarui!", "success");
-                setTimeout(() => { alertMsg.style.display = 'none'; }, 3000);
-            } catch (error) {
-                showAlert(error.message, "error");
-            } finally {
-                btn.innerHTML = '<i class="fas fa-save"></i> Simpan';
-                btn.disabled = false;
-            }
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('user_session'); 
-            window.location.href = 'login.html'; 
-        }
 
         window.addEventListener('DOMContentLoaded', loadProfile);
     </script>
