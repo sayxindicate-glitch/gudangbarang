@@ -128,7 +128,6 @@
             .item-price { font-size: 12px; }
             .total-price { font-size: 16px; }
 
-            /* ---> MASTER BOTTOM NAV IMPLEMENTATION <--- */
             .bottom-nav { 
                 display: flex; position: fixed; bottom: 0; left: 0; width: 100%; 
                 background-color: var(--bg-color); border-radius: 25px 25px 0 0; 
@@ -152,24 +151,16 @@
                 transition: transform 0.2s ease, color 0.2s ease; 
             }
             
-            /* Efek "Bolong" saat item aktif */
             .bottom-nav-item.active { 
                 color: var(--accent-color); 
                 background: var(--bg-color); 
                 box-shadow: var(--neu-pressed-sm); 
             }
             
-            .bottom-nav-item.active i { 
-                transform: scale(1.15); 
-            }
+            .bottom-nav-item.active i { transform: scale(1.15); }
             
-            /* Kontainer untuk menjaga ikon dan angka notifikasi tetap menyatu */
-            .badge-container {
-                position: relative;
-                display: inline-flex;
-            }
+            .badge-container { position: relative; display: inline-flex; }
             
-            /* Posisi angka notifikasi statis yang presisi */
             .bottom-nav-item .badge-count { 
                 position: absolute; top: -5px; right: -12px; background: #ff4757; color: white; 
                 font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; 
@@ -203,8 +194,9 @@
                 <span class="badge-count" id="cartBadge" style="display: none; top: -5px; right: -5px; width: 18px; height: 18px; padding: 0;">0</span>
             </a>
             
-            <a href="login.html" class="nav-btn-cap hide-on-mobile" id="navLoginBtn">
-                <i class="fas fa-sign-in-alt"></i> <span>Login</span>
+            <a href="akun.html" class="nav-profile-badge hide-on-mobile" id="navLoginBtn">
+                <img src="https://api.dicebear.com/7.x/micah/svg?seed=User&backgroundColor=e0e5ec" alt="Avatar" id="navAvatar">
+                <span id="navUsername">Memuat...</span>
             </a>
         </div>
     </div>
@@ -240,11 +232,8 @@
         </div>
     </div>
 
-    MASTER BOTTOM NAV HTML <--- -->
     <nav class="bottom-nav">
-        <a href="index.html" class="bottom-nav-item">
-            <i class="fas fa-home"></i><span>Beranda</span>
-        </a>
+        <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
         
         <a href="promo.html" class="bottom-nav-item">
             <div class="badge-container">
@@ -283,6 +272,7 @@
         const session = JSON.parse(sessionData);
 
         let allOrders = [];
+        let allProducts = []; // ARRAY ANTI-NYANGKUT: Mengambil langsung dari master tabel produk
         let currentStatusFilter = 'Semua';
 
         const themeToggle = document.getElementById('themeToggle');
@@ -349,10 +339,9 @@
 
                     loginBtn.className = 'nav-profile-badge hide-on-mobile';
                     loginBtn.href = 'akun.html';
-                    loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${displayName}</span>`;
+                    loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" id="navAvatar"><span id="navUsername">${displayName}</span>`;
 
                     if (mobileAccountBtn) {
-                        // Menyesuaikan ukuran avatar dengan Master Bottom Nav (24px)
                         mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
                     }
                 }
@@ -365,7 +354,6 @@
                 if (cartRes.ok) {
                     const cartItems = await cartRes.json();
                     const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-                    
                     const cb = document.getElementById('cartBadge');
                     const mcb = document.getElementById('mobileCartBadge');
                     if (cb) { cb.style.display = totalQty > 0 ? 'flex' : 'none'; cb.innerText = totalQty > 99 ? '99+' : totalQty; }
@@ -383,27 +371,29 @@
                     if (mpb) { mpb.style.display = promos.length > 0 ? 'flex' : 'none'; mpb.innerText = promos.length; }
                 }
             } catch (e) {}
-
-            try {
-                const activeOrders = allOrders.filter(o => {
-                    const stat = (o.status || '').toLowerCase();
-                    return stat !== 'selesai' && stat !== 'dibatalkan';
-                });
-                const ob = document.getElementById('orderBadge');
-                const mob = document.getElementById('mobileOrderBadge');
-                if (ob) { ob.style.display = activeOrders.length > 0 ? 'flex' : 'none'; ob.innerText = activeOrders.length; }
-                if (mob) { mob.style.display = activeOrders.length > 0 ? 'flex' : 'none'; mob.innerText = activeOrders.length; }
-            } catch (e) {}
         }
 
+        // =========================================================================
+        // SISTEM ANTI-CACHE: AMBIL PRODUK LALU AMBIL PESANAN
+        // =========================================================================
         async function fetchOrders() {
             updateNavUI(); 
 
             try {
-                const response = await fetch('/api/orders', {
+                // 1. Ambil Semua Produk secara Mandiri (Bypass Orders.js)
+                const prodPromise = fetch('/api/products')
+                    .then(res => res.ok ? res.json() : [])
+                    .catch(() => []);
+
+                // 2. Ambil Pesanan User
+                const orderPromise = fetch('/api/orders', {
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${session.access_token}` }
                 });
+
+                // Tunggu keduanya selesai
+                const [productsData, response] = await Promise.all([prodPromise, orderPromise]);
+                allProducts = productsData; // Simpan ke variabel global anti-nyangkut
 
                 if (response.status === 401 || response.status === 403) throw new Error('Sesi tidak valid');
                 if (!response.ok) throw new Error('Gagal terhubung ke database');
@@ -412,6 +402,17 @@
                 allOrders.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
                 
                 renderOrders(currentStatusFilter);
+
+                // Update badge pesanan aktif
+                const activeOrders = allOrders.filter(o => {
+                    const stat = (o.status || '').toLowerCase();
+                    return stat !== 'selesai' && stat !== 'dibatalkan';
+                });
+                const ob = document.getElementById('orderBadge');
+                const mob = document.getElementById('mobileOrderBadge');
+                if (ob) { ob.style.display = activeOrders.length > 0 ? 'flex' : 'none'; ob.innerText = activeOrders.length; }
+                if (mob) { mob.style.display = activeOrders.length > 0 ? 'flex' : 'none'; mob.innerText = activeOrders.length; }
+
                 syncBadges(session.access_token);
 
             } catch (error) {
@@ -456,6 +457,9 @@
             }
         }
 
+        // =========================================================================
+        // RENDERING TAMPILAN: PENCOCOKAN DATA MANUAL
+        // =========================================================================
         function renderOrders(statusFilter) {
             const container = document.getElementById('ordersContainer');
             container.innerHTML = '';
@@ -489,17 +493,25 @@
                 
                 if (items.length > 0) {
                     const firstItem = items[0];
-                    const cleanPrice = parsePriceSafe(firstItem.product_price || firstItem.price_at_buy);
+
+                    // KUNCI PERBAIKAN: Cari info asli dari allProducts berdasarkan ID
+                    const realProduct = allProducts.find(p => String(p.id) === String(firstItem.product_id)) || {};
+
+                    const finalName = realProduct.product_name || firstItem.product_name || 'Barang Grosir';
+                    const finalImg = (realProduct.product_img && realProduct.product_img.startsWith('http')) 
+                        ? realProduct.product_img 
+                        : (firstItem.product_img && firstItem.product_img.startsWith('http')) 
+                            ? firstItem.product_img 
+                            : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
+                    
+                    const cleanPrice = parsePriceSafe(firstItem.price_at_buy || firstItem.product_price || realProduct.product_price);
                     const itemPriceDisplay = formatRupiah(cleanPrice);
-                    const imgUrl = (firstItem.product_img && firstItem.product_img !== "undefined" && firstItem.product_img.startsWith('http')) 
-                        ? firstItem.product_img 
-                        : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
 
                     itemsHTML += `
                         <div class="order-item">
-                            <img src="${imgUrl}" class="item-img" alt="Produk">
+                            <img src="${finalImg}" class="item-img" alt="Produk">
                             <div class="item-details">
-                                <div class="item-name">${firstItem.product_name || 'Barang Belanjaan'}</div>
+                                <div class="item-name">${finalName}</div>
                                 <div class="item-qty">${firstItem.quantity || 1} Barang x ${itemPriceDisplay}</div>
                                 <div class="item-price">${formatRupiah(cleanPrice * (firstItem.quantity || 1))}</div>
                             </div>
@@ -512,17 +524,23 @@
                         
                         for (let i = 1; i < items.length; i++) {
                             const currItem = items[i];
-                            const currCleanPrice = parsePriceSafe(currItem.product_price || currItem.price_at_buy);
+                            const currRealProduct = allProducts.find(p => String(p.id) === String(currItem.product_id)) || {};
+
+                            const currFinalName = currRealProduct.product_name || currItem.product_name || 'Barang Grosir';
+                            const currFinalImg = (currRealProduct.product_img && currRealProduct.product_img.startsWith('http')) 
+                                ? currRealProduct.product_img 
+                                : (currItem.product_img && currItem.product_img.startsWith('http')) 
+                                    ? currItem.product_img 
+                                    : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
+                            
+                            const currCleanPrice = parsePriceSafe(currItem.price_at_buy || currItem.product_price || currRealProduct.product_price);
                             const currPriceDisplay = formatRupiah(currCleanPrice);
-                            const currImgUrl = (currItem.product_img && currItem.product_img !== "undefined" && currItem.product_img.startsWith('http')) 
-                                ? currItem.product_img 
-                                : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
 
                             hiddenItemsHTML += `
                                 <div class="order-item">
-                                    <img src="${currImgUrl}" class="item-img" alt="Produk">
+                                    <img src="${currFinalImg}" class="item-img" alt="Produk">
                                     <div class="item-details">
-                                        <div class="item-name">${currItem.product_name || 'Barang Belanjaan'}</div>
+                                        <div class="item-name">${currFinalName}</div>
                                         <div class="item-qty">${currItem.quantity || 1} Barang x ${currPriceDisplay}</div>
                                         <div class="item-price">${formatRupiah(currCleanPrice * (currItem.quantity || 1))}</div>
                                     </div>
