@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesanan Saya | Goedang Grosir</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #e0e5ec; --text-main: #2d3436; --text-muted: #636e72; --accent-color: #0984e3;
+            --shadow-light: #ffffff; --shadow-dark: #a3b1c6;
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1b1e; --text-main: #f5f6fa; --text-muted: #a4b0be; --accent-color: #00e5ff;
+            --shadow-light: rgba(255, 255, 255, 0.05); --shadow-dark: rgba(0, 0, 0, 0.6);
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+        .top-nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; background-color: var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        
+        .controls { display: flex; align-items: center; gap: 20px; }
+        .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; }
+        .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
+        [data-theme="dark"] .switch-handle { transform: translateX(30px); }
+
+        .neu-btn-icon { background: var(--bg-color); color: var(--text-main); border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative; }
+        .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; flex: 1; width: 100%; }
+        .page-title { display: flex; align-items: center; gap: 15px; font-size: 24px; font-weight: 700; margin-bottom: 25px; }
+        .btn-back { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--bg-color); color: var(--text-main); text-decoration: none; box-shadow: var(--neu-flat); transition: transform 0.2s; }
+        .btn-back:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
+
+        /* TABS FILTER PESANAN */
+        .status-tabs { display: flex; gap: 15px; overflow-x: auto; padding: 10px 5px 20px 5px; margin-bottom: 10px; -ms-overflow-style: none; scrollbar-width: none; }
+        .status-tabs::-webkit-scrollbar { display: none; }
+        .tab-btn { flex-shrink: 0; padding: 10px 25px; border-radius: 50px; background: var(--bg-color); color: var(--text-main); border: none; font-size: 13px; font-weight: 600; box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.3s ease; }
+        .tab-btn.active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+
+        /* KARTU PESANAN */
+        .orders-container { display: flex; flex-direction: column; gap: 25px; padding-bottom: 50px; }
+        
+        .order-card { background: var(--bg-color); border-radius: 20px; padding: 20px; box-shadow: var(--neu-flat); display: flex; flex-direction: column; gap: 15px; }
+        .order-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed rgba(128,128,128,0.2); padding-bottom: 15px; }
+        .order-id { font-size: 13px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+        .order-date { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+        
+        .status-badge { padding: 6px 15px; border-radius: 50px; font-size: 11px; font-weight: 700; box-shadow: var(--neu-pressed-sm); }
+        .status-diproses { color: #e67e22; border: 1px solid rgba(230, 126, 34, 0.2); }
+        .status-dikirim { color: var(--accent-color); border: 1px solid rgba(9, 132, 227, 0.2); }
+        .status-selesai { color: #27ae60; border: 1px solid rgba(39, 174, 96, 0.2); }
+        .status-dibatalkan { color: #ff4757; border: 1px solid rgba(255, 71, 87, 0.2); }
+
+        .order-items { display: flex; flex-direction: column; gap: 10px; }
+        .order-item { display: flex; align-items: center; gap: 15px; background: var(--bg-color); padding: 10px; border-radius: 15px; box-shadow: var(--neu-pressed-sm); }
+        .item-img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; box-shadow: var(--neu-flat-sm); }
+        .item-details { flex: 1; }
+        .item-name { font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        .item-qty { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+        .item-price { font-size: 13px; font-weight: 700; color: var(--accent-color); }
+
+        .more-items-text { font-size: 11px; color: var(--text-muted); font-weight: 600; font-style: italic; text-align: center; margin-top: 5px; }
+
+        .order-footer { display: flex; justify-content: space-between; align-items: center; border-top: 2px dashed rgba(128,128,128,0.2); padding-top: 15px; margin-top: 5px; }
+        .total-text { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+        .total-price { font-size: 18px; font-weight: 700; color: var(--text-main); }
+        
+        .btn-track { background: var(--bg-color); color: var(--accent-color); border: none; padding: 10px 20px; border-radius: 12px; font-size: 12px; font-weight: 700; box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.2s; }
+        .btn-track:active { box-shadow: var(--neu-pressed-sm); }
+
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+        .empty-icon { font-size: 50px; margin-bottom: 20px; color: var(--shadow-dark); opacity: 0.5; }
+        .empty-text { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+        .empty-subtext { font-size: 12px; margin-bottom: 30px; }
+
+        .btn-shop-now { display: inline-flex; align-items: center; gap: 10px; background: var(--bg-color); color: var(--accent-color); padding: 12px 30px; border-radius: 50px; text-decoration: none; font-size: 14px; font-weight: 700; box-shadow: var(--neu-flat); }
+        .btn-shop-now:active { box-shadow: var(--neu-pressed); }
+
+        .bottom-nav { display: none; }
+
+        @media (max-width: 768px) {
+            .top-nav { padding: 12px 20px; }
+            .container { padding-bottom: 120px; margin-top: 15px; } 
+            
+            .order-card { padding: 15px; }
+            .order-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .status-badge { align-self: flex-start; }
+            
+            .item-img { width: 50px; height: 50px; }
+            .item-name { font-size: 12px; }
+            .item-price { font-size: 12px; }
+            .total-price { font-size: 16px; }
+
+            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 20px 20px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px; justify-content: space-between; }
+            [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
+            .bottom-nav-item { flex: 1; text-align: center; text-decoration: none; color: var(--text-muted); font-size: 9px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative;}
+            .bottom-nav-item i { font-size: 18px; }
+            .bottom-nav-item.active { color: var(--accent-color); }
+            
+            .badge-count { position: absolute; top: -5px; right: 20%; background: #ff4757; color: white; font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <a href="index.html" class="logo"><i class="fas fa-box-open"></i> GOEDANG</a>
+        <div class="controls">
+            <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
+            <a href="keranjang.html" class="neu-btn-icon hide-on-mobile"><i class="fas fa-shopping-cart"></i></a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-title">
+            <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i></a>
+            <div>Pesanan Saya</div>
+        </div>
+
+        <div class="status-tabs">
+            <button class="tab-btn active" data-status="Semua" onclick="filterOrders('Semua')">Semua</button>
+            <button class="tab-btn" data-status="Diproses" onclick="filterOrders('Diproses')">Diproses</button>
+            <button class="tab-btn" data-status="Dikirim" onclick="filterOrders('Dikirim')">Dikirim</button>
+            <button class="tab-btn" data-status="Selesai" onclick="filterOrders('Selesai')">Selesai</button>
+            <button class="tab-btn" data-status="Dibatalkan" onclick="filterOrders('Dibatalkan')">Dibatalkan</button>
+        </div>
+
+        <div class="orders-container" id="ordersContainer">
+            <div class="empty-state">
+                <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--accent-color); margin-bottom: 20px;"></i>
+                <div class="empty-text">Memuat data pesanan dengan aman...</div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
+        
+        <a href="promo.html" class="bottom-nav-item">
+            <div style="position: relative;">
+                <i class="fas fa-tags"></i>
+                <span class="badge-count" id="mobilePromoBadge" style="display: none;">0</span>
+            </div>
+            <span>Promo</span>
+        </a>
+        
+        <a href="keranjang.html" class="bottom-nav-item">
+            <div style="position: relative;">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge-count" id="mobileCartBadge" style="display: none;">0</span>
+            </div>
+            <span>Keranjang</span>
+        </a>
+        
+        <a href="pesanan.html" class="bottom-nav-item active">
+            <div style="position: relative;">
+                <i class="fas fa-box"></i>
+                <span class="badge-count" id="mobileOrderBadge" style="display: none;">0</span>
+            </div>
+            <span>Pesanan</span>
+        </a>
+        
+        <a href="akun.html" class="bottom-nav-item" id="mobileAccountBtn">
+            <i class="fas fa-user"></i><span>Akun</span>
+        </a>
+    </nav>
+
+    <script>
+        // =========================================================================
+        // 1. GATEKEEPER LOKAL (KEAMANAN LAPIS PERTAMA)
+        // =========================================================================
+        const sessionData = localStorage.getItem('user_session');
+        if (!sessionData) {
+            // Jika tidak ada tiket sesi, usir seketika tanpa loading halaman
+            window.location.replace('login.html');
+        }
+        const session = JSON.parse(sessionData);
+
+        // --- Variabel Logika Pesanan ---
+        let allOrders = [];
+        let currentStatusFilter = 'Semua';
+
+        // --- DARK MODE LOGIC ---
+        const themeToggle = document.getElementById('themeToggle');
+        const switchIcon = document.getElementById('switchIcon');
+        const html = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); switchIcon.classList.replace('fa-sun', 'fa-moon'); }
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            switchIcon.classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
+        });
+
+        // =========================================================================
+        // 2. FUNGSI UTAMA: MENGAMBIL PESANAN DARI SERVER (KEAMANAN LAPIS KEDUA)
+        // =========================================================================
+        async function fetchOrders() {
+            try {
+                // Mengirim permintaan dengan tiket (token) otorisasi ke backend
+                const response = await fetch('/api/orders', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                });
+
+                // Jika server merespons 401 Unauthorized atau 403 Forbidden (Token Palsu/Kedaluwarsa)
+                if (response.status === 401 || response.status === 403) {
+                    throw new Error('Sesi tidak valid');
+                }
+
+                if (!response.ok) throw new Error('Gagal terhubung ke database');
+                
+                allOrders = await response.json();
+                
+                // Urutkan pesanan dari yang terbaru (asumsi ada field created_at atau id yang berurutan)
+                allOrders.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+                
+                renderOrders(currentStatusFilter);
+                syncBadges(session.access_token);
+                updateNavAvatar();
+
+            } catch (error) {
+                console.error("Keamanan/Jaringan Error:", error);
+                // Isolasi Error: Bersihkan memori dan tendang pengguna jika dicurigai manipulasi sesi
+                if(error.message === 'Sesi tidak valid') {
+                    localStorage.removeItem('user_session');
+                    window.location.replace('login.html');
+                } else {
+                    document.getElementById('ordersContainer').innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-wifi empty-icon" style="color: #ff4757;"></i>
+                            <div class="empty-text" style="color: #ff4757;">Gagal Memuat Pesanan</div>
+                            <div class="empty-subtext">Periksa koneksi internet Anda.</div>
+                            <button onclick="location.reload()" class="btn-shop-now" style="background:#ff4757; color:white;"><i class="fas fa-sync-alt"></i> Coba Lagi</button>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // --- FUNGSI MERENDER KARTU PESANAN KE HTML ---
+        function renderOrders(statusFilter) {
+            const container = document.getElementById('ordersContainer');
+            container.innerHTML = '';
+
+            // Filter pesanan berdasarkan Tab yang dipilih
+            const filteredOrders = statusFilter === 'Semua' 
+                ? allOrders 
+                : allOrders.filter(o => (o.status || 'Diproses').toLowerCase() === statusFilter.toLowerCase());
+
+            if (filteredOrders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open empty-icon"></i>
+                        <div class="empty-text">Tidak Ada Pesanan</div>
+                        <div class="empty-subtext">Anda belum memiliki pesanan dengan status ini.</div>
+                        <a href="index.html" class="btn-shop-now"><i class="fas fa-shopping-cart"></i> Mulai Belanja</a>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredOrders.forEach(order => {
+                // Memformat Status
+                const rawStatus = order.status || 'Diproses';
+                const statusClass = `status-${rawStatus.toLowerCase()}`;
+                
+                // Memformat Tanggal
+                const dateObj = new Date(order.created_at || Date.now());
+                const formattedDate = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' });
+
+                // Mengolah daftar barang (Item) dalam pesanan tersebut
+                const items = order.items || [];
+                let itemsHTML = '';
+                
+                if (items.length > 0) {
+                    // Hanya tampilkan 1 barang pertama untuk ringkasan desain yang rapi
+                    const firstItem = items[0];
+                    const itemPrice = typeof firstItem.product_price === 'number' 
+                        ? formatRupiah(firstItem.product_price) 
+                        : (firstItem.product_price || 'Rp 0');
+
+                    itemsHTML += `
+                        <div class="order-item">
+                            <img src="${firstItem.product_img || 'https://via.placeholder.com/60?text=No+Image'}" class="item-img" alt="${firstItem.product_name}">
+                            <div class="item-details">
+                                <div class="item-name">${firstItem.product_name || 'Barang Grosir'}</div>
+                                <div class="item-qty">${firstItem.quantity || 1} Barang x ${itemPrice}</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    if (items.length > 1) {
+                        itemsHTML += `<div class="more-items-text">+ ${items.length - 1} barang lainnya</div>`;
+                    }
+                } else {
+                    itemsHTML = `<div class="more-items-text">Rincian barang tidak tersedia.</div>`;
+                }
+
+                // Membuat Kartu Pesanan (Neumorphism Card)
+                const card = document.createElement('div');
+                card.className = 'order-card';
+                card.innerHTML = `
+                    <div class="order-header">
+                        <div class="order-id">
+                            <i class="fas fa-receipt" style="color: var(--accent-color);"></i> 
+                            <div>
+                                INV-${order.id || Math.floor(Math.random()*10000)}
+                                <div class="order-date">${formattedDate}</div>
+                            </div>
+                        </div>
+                        <div class="status-badge ${statusClass}">${rawStatus.toUpperCase()}</div>
+                    </div>
+                    
+                    <div class="order-items">
+                        ${itemsHTML}
+                    </div>
+
+                    <div class="order-footer">
+                        <div>
+                            <div class="total-text">Total Belanja</div>
+                            <div class="total-price">${order.total_price || 'Rp 0'}</div>
+                        </div>
+                        ${rawStatus.toLowerCase() !== 'dibatalkan' && rawStatus.toLowerCase() !== 'selesai' 
+                            ? `<button class="btn-track" onclick="alert('Fitur Lacak Resi sedang dalam pengembangan.')"><i class="fas fa-truck"></i> Lacak</button>` 
+                            : ''}
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // --- FUNGSI FILTER TAB ---
+        window.filterOrders = function(status) {
+            currentStatusFilter = status;
+            
+            // Ubah tampilan tombol tab aktif
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                if (btn.getAttribute('data-status') === status) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            renderOrders(status);
+        }
+
+        // --- FUNGSI UTILITAS FORMAT RUPIAH ---
+        function formatRupiah(number) { 
+            return "Rp " + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); 
+        }
+
+        // =========================================================================
+        // SINKRONISASI NAVIGASI CERDAS (AVATAR & BADGE)
+        // =========================================================================
+        function updateNavAvatar() {
+            const savedName = session.name || (session.user && session.user.name) || "User";
+            const nickname = savedName.split(' ')[0]; 
+            const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(savedName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
+            
+            const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+            if (mobileAccountBtn) {
+                mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${nickname}</span>`;
+            }
+        }
+
+        async function syncBadges(token) {
+            // Keranjang
+            try {
+                const cartRes = await fetch('/api/cart', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (cartRes.ok) {
+                    const cartItems = await cartRes.json();
+                    const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+                    const el = document.getElementById('mobileCartBadge');
+                    if (el) { el.style.display = totalQty > 0 ? 'flex' : 'none'; el.innerText = totalQty > 99 ? '99+' : totalQty; }
+                }
+            } catch (e) {}
+
+            // Promo
+            try {
+                const promoRes = await fetch('/api/vouchers', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (promoRes.ok) {
+                    const promos = await promoRes.json();
+                    const el = document.getElementById('mobilePromoBadge');
+                    if (el) { el.style.display = promos.length > 0 ? 'flex' : 'none'; el.innerText = promos.length; }
+                }
+            } catch (e) {}
+
+            // Pesanan Aktif
+            try {
+                // Di sini kita tidak perlu fetch lagi jika allOrders sudah terisi
+                const activeOrders = allOrders.filter(o => {
+                    const stat = (o.status || '').toLowerCase();
+                    return stat !== 'selesai' && stat !== 'dibatalkan';
+                });
+                const el = document.getElementById('mobileOrderBadge');
+                if (el) { el.style.display = activeOrders.length > 0 ? 'flex' : 'none'; el.innerText = activeOrders.length; }
+            } catch (e) {}
+        }
+
+        // Jalankan fetch saat dokumen siap
+        document.addEventListener('DOMContentLoaded', fetchOrders);
+
+    </script>
+</body>
+</html>
