@@ -40,7 +40,8 @@ export default async function handler(req, res) {
 
         // --- JIKA REQUEST PUT (SIMPAN PERUBAHAN PROFIL) ---
         if (req.method === 'PUT') {
-            const { nama_lengkap, nama_panggilan, no_wa, alamat_lengkap, jenis_kelamin } = req.body;
+            // jenis_kelamin sudah dihapus agar sinkron dengan frontend
+            const { nama_lengkap, nama_panggilan, no_wa, alamat_lengkap } = req.body;
 
             // Update atau Insert (Upsert) ke tabel profiles
             const { data, error: updateError } = await supabase
@@ -52,7 +53,6 @@ export default async function handler(req, res) {
                     nama_panggilan,
                     no_wa,
                     alamat_lengkap,
-                    jenis_kelamin,
                     created_at: new Date().toISOString()
                 }, { onConflict: 'id' })
                 .select()
