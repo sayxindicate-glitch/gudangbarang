@@ -80,7 +80,14 @@
         .item-qty { font-size: 11px; color: var(--text-muted); font-weight: 600; }
         .item-price { font-size: 13px; font-weight: 700; color: var(--accent-color); }
 
-        .more-items-text { font-size: 11px; color: var(--text-muted); font-weight: 600; font-style: italic; text-align: center; margin-top: 5px; }
+        /* --- STYLING UNTUK FITUR BUKA TUTUP BARANG LAINNYA --- */
+        .hidden-items-container { display: none; flex-direction: column; gap: 10px; margin-top: 5px; padding-top: 10px; border-top: 1px dashed rgba(128,128,128,0.2); animation: slideDown 0.3s ease-out forwards; }
+        .hidden-items-container.active { display: flex; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .toggle-items-btn { background: none; border: none; font-size: 12px; color: var(--accent-color); font-weight: 700; cursor: pointer; text-align: center; margin-top: 5px; padding: 8px; border-radius: 10px; display: block; width: 100%; transition: all 0.2s; }
+        .toggle-items-btn:hover { background: rgba(9, 132, 227, 0.1); }
+        .toggle-items-btn:active { transform: scale(0.98); }
 
         .order-footer { display: flex; justify-content: space-between; align-items: center; border-top: 2px dashed rgba(128,128,128,0.2); padding-top: 15px; margin-top: 5px; }
         .total-text { font-size: 12px; font-weight: 600; color: var(--text-muted); }
@@ -355,6 +362,20 @@
             return "Rp " + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); 
         }
 
+        // --- FUNGSI MENGATUR BUKA/TUTUP DAFTAR BARANG LAINNYA ---
+        window.toggleItems = function(orderId, hiddenCount) {
+            const container = document.getElementById(`hidden-items-${orderId}`);
+            const btn = document.getElementById(`toggle-btn-${orderId}`);
+            
+            if (container.classList.contains('active')) {
+                container.classList.remove('active');
+                btn.innerHTML = `+ ${hiddenCount} barang lainnya`;
+            } else {
+                container.classList.add('active');
+                btn.innerHTML = `<i class="fas fa-chevron-up"></i> Sembunyikan barang`;
+            }
+        }
+
         function renderOrders(statusFilter) {
             const container = document.getElementById('ordersContainer');
             container.innerHTML = '';
@@ -387,12 +408,10 @@
                 let itemsHTML = '';
                 
                 if (items.length > 0) {
+                    // BARANG PERTAMA (Selalu Tampil)
                     const firstItem = items[0];
-                    
-                    const rawPrice = firstItem.product_price || firstItem.price_at_buy || '0';
-                    const cleanPrice = parsePriceSafe(rawPrice);
+                    const cleanPrice = parsePriceSafe(firstItem.product_price || firstItem.price_at_buy);
                     const itemPriceDisplay = formatRupiah(cleanPrice);
-
                     const imgUrl = (firstItem.product_img && firstItem.product_img !== "undefined" && firstItem.product_img.startsWith('http')) 
                         ? firstItem.product_img 
                         : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
@@ -407,8 +426,35 @@
                         </div>
                     `;
                     
+                    // JIKA ADA BARANG LAINNYA (Buat container tersembunyi & tombol interaktif)
                     if (items.length > 1) {
-                        itemsHTML += `<div class="more-items-text">+ ${items.length - 1} barang lainnya</div>`;
+                        const hiddenCount = items.length - 1;
+                        let hiddenItemsHTML = `<div class="hidden-items-container" id="hidden-items-${order.id}">`;
+                        
+                        // Looping barang ke-2 dan seterusnya
+                        for (let i = 1; i < items.length; i++) {
+                            const currItem = items[i];
+                            const currCleanPrice = parsePriceSafe(currItem.product_price || currItem.price_at_buy);
+                            const currPriceDisplay = formatRupiah(currCleanPrice);
+                            const currImgUrl = (currItem.product_img && currItem.product_img !== "undefined" && currItem.product_img.startsWith('http')) 
+                                ? currItem.product_img 
+                                : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
+
+                            hiddenItemsHTML += `
+                                <div class="order-item">
+                                    <img src="${currImgUrl}" class="item-img" alt="Produk">
+                                    <div class="item-details">
+                                        <div class="item-name">${currItem.product_name || 'Barang Belanjaan'}</div>
+                                        <div class="item-qty">${currItem.quantity || 1} Barang x ${currPriceDisplay}</div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        hiddenItemsHTML += `</div>`;
+                        
+                        // Gabungkan ke HTML utama beserta tombolnya
+                        itemsHTML += hiddenItemsHTML;
+                        itemsHTML += `<button class="toggle-items-btn" id="toggle-btn-${order.id}" onclick="toggleItems('${order.id}', ${hiddenCount})">+ ${hiddenCount} barang lainnya</button>`;
                     }
                 } else {
                     itemsHTML = `<div class="more-items-text">Rincian barang belum dimasukkan.</div>`;
