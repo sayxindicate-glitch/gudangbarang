@@ -108,11 +108,53 @@
             .hide-on-mobile { display: none !important; }
             body { padding-bottom: 90px; }
             
-            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 20px 20px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px; justify-content: space-between; }
+            /* ---> MASTER BOTTOM NAV IMPLEMENTATION <--- */
+            .bottom-nav { 
+                display: flex; position: fixed; bottom: 0; left: 0; width: 100%; 
+                background-color: var(--bg-color); border-radius: 25px 25px 0 0; 
+                box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; 
+                padding: 10px 15px; 
+                justify-content: space-between; 
+                padding-bottom: max(15px, env(safe-area-inset-bottom)); 
+                gap: 8px; 
+            }
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
-            .bottom-nav-item { flex: 1; text-align: center; text-decoration: none; color: var(--text-muted); font-size: 9px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-            .bottom-nav-item i { font-size: 18px; }
-            .bottom-nav-item.active { color: var(--accent-color); }
+            
+            .bottom-nav-item { 
+                flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+                text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; 
+                padding: 10px 0; border-radius: 18px; 
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: transparent; 
+            }
+            
+            .bottom-nav-item i { 
+                font-size: 20px; margin-bottom: 4px; 
+                transition: transform 0.2s ease, color 0.2s ease; 
+            }
+            
+            /* Efek "Bolong" saat item aktif */
+            .bottom-nav-item.active { 
+                color: var(--accent-color); 
+                background: var(--bg-color); 
+                box-shadow: var(--neu-pressed-sm); 
+            }
+            
+            .bottom-nav-item.active i { 
+                transform: scale(1.15); 
+            }
+            
+            /* Kontainer untuk menjaga ikon dan angka notifikasi tetap menyatu */
+            .badge-container {
+                position: relative;
+                display: inline-flex;
+            }
+            
+            /* Posisi angka notifikasi statis yang presisi */
+            .bottom-nav-item .badge-count { 
+                position: absolute; top: -5px; right: -12px; background: #ff4757; color: white; 
+                font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; 
+                border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 2;
+            }
         }
     </style>
 </head>
@@ -154,29 +196,32 @@
         </div>
     </div>
 
+    MASTER BOTTOM NAV HTML <--- -->
     <nav class="bottom-nav">
-        <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i><span>Beranda</span>
+        </a>
         
         <a href="promo.html" class="bottom-nav-item active">
-            <div style="position: relative;">
+            <div class="badge-container">
                 <i class="fas fa-tags"></i>
-                <span class="badge-count" id="mobilePromoBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span>
+                <span class="badge-count" id="mobilePromoBadge" style="display: none;">0</span>
             </div>
             <span>Promo</span>
         </a>
         
         <a href="keranjang.html" class="bottom-nav-item">
-            <div style="position: relative;">
+            <div class="badge-container">
                 <i class="fas fa-shopping-cart"></i>
-                <span class="badge-count" id="mobileCartBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span>
+                <span class="badge-count" id="mobileCartBadge" style="display: none;">0</span>
             </div>
             <span>Keranjang</span>
         </a>
         
         <a href="pesanan.html" class="bottom-nav-item">
-            <div style="position: relative;">
+            <div class="badge-container">
                 <i class="fas fa-box"></i>
-                <span class="badge-count" id="mobileOrderBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span>
+                <span class="badge-count" id="mobileOrderBadge" style="display: none;">0</span>
             </div>
             <span>Pesanan</span>
         </a>
@@ -219,7 +264,8 @@
 
                         if (mobileAccountBtn) {
                             mobileAccountBtn.href = 'akun.html';
-                            mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 22px; height: 22px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
+                            // Menyesuaikan ukuran avatar dengan Master Bottom Nav yang baru
+                            mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
                         }
                     }
                 } catch (e) { console.log("Koneksi offline"); }
