@@ -54,7 +54,6 @@
         .avatar-container { position: relative; width: 120px; height: 120px; border-radius: 50%; box-shadow: var(--neu-flat); display: flex; justify-content: center; align-items: center; background: var(--bg-color); }
         .profile-avatar { width: 104px; height: 104px; border-radius: 50%; object-fit: cover; box-shadow: var(--neu-pressed); }
         
-        /* Modifikasi User Meta Box untuk Tombol Keluar */
         .user-meta-box { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .display-title { font-size: 22px; font-weight: 700; color: var(--accent-color); }
         .display-email { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px;}
@@ -70,11 +69,6 @@
         
         .neu-input { width: 100%; padding: 14px 20px; border-radius: 15px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed-sm); outline: none; font-size: 13px; font-weight: 600; }
         .neu-input:disabled { opacity: 0.6; cursor: not-allowed; }
-        
-        .neu-select { width: 100%; padding: 14px 20px; border-radius: 15px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-flat-sm); outline: none; font-size: 13px; font-weight: 600; cursor: pointer; appearance: none; -webkit-appearance: none; }
-        .neu-select:focus { box-shadow: var(--neu-pressed-sm); }
-        .select-wrapper { position: relative; }
-        .select-wrapper::after { content: '\f078'; font-family: 'Font Awesome 5 Free'; font-weight: 900; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--text-muted); pointer-events: none; }
 
         .action-buttons { display: flex; gap: 20px; width: 100%; margin-top: 15px; }
         .btn-action { flex: 1; padding: 15px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); font-size: 14px; font-weight: 700; box-shadow: var(--neu-flat); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: all 0.2s; }
@@ -192,26 +186,14 @@
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="input-group">
-                        <span class="input-label">Nomor WhatsApp</span>
-                        <input type="tel" id="noWa" class="neu-input" placeholder="Contoh: 08123456789">
-                    </div>
-                    <div class="input-group">
-                        <span class="input-label">Jenis Kelamin</span>
-                        <div class="select-wrapper">
-                            <select id="jenisKelamin" class="neu-select">
-                                <option value="">Pilih Jenis Kelamin</option>
-                                <option value="Laki-laki">Laki-laki</option>
-                                <option value="Perempuan">Perempuan</option>
-                            </select>
-                        </div>
-                    </div>
+                <div class="input-group">
+                    <span class="input-label">Nomor WhatsApp</span>
+                    <input type="tel" id="noWa" class="neu-input" placeholder="Contoh: 08123456789">
                 </div>
 
                 <div class="input-group">
                     <span class="input-label">Alamat Lengkap Pengiriman</span>
-                    <textarea id="alamatLengkap" class="neu-input" rows="3" placeholder="Nama jalan, nomor rumah, RT/RW, kecamatan, kota..." style="resize: none; font-family: inherit;"></textarea>
+                    <textarea id="alamatLengkap" class="neu-input" placeholder="Nama jalan, nomor rumah, RT/RW, kecamatan, kota..." style="resize: none; font-family: inherit; overflow: hidden; min-height: 54px;" oninput="autoResize(this)"></textarea>
                 </div>
 
                 <div class="action-buttons">
@@ -271,6 +253,12 @@
         const alertIcon = document.getElementById('alertIcon');
         const alertMessage = document.getElementById('alertMessage');
 
+        // Fungsi Auto-Resize untuk Kolom Alamat
+        function autoResize(el) {
+            el.style.height = 'auto';
+            el.style.height = el.scrollHeight + 'px';
+        }
+
         function showAlert(msg, type) {
             alertMessage.innerText = msg;
             if(type === 'success') {
@@ -305,8 +293,12 @@
                     document.getElementById('namaLengkap').value = data.nama_lengkap || "";
                     document.getElementById('namaPanggilan').value = data.nama_panggilan || "";
                     document.getElementById('noWa').value = data.no_wa || "";
-                    document.getElementById('jenisKelamin').value = data.jenis_kelamin || "";
-                    document.getElementById('alamatLengkap').value = data.alamat_lengkap || "";
+                    
+                    const alamatInput = document.getElementById('alamatLengkap');
+                    alamatInput.value = data.alamat_lengkap || "";
+                    
+                    // Picu auto-resize saat data alamat berhasil dimuat dari database
+                    autoResize(alamatInput);
 
                     const displayName = data.nama_panggilan || (data.nama_lengkap ? data.nama_lengkap.split(' ')[0] : "User");
                     updateAvatarUI(displayName);
@@ -377,7 +369,6 @@
             const name = document.getElementById('namaLengkap').value.trim();
             const nickname = document.getElementById('namaPanggilan').value.trim();
             const phone = document.getElementById('noWa').value.trim();
-            const sex = document.getElementById('jenisKelamin').value;
             const address = document.getElementById('alamatLengkap').value.trim();
 
             if (!name || !phone || !address) {
@@ -393,7 +384,7 @@
                 const res = await fetch('/api/user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
-                    body: JSON.stringify({ nama_lengkap: name, nama_panggilan: nickname, no_wa: phone, alamat_lengkap: address, jenis_kelamin: sex })
+                    body: JSON.stringify({ nama_lengkap: name, nama_panggilan: nickname, no_wa: phone, alamat_lengkap: address })
                 });
 
                 const result = await res.json();
