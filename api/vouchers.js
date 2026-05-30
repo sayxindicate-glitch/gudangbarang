@@ -34,11 +34,13 @@ export default async function handler(req, res) {
         const daysSinceCreated = Math.max(0, (now - createdDate) / (1000 * 60 * 60 * 24));
         const daysSinceLastSignIn = Math.max(0, (now - lastSignInDate) / (1000 * 60 * 60 * 24));
 
-        const { data: dbVouchers, error: dbError } = await supabase.from('gg_vouchers').select('*').order('created_at', { ascending: false });
+        // PERBAIKAN: Menghapus .order('created_at') yang menyebabkan Supabase Crash
+        const { data: dbVouchers, error: dbError } = await supabase.from('gg_vouchers').select('*');
+        
         if (dbError) throw dbError;
 
         const filteredVouchers = (dbVouchers || []).filter(vch => {
-            // PERBAIKAN: Jika target kosong di database, otomatis jadikan 'all'
+            // Jika target kosong di database, otomatis jadikan 'all'
             const segment = (vch.target_segment || 'all').trim().toLowerCase();
             
             // CEK 1: Sembunyikan jika tanggal sudah lewat
