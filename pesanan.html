@@ -32,13 +32,23 @@
         .top-nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; background-color: var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
         
-        .controls { display: flex; align-items: center; gap: 20px; }
+        .controls { display: flex; align-items: center; gap: 20px; flex: 1; justify-content: flex-end; }
         .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; }
         .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
         [data-theme="dark"] .switch-handle { transform: translateX(30px); }
 
+        /* --- SINKRONISASI CSS NAVIGASI DESKTOP (SAMA DENGAN INDEX.HTML) --- */
+        .nav-link { color: var(--text-muted); text-decoration: none; position: relative; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .nav-link:hover { color: var(--accent-color); }
+        .badge-count { position: absolute; top: -10px; right: -15px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .neu-btn-icon { background: var(--bg-color); color: var(--text-main); border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative; }
         .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+        .nav-btn-cap { background: var(--bg-color); color: var(--text-main); text-decoration: none; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 50px; box-shadow: var(--neu-flat-sm); }
+        .nav-btn-cap:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+        .nav-profile-badge { display: flex; flex-direction: row; align-items: center; justify-content: center; text-decoration: none; gap: 10px; transition: transform 0.2s ease; cursor: pointer; background: var(--bg-color); padding: 5px 15px 5px 5px; border-radius: 50px; box-shadow: var(--neu-flat-sm); }
+        .nav-profile-badge:active { box-shadow: var(--neu-pressed-sm); }
+        .nav-profile-badge img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; box-shadow: var(--neu-pressed-sm); border: 2px solid transparent; }
+        .nav-profile-badge span { font-size: 13px; font-weight: 700; color: var(--text-main); max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; flex: 1; width: 100%; }
         .page-title { display: flex; align-items: center; gap: 15px; font-size: 24px; font-weight: 700; margin-bottom: 25px; }
@@ -94,6 +104,7 @@
 
         @media (max-width: 768px) {
             .top-nav { padding: 12px 20px; }
+            .hide-on-mobile { display: none !important; }
             .container { padding-bottom: 120px; margin-top: 15px; } 
             
             .order-card { padding: 15px; }
@@ -108,8 +119,8 @@
             .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 20px 20px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px; justify-content: space-between; }
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
             .bottom-nav-item { flex: 1; text-align: center; text-decoration: none; color: var(--text-muted); font-size: 9px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative;}
-            .bottom-nav-item i { font-size: 18px; }
-            .bottom-nav-item.active { color: var(--accent-color); }
+            .bottom-nav-item i { font-size: 18px; transition: transform 0.2s ease; }
+            .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); padding: 10px 5px; border-radius: 15px;}
             
             .badge-count { position: absolute; top: -5px; right: 20%; background: #ff4757; color: white; font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; }
         }
@@ -119,9 +130,30 @@
 
     <div class="top-nav">
         <a href="index.html" class="logo"><i class="fas fa-box-open"></i> GOEDANG</a>
+        
         <div class="controls">
-            <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
-            <a href="keranjang.html" class="neu-btn-icon hide-on-mobile"><i class="fas fa-shopping-cart"></i></a>
+            <div class="theme-switch" id="themeToggle" title="Toggle Dark Mode">
+                <div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div>
+            </div>
+            
+            <a href="promo.html" class="nav-link hide-on-mobile" title="Promo">
+                <i class="fas fa-tags"></i> <span>Promo</span>
+                <span class="badge-count" id="promoBadge" style="display: none;">0</span>
+            </a>
+            
+            <a href="pesanan.html" class="nav-link hide-on-mobile" title="Pesanan">
+                <i class="fas fa-box"></i> <span>Pesanan</span>
+                <span class="badge-count" id="orderBadge" style="display: none;">0</span>
+            </a>
+            
+            <a href="keranjang.html" class="neu-btn-icon hide-on-mobile" id="desktopCartIconTarget" title="Keranjang">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge-count" id="cartBadge" style="display: none; top: -5px; right: -5px; width: 18px; height: 18px; padding: 0;">0</span>
+            </a>
+            
+            <a href="login.html" class="nav-btn-cap hide-on-mobile" id="navLoginBtn">
+                <i class="fas fa-sign-in-alt"></i> <span>Login</span>
+            </a>
         </div>
     </div>
 
@@ -185,7 +217,6 @@
         // =========================================================================
         const sessionData = localStorage.getItem('user_session');
         if (!sessionData) {
-            // Jika tidak ada tiket sesi, usir seketika tanpa loading halaman
             window.location.replace('login.html');
         }
         const session = JSON.parse(sessionData);
@@ -209,35 +240,112 @@
         });
 
         // =========================================================================
-        // 2. FUNGSI UTAMA: MENGAMBIL PESANAN DARI SERVER (KEAMANAN LAPIS KEDUA)
+        // 2. SINKRONISASI NAVIGASI CERDAS (AVATAR & BADGE SEPERTI INDEX.HTML)
+        // =========================================================================
+        async function updateNavUI() {
+            const loginBtn = document.getElementById('navLoginBtn');
+            const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+
+            // Set Avatar lokal agar cepat (Anti-Rasis: baseColor=f9c9b6)
+            const savedName = session.name || (session.user && session.user.name) || "User";
+            const tempNickname = savedName.split(' ')[0]; 
+            const tempAvatar = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(savedName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
+
+            loginBtn.className = 'nav-profile-badge hide-on-mobile';
+            loginBtn.href = 'akun.html';
+            loginBtn.innerHTML = `<img src="${tempAvatar}" alt="Avatar"><span>${tempNickname}</span>`;
+
+            if (mobileAccountBtn) {
+                mobileAccountBtn.href = 'akun.html';
+                mobileAccountBtn.innerHTML = `<img src="${tempAvatar}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${tempNickname}</span>`;
+            }
+
+            try {
+                const userRes = await fetch('/api/user', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
+                
+                if (userRes.status === 401 || userRes.status === 403) {
+                    localStorage.removeItem('user_session');
+                    window.location.replace('login.html');
+                    return;
+                }
+
+                if (userRes.ok) {
+                    const userData = await userRes.json();
+                    const fullName = userData.name || "User";
+                    const nickname = fullName.split(' ')[0]; 
+                    const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(fullName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
+
+                    loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${nickname}</span>`;
+                    if (mobileAccountBtn) {
+                        mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${nickname}</span>`;
+                    }
+                }
+            } catch (e) { 
+                console.error("Mode Offline: Menggunakan sesi lokal.", e); 
+            }
+        }
+
+        async function syncBadges(token) {
+            try {
+                const cartRes = await fetch('/api/cart', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (cartRes.ok) {
+                    const cartItems = await cartRes.json();
+                    const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+                    
+                    const cb = document.getElementById('cartBadge');
+                    const mcb = document.getElementById('mobileCartBadge');
+                    if (cb) { cb.style.display = totalQty > 0 ? 'flex' : 'none'; cb.innerText = totalQty > 99 ? '99+' : totalQty; }
+                    if (mcb) { mcb.style.display = totalQty > 0 ? 'flex' : 'none'; mcb.innerText = totalQty > 99 ? '99+' : totalQty; }
+                }
+            } catch (e) {}
+
+            try {
+                const promoRes = await fetch('/api/vouchers', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (promoRes.ok) {
+                    const promos = await promoRes.json();
+                    const pb = document.getElementById('promoBadge');
+                    const mpb = document.getElementById('mobilePromoBadge');
+                    if (pb) { pb.style.display = promos.length > 0 ? 'flex' : 'none'; pb.innerText = promos.length; }
+                    if (mpb) { mpb.style.display = promos.length > 0 ? 'flex' : 'none'; mpb.innerText = promos.length; }
+                }
+            } catch (e) {}
+
+            try {
+                const activeOrders = allOrders.filter(o => {
+                    const stat = (o.status || '').toLowerCase();
+                    return stat !== 'selesai' && stat !== 'dibatalkan';
+                });
+                const ob = document.getElementById('orderBadge');
+                const mob = document.getElementById('mobileOrderBadge');
+                if (ob) { ob.style.display = activeOrders.length > 0 ? 'flex' : 'none'; ob.innerText = activeOrders.length; }
+                if (mob) { mob.style.display = activeOrders.length > 0 ? 'flex' : 'none'; mob.innerText = activeOrders.length; }
+            } catch (e) {}
+        }
+
+
+        // =========================================================================
+        // 3. FUNGSI UTAMA: MENGAMBIL PESANAN DARI SERVER
         // =========================================================================
         async function fetchOrders() {
+            updateNavUI(); // Panggil sinkronisasi UI Profil seketika
+
             try {
-                // Mengirim permintaan dengan tiket (token) otorisasi ke backend
                 const response = await fetch('/api/orders', {
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${session.access_token}` }
                 });
 
-                // Jika server merespons 401 Unauthorized atau 403 Forbidden (Token Palsu/Kedaluwarsa)
-                if (response.status === 401 || response.status === 403) {
-                    throw new Error('Sesi tidak valid');
-                }
-
+                if (response.status === 401 || response.status === 403) throw new Error('Sesi tidak valid');
                 if (!response.ok) throw new Error('Gagal terhubung ke database');
                 
                 allOrders = await response.json();
-                
-                // Urutkan pesanan dari yang terbaru (asumsi ada field created_at atau id yang berurutan)
                 allOrders.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
                 
                 renderOrders(currentStatusFilter);
                 syncBadges(session.access_token);
-                updateNavAvatar();
 
             } catch (error) {
                 console.error("Keamanan/Jaringan Error:", error);
-                // Isolasi Error: Bersihkan memori dan tendang pengguna jika dicurigai manipulasi sesi
                 if(error.message === 'Sesi tidak valid') {
                     localStorage.removeItem('user_session');
                     window.location.replace('login.html');
@@ -254,12 +362,24 @@
             }
         }
 
+        // --- SISTEM PEMBERSIH ANGKA KEBANGGAAN (ANTI ERROR TITIK/KOMA) ---
+        function parsePriceSafe(val) {
+            if (!val) return 0;
+            if (typeof val === 'number') return val;
+            // Bersihkan semua karakter SELAIN angka (agar "123.000" dan "123" tetap jadi murni angka yang benar)
+            const digits = val.toString().replace(/[^0-9]/g, '');
+            return parseInt(digits, 10) || 0;
+        }
+
+        function formatRupiah(number) { 
+            return "Rp " + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); 
+        }
+
         // --- FUNGSI MERENDER KARTU PESANAN KE HTML ---
         function renderOrders(statusFilter) {
             const container = document.getElementById('ordersContainer');
             container.innerHTML = '';
 
-            // Filter pesanan berdasarkan Tab yang dipilih
             const filteredOrders = statusFilter === 'Semua' 
                 ? allOrders 
                 : allOrders.filter(o => (o.status || 'Diproses').toLowerCase() === statusFilter.toLowerCase());
@@ -277,31 +397,34 @@
             }
 
             filteredOrders.forEach(order => {
-                // Memformat Status
                 const rawStatus = order.status || 'Diproses';
                 const statusClass = `status-${rawStatus.toLowerCase()}`;
-                
-                // Memformat Tanggal
                 const dateObj = new Date(order.created_at || Date.now());
                 const formattedDate = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' });
 
-                // Mengolah daftar barang (Item) dalam pesanan tersebut
+                const shortId = order.id ? order.id.toString().split('-')[0].toUpperCase() : Math.floor(Math.random()*10000);
+
                 const items = order.items || [];
                 let itemsHTML = '';
                 
                 if (items.length > 0) {
-                    // Hanya tampilkan 1 barang pertama untuk ringkasan desain yang rapi
                     const firstItem = items[0];
-                    const itemPrice = typeof firstItem.product_price === 'number' 
-                        ? formatRupiah(firstItem.product_price) 
-                        : (firstItem.product_price || 'Rp 0');
+                    
+                    // Eksekusi Pemanipulasi Harga Barang
+                    const cleanPrice = parsePriceSafe(firstItem.product_price);
+                    const itemPriceDisplay = formatRupiah(cleanPrice);
+
+                    // Pengecekan agar gambar yang "undefined" di database diganti dengan rapi
+                    const imgUrl = (firstItem.product_img && firstItem.product_img !== "undefined" && firstItem.product_img.startsWith('http')) 
+                        ? firstItem.product_img 
+                        : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang+Grosir';
 
                     itemsHTML += `
                         <div class="order-item">
-                            <img src="${firstItem.product_img || 'https://via.placeholder.com/60?text=No+Image'}" class="item-img" alt="${firstItem.product_name}">
+                            <img src="${imgUrl}" class="item-img" alt="Produk">
                             <div class="item-details">
-                                <div class="item-name">${firstItem.product_name || 'Barang Grosir'}</div>
-                                <div class="item-qty">${firstItem.quantity || 1} Barang x ${itemPrice}</div>
+                                <div class="item-name">${firstItem.product_name || 'Barang Belanjaan'}</div>
+                                <div class="item-qty">${firstItem.quantity || 1} Barang x ${itemPriceDisplay}</div>
                             </div>
                         </div>
                     `;
@@ -310,10 +433,13 @@
                         itemsHTML += `<div class="more-items-text">+ ${items.length - 1} barang lainnya</div>`;
                     }
                 } else {
-                    itemsHTML = `<div class="more-items-text">Rincian barang tidak tersedia.</div>`;
+                    itemsHTML = `<div class="more-items-text">Rincian barang belum dimasukkan.</div>`;
                 }
 
-                // Membuat Kartu Pesanan (Neumorphism Card)
+                // Eksekusi Pemanipulasi Total Harga
+                const cleanTotal = parsePriceSafe(order.total_price);
+                const displayTotal = formatRupiah(cleanTotal);
+
                 const card = document.createElement('div');
                 card.className = 'order-card';
                 card.innerHTML = `
@@ -321,7 +447,7 @@
                         <div class="order-id">
                             <i class="fas fa-receipt" style="color: var(--accent-color);"></i> 
                             <div>
-                                INV-${order.id || Math.floor(Math.random()*10000)}
+                                INV-${shortId}
                                 <div class="order-date">${formattedDate}</div>
                             </div>
                         </div>
@@ -335,7 +461,7 @@
                     <div class="order-footer">
                         <div>
                             <div class="total-text">Total Belanja</div>
-                            <div class="total-price">${order.total_price || 'Rp 0'}</div>
+                            <div class="total-price">${displayTotal}</div>
                         </div>
                         ${rawStatus.toLowerCase() !== 'dibatalkan' && rawStatus.toLowerCase() !== 'selesai' 
                             ? `<button class="btn-track" onclick="alert('Fitur Lacak Resi sedang dalam pengembangan.')"><i class="fas fa-truck"></i> Lacak</button>` 
@@ -350,73 +476,13 @@
         // --- FUNGSI FILTER TAB ---
         window.filterOrders = function(status) {
             currentStatusFilter = status;
-            
-            // Ubah tampilan tombol tab aktif
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                if (btn.getAttribute('data-status') === status) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
+                if (btn.getAttribute('data-status') === status) btn.classList.add('active');
+                else btn.classList.remove('active');
             });
-            
             renderOrders(status);
         }
 
-        // --- FUNGSI UTILITAS FORMAT RUPIAH ---
-        function formatRupiah(number) { 
-            return "Rp " + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); 
-        }
-
-        // =========================================================================
-        // SINKRONISASI NAVIGASI CERDAS (AVATAR & BADGE)
-        // =========================================================================
-        function updateNavAvatar() {
-            const savedName = session.name || (session.user && session.user.name) || "User";
-            const nickname = savedName.split(' ')[0]; 
-            const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(savedName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
-            
-            const mobileAccountBtn = document.getElementById('mobileAccountBtn');
-            if (mobileAccountBtn) {
-                mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${nickname}</span>`;
-            }
-        }
-
-        async function syncBadges(token) {
-            // Keranjang
-            try {
-                const cartRes = await fetch('/api/cart', { headers: { 'Authorization': `Bearer ${token}` } });
-                if (cartRes.ok) {
-                    const cartItems = await cartRes.json();
-                    const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-                    const el = document.getElementById('mobileCartBadge');
-                    if (el) { el.style.display = totalQty > 0 ? 'flex' : 'none'; el.innerText = totalQty > 99 ? '99+' : totalQty; }
-                }
-            } catch (e) {}
-
-            // Promo
-            try {
-                const promoRes = await fetch('/api/vouchers', { headers: { 'Authorization': `Bearer ${token}` } });
-                if (promoRes.ok) {
-                    const promos = await promoRes.json();
-                    const el = document.getElementById('mobilePromoBadge');
-                    if (el) { el.style.display = promos.length > 0 ? 'flex' : 'none'; el.innerText = promos.length; }
-                }
-            } catch (e) {}
-
-            // Pesanan Aktif
-            try {
-                // Di sini kita tidak perlu fetch lagi jika allOrders sudah terisi
-                const activeOrders = allOrders.filter(o => {
-                    const stat = (o.status || '').toLowerCase();
-                    return stat !== 'selesai' && stat !== 'dibatalkan';
-                });
-                const el = document.getElementById('mobileOrderBadge');
-                if (el) { el.style.display = activeOrders.length > 0 ? 'flex' : 'none'; el.innerText = activeOrders.length; }
-            } catch (e) {}
-        }
-
-        // Jalankan fetch saat dokumen siap
         document.addEventListener('DOMContentLoaded', fetchOrders);
 
     </script>
