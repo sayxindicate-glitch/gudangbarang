@@ -192,211 +192,12 @@
 
     <script>
         const sessionData = localStorage.getItem('user_session');
-
-        // =========================================================================
-        // SINKRONISASI NAVIGASI CERDAS (LOGIN / LOGOUT PERMANEN)
-        // =========================================================================
-        async function updateNavUI() {
-            const loginBtn = document.getElementById('navLoginBtn');
-            const mobileAccountBtn = document.getElementById('mobileAccountBtn');
-
-            if (sessionData) {
-                const session = JSON.parse(sessionData);
-                try {
-                    const userRes = await fetch('/api/user', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
-                    
-                    // JIKA TOKEN RUSAK / KADALUARSA BERDASARKAN SERVER: Bersihkan & Atur UI Logout
-                    if (userRes.status === 401 || userRes.status === 403) {
-                        localStorage.removeItem('user_session');
-                        setLoggedOutUI();
-                        return;
-                    }
-
-                    if (userRes.ok) {
-                        const userData = await userRes.json();
-                        const fullName = userData.name || "User";
-                        const nickname = fullName.split(' ')[0]; 
-                        const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(fullName)}&backgroundColor=e0e5ec`;
-
-                        // Tampilan Desktop (Avatar Pil Horizontal Berjejer Rapi)
-                        loginBtn.className = 'nav-profile-badge hide-on-mobile';
-                        loginBtn.href = 'akun.html';
-                        loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${nickname}</span>`;
-
-                        // Tampilan Mobile (Ikon orang diganti Avatar Lingkar Kecil)
-                        if (mobileAccountBtn) {
-                            mobileAccountBtn.href = 'akun.html';
-                            mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 22px; height: 22px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${nickname}</span>`;
-                        }
-                    }
-                } catch (e) { console.log("Koneksi profil offline"); }
-
-                // Tarik Lencana Notifikasi Keranjang Belanja
-                try {
-                    const cartRes = await fetch('/api/cart', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
-                    if (cartRes.ok) {
-                        const cartItems = await cartRes.json();
-                        const totalQty = cartItems.reduce((s, i) => s + i.quantity, 0);
-                        if (totalQty > 0) {
-                            const txt = totalQty > 99 ? '99+' : totalQty;
-                            document.getElementById('cartBadge').style.display = 'flex'; document.getElementById('cartBadge').innerText = txt;
-                            document.getElementById('mobileCartBadge').style.display = 'flex'; document.getElementById('mobileCartBadge').innerText = txt;
-                        }
-                    }
-                } catch (e) {}
-
-                // Tarik Lencana Notifikasi Pesanan Aktif
-                try {
-                    const orderRes = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
-                    if (orderRes.ok) {
-                        const orders = await orderRes.json();
-                        const activeOrders = orders.filter(o => o.status !== 'Selesai' && o.status !== 'Dibatalkan');
-                        if (activeOrders.length > 0) {
-                            document.getElementById('orderBadge').style.display = 'flex'; document.getElementById('orderBadge').innerText = activeOrders.length;
-                            document.getElementById('mobileOrderBadge').style.display = 'flex'; document.getElementById('mobileOrderBadge').innerText = activeOrders.length;
-                        }
-                    }
-                } catch (e) {}
-
-            } else {
-                setLoggedOutUI();
-            }
+        if (!sessionData) {
+            alert("Silakan masuk/login terlebih dahulu untuk melihat voucher khusus Anda.");
+            window.location.href = 'login.html';
         }
+        const session = JSON.parse(sessionData);
 
-        // Fungsi Helper untuk Mereset UI ke Status Belum Login / Logout
-        function setLoggedOutUI() {
-            const loginBtn = document.getElementById('navLoginBtn');
-            const mobileAccountBtn = document.getElementById('mobileAccountBtn');
-
-            loginBtn.className = 'nav-btn-cap hide-on-mobile';
-            loginBtn.href = 'login.html';
-            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span>Login</span>';
-
-            if (mobileAccountBtn) {
-                mobileAccountBtn.href = 'login.html';
-                mobileAccountBtn.innerHTML = '<i class="fas fa-user"></i><span>Akun</span>';
-            }
-
-            document.getElementById('cartBadge').style.display = 'none';
-            document.getElementById('orderBadge').style.display = 'none';
-            document.getElementById('promoBadge').style.display = 'none';
-            document.getElementById('mobileCartBadge').style.display = 'none';
-            document.getElementById('mobilePromoBadge').style.display = 'none';
-            document.getElementById('mobileOrderBadge').style.display = 'none';
-        }
-
-        // =========================================================================
-        // SISTEM LOAD VOUCHER & STRATEGI MARKETING BERBASIS FOMO TIMER
-        // =========================================================================
-        async function loadVouchers() {
-            const container = document.getElementById('voucherContainer');
-            
-            // --- JIKA PENGGUNA BELUM LOGIN SAMA SEKALI / SESI HABIS ---
-            if (!sessionData) {
-                container.innerHTML = `
-                    <div class="voucher-card" style="border-left-color: #ff4757;">
-                        <div class="voucher-title" style="color: #ff4757;">Promo Kilat Bebas Syarat</div>
-                        <div class="voucher-desc">Diskon 50% maksimal potongan Rp 25.000 untuk semua pelanggan tanpa terkecuali!</div>
-                        <div class="voucher-timer"><i class="fas fa-clock"></i> Hangus dalam: <span class="countdown-text">00 : 00 : 00</span></div>
-                        <div class="voucher-code-box">
-                            <span class="voucher-code" id="code-public">HEMAT50</span>
-                            <button class="btn-copy" onclick="copyCode('public', this)"><i class="fas fa-copy"></i> Salin</button>
-                        </div>
-                    </div>
-
-                    <div class="voucher-card" style="border-left-color: var(--accent-color); border-style: dashed; justify-content: center; align-items: center; text-align: center; padding: 30px;">
-                        <div class="voucher-title" style="color: var(--accent-color); padding: 0; margin-bottom: 8px;"><i class="fas fa-lock"></i> Mau Voucher Tambahan?</div>
-                        <div class="voucher-desc" style="padding: 0; margin-bottom: 20px; font-weight: 500;">Yuk masuk ke akun Anda sekarang untuk membuka Voucher Pengguna Baru, Potongan Ongkir, dan diskon personal khusus lainnya!</div>
-                        <a href="login.html" class="btn-copy" style="text-decoration: none; background: var(--accent-color); color: white; border-radius: 50px; padding: 10px 25px; box-shadow: var(--neu-flat-sm);">Masuk Akun</a>
-                    </div>
-                `;
-                startCountdownTimer();
-                return;
-            }
-
-            // --- JIKA PENGGUNA TERVERIFIKASI SUDAH LOGIN AKTIF ---
-            const session = JSON.parse(sessionData);
-            try {
-                const response = await fetch('/api/vouchers', {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bearer ${session.access_token}` }
-                });
-
-                if (!response.ok) throw new Error("Gagal mengambil voucher khusus");
-                
-                const vouchers = await response.json();
-                container.innerHTML = '';
-
-                if (vouchers.length > 0) {
-                    document.getElementById('promoBadge').style.display = 'flex'; document.getElementById('promoBadge').innerText = vouchers.length;
-                    document.getElementById('mobilePromoBadge').style.display = 'flex'; document.getElementById('mobilePromoBadge').innerText = vouchers.length;
-                }
-
-                if (vouchers.length === 0) {
-                    container.innerHTML = `<div class="empty-state">Maaf, saat ini belum ada voucher baru yang tersedia untuk akun Anda.</div>`;
-                    return;
-                }
-
-                vouchers.forEach(vch => {
-                    const card = document.createElement('div');
-                    card.className = 'voucher-card';
-                    card.style.borderLeftColor = vch.color;
-
-                    card.innerHTML = `
-                        <div class="voucher-title" style="color: ${vch.color};">${vch.title}</div>
-                        <div class="voucher-desc">${vch.desc}</div>
-                        <div class="voucher-timer"><i class="fas fa-clock"></i> Hangus dalam: <span class="countdown-text">00 : 00 : 00</span></div>
-                        <div class="voucher-code-box">
-                            <span class="voucher-code" id="code-${vch.id}">${vch.code}</span>
-                            <button class="btn-copy" onclick="copyCode('${vch.id}', this)"><i class="fas fa-copy"></i> Salin</button>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-
-                startCountdownTimer();
-
-            } catch (error) {
-                container.innerHTML = `<div class="empty-state" style="color:#ff4757;"><i class="fas fa-exclamation-triangle"></i> Gagal memuat data voucher strategis.</div>`;
-            }
-        }
-
-        // --- FUNGSI MESIN HITUNG MUNDUR FOMO (Tengah Malam Reset) ---
-        function startCountdownTimer() {
-            function updateTimer() {
-                const now = new Date();
-                const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-                const diff = endOfDay - now;
-
-                if (diff <= 0) return;
-
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-                const formattedTime = 
-                    String(hours).padStart(2, '0') + " : " + 
-                    String(minutes).padStart(2, '0') + " : " + 
-                    String(seconds).padStart(2, '0');
-
-                document.querySelectorAll('.countdown-text').forEach(el => el.innerText = formattedTime);
-            }
-            updateTimer();
-            setInterval(updateTimer, 1000);
-        }
-
-        // --- FUNGSI SALIN KODE VOUCHER ---
-        function copyCode(id, btnElement) {
-            const codeText = document.getElementById(`code-${id}`).innerText;
-            navigator.clipboard.writeText(codeText).then(() => {
-                const originalText = btnElement.innerHTML;
-                btnElement.innerHTML = '<i class="fas fa-check"></i> Tersalin!';
-                btnElement.classList.add('copied');
-                setTimeout(() => { btnElement.innerHTML = originalText; btnElement.classList.remove('copied'); }, 2000);
-            });
-        }
-
-        // --- TOGGLE DARK MODE ---
         const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
         if (localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); document.getElementById('switchIcon').classList.replace('fa-sun', 'fa-moon'); }
@@ -407,11 +208,73 @@
             document.getElementById('switchIcon').classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
         });
 
-        // INISIALISASI UTAMA
-        window.addEventListener('DOMContentLoaded', () => {
-            updateNavUI();
-            loadVouchers();
-        });
+        // --- FETCH VOUCHER DARI VERCEL ---
+        async function loadVouchers() {
+            const container = document.getElementById('voucherContainer');
+            
+            try {
+                const response = await fetch('/api/vouchers', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                });
+
+                if(!response.ok) throw new Error("Gagal mengambil data promo");
+                
+                const vouchers = await response.json();
+                container.innerHTML = '';
+
+                if (vouchers.length === 0) {
+                    container.innerHTML = `<div class="empty-state">Maaf, saat ini belum ada promo yang tersedia untuk Anda.</div>`;
+                    return;
+                }
+
+                vouchers.forEach(vch => {
+                    const card = document.createElement('div');
+                    card.className = 'voucher-card';
+                    card.style.borderLeftColor = vch.color;
+
+                    // FORMAT TANGGAL KEDALUWARSA
+                    let expiryInfo = `<i class="fas fa-infinity"></i> Tanpa batas waktu`;
+                    if (vch.expires_at) {
+                        const expDate = new Date(vch.expires_at);
+                        const formattedDate = expDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                        expiryInfo = `<i class="fas fa-clock"></i> Berlaku s/d: ${formattedDate}`;
+                    }
+
+                    card.innerHTML = `
+                        <div class="voucher-title" style="color: ${vch.color};">${vch.title}</div>
+                        <div class="voucher-desc">${vch.desc}</div>
+                        
+                        <div style="font-size: 10px; font-weight: 600; color: var(--text-muted); margin-bottom: 15px; padding-left: 10px;">
+                            ${expiryInfo}
+                        </div>
+
+                        <div class="voucher-code-box">
+                            <span class="voucher-code" id="code-${vch.id}">${vch.code}</span>
+                            <button class="btn-copy" onclick="copyCode('${vch.id}', this)">
+                                <i class="fas fa-copy"></i> Salin
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                container.innerHTML = `<div class="empty-state" style="color:#ff4757;"><i class="fas fa-exclamation-triangle"></i> Terjadi kesalahan jaringan.</div>`;
+            }
+        }
+
+        function copyCode(id, btnElement) {
+            const codeText = document.getElementById(`code-${id}`).innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                const originalText = btnElement.innerHTML;
+                btnElement.innerHTML = '<i class="fas fa-check"></i> Tersalin!';
+                btnElement.classList.add('copied');
+                setTimeout(() => { btnElement.innerHTML = originalText; btnElement.classList.remove('copied'); }, 2000);
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', loadVouchers);
     </script>
 </body>
 </html>
