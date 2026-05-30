@@ -175,10 +175,12 @@
         .social-icon { width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.05); color: #f5f6fa; display: flex; justify-content: center; align-items: center; text-decoration: none; transition: background 0.3s; }
         .social-icon:hover { background: #00e5ff; color: #1a1b1e; }
         .footer-title { font-size: 15px; font-weight: 600; margin-bottom: 20px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        
         .footer-links { list-style: none; padding: 0; }
         .footer-links li { margin-bottom: 12px; }
         .footer-links a { color: #a4b0be; text-decoration: none; font-size: 13px; transition: color 0.3s; cursor: pointer; }
         .footer-links a:hover { color: #00e5ff; }
+        
         .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; color: #a4b0be; font-size: 13px; margin-bottom: 15px; line-height: 1.5; }
         .footer-contact-item i { color: #00e5ff; margin-top: 3px; }
         .payment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -363,15 +365,13 @@
                 <div class="footer-contact-item"><i class="fas fa-phone-alt"></i><span>0815 333 5000</span></div>
                 <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>admin@goedanggrosir.com</span></div>
             </div>
+            
             <div>
                 <h4 class="footer-title">Kategori</h4>
-                <ul class="footer-links">
-                    <li><a onclick="handleCategoryClick(null, 'Semua Barang'); window.scrollTo(0,0); return false;">Sembako Grosir</a></li>
-                    <li><a onclick="handleCategoryClick(null, 'Alat Tulis'); window.scrollTo(0,0); return false;">Alat Tulis Kantor (ATK)</a></li>
-                    <li><a onclick="handleCategoryClick(null, 'Elektronik'); window.scrollTo(0,0); return false;">Elektronik & Gadget</a></li>
-                    <li><a onclick="handleCategoryClick(null, 'Fashion'); window.scrollTo(0,0); return false;">Fashion Grosir</a></li>
-                </ul>
+                <ul class="footer-links" id="footerCategoryList">
+                    </ul>
             </div>
+            
             <div>
                 <h4 class="footer-title">Perusahaan</h4>
                 <ul class="footer-links">
@@ -455,9 +455,6 @@
         const filterTagsContainer = document.getElementById('filterTagsContainer');
         const clearFiltersBtn = document.getElementById('clearFilters');
 
-        // =========================================================================
-        // PEMBERSIHAN SESI & UPDATE UI (DIPERBAIKI)
-        // =========================================================================
         async function updateNavUI() {
             const sessionData = localStorage.getItem('user_session');
             const loginBtn = document.getElementById('navLoginBtn');
@@ -498,11 +495,7 @@
 
                     if (userRes.ok) {
                         const userData = await userRes.json();
-                        
-                        // PERBAIKAN: Baca dari nama_panggilan atau nama_lengkap yang dikirim backend
-                        const displayName = userData.nama_panggilan || 
-                                          (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
-
+                        const displayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
                         const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
                         loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${displayName}</span>`;
@@ -645,13 +638,18 @@
             } catch (error) {}
         }
 
+        // =========================================================================
+        // PERBAIKAN: OTOMATISASI KATEGORI FOOTER
+        // =========================================================================
         function renderCategories(customCategories = null) {
             const uniqueCategories = customCategories || new Set();
             
+            // Kumpulkan kategori unik dari seluruh produk jika tidak ada filter custom
             if (!customCategories) {
                 allProducts.forEach(prod => { if(prod.category) uniqueCategories.add(prod.category); });
             }
             
+            // 1. UPDATE KATEGORI SLIDER (DI ATAS)
             categoryContainer.innerHTML = ''; 
             const allBtn = document.createElement('button');
             allBtn.className = `cat-btn ${currentCategory === 'Semua Barang' ? 'active' : ''}`;
@@ -660,24 +658,48 @@
             allBtn.onclick = () => handleCategoryClick(allBtn, 'Semua Barang');
             categoryContainer.appendChild(allBtn);
 
+            // 2. KOSONGKAN KATEGORI FOOTER (Hanya saat halaman pertama dimuat)
+            const footerCatList = document.getElementById('footerCategoryList');
+            if (footerCatList && !customCategories) {
+                footerCatList.innerHTML = '';
+                // Tambahkan opsi 'Semua Barang'
+                footerCatList.innerHTML += `<li><a onclick="handleCategoryClick(null, 'Semua Barang'); window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Semua Barang</a></li>`;
+            }
+
             Array.from(uniqueCategories).sort().forEach(cat => {
+                // Tambah tombol ke Slider Atas
                 const btn = document.createElement('button');
                 btn.className = `cat-btn ${currentCategory === cat ? 'active' : ''}`;
                 btn.setAttribute('data-category', cat);
                 btn.innerText = cat;
                 btn.onclick = () => handleCategoryClick(btn, cat);
                 categoryContainer.appendChild(btn);
+
+                // Tambah link ke Footer Bawah (Hanya saat halaman pertama dimuat)
+                if (footerCatList && !customCategories) {
+                    // Gunakan replace untuk menangani kategori yang mengandung tanda kutip (misal: "Barang's")
+                    const safeCatName = cat.replace(/'/g, "\\'");
+                    footerCatList.innerHTML += `<li><a onclick="handleCategoryClick(null, '${safeCatName}'); window.scrollTo({top: 0, behavior: 'smooth'}); return false;">${cat}</a></li>`;
+                }
             });
         }
 
         window.handleCategoryClick = function(clickedBtn, categoryName) {
+            // Bersihkan semua tombol aktif
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
             
             if (clickedBtn) {
+                // Jika ditekan dari slider atas
                 clickedBtn.classList.add('active');
             } else {
-                const targetBtn = document.querySelector(`.cat-btn[data-category="${categoryName}"]`);
-                if (targetBtn) targetBtn.classList.add('active');
+                // PERBAIKAN: Jika ditekan dari footer, cari tombolnya dengan aman
+                document.querySelectorAll('.cat-btn').forEach(b => {
+                    if (b.getAttribute('data-category') === categoryName) {
+                        b.classList.add('active');
+                        // Otomatis geser slider atas ke posisi tombol yang aktif
+                        b.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                    }
+                });
             }
             
             currentCategory = categoryName;
