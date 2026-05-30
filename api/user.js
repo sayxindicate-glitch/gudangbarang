@@ -1,62 +1,78 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
 
 export default async function handler(req, res) {
     const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return res.status(401).json({ error: 'Akses ditolak: Tidak ada tiket sesi.' });
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Akses ditolak: Token hilang' });
     }
     const token = authHeader.split(' ')[1];
 
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // Menarik Kunci Master dari Vercel
-
-    // Koneksi standar untuk mengecek apakah tiket pengguna valid
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY, {
         global: { headers: { Authorization: `Bearer ${token}` } }
     });
 
     try {
+        // Validasi Token
         const { data: { user }, error: authError } = await supabase.auth.getUser();
-        if (authError || !user) throw new Error('Sesi tidak valid, silakan login ulang.');
+        if (authError || !user) {
+            return res.status(401).json({ error: 'Sesi tidak valid' });
+        }
 
-        // JIKA MINTA DATA UNTUK DITAMPILKAN
+        // --- JIKA REQUEST GET (AMBIL DATA PROFIL) ---
         if (req.method === 'GET') {
-            return res.status(200).json({
-                email: user.email,
-                name: user.user_metadata.full_name || '',
-                phone: user.user_metadata.phone || '',
-                address: user.user_metadata.address || ''
-            });
-        } 
-        
-        // JIKA TOMBOL "SIMPAN" DITEKAN PENGGUNA
-        else if (req.method === 'PUT') {
-            if (!supabaseServiceKey) {
-                throw new Error('Kunci Master belum dipasang di Vercel!');
+            const { data: profile, error: dbError } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', user.id)
+                .single();
+
+            if (dbError && dbError.code !== 'PGRST116') { // Abaikan error jika baris belum ada
+                return res.status(500).json({ error: dbError.message });
             }
 
-            const { name, phone, address } = req.body;
-            
-            // Buat koneksi Kunci Master khusus untuk operasi penyimpanan ini
-            const adminAuthClient = createClient(supabaseUrl, supabaseServiceKey, {
-                auth: { autoRefreshToken: false, persistSession: false }
-            });
+            // Jika baris profil belum ada, kembalikan data dasar dari Auth
+            if (!profile) {
+                return res.status(200).json({ email: user.email });
+            }
 
-            // Menyimpan paksa pembaruan data pengguna
-            const { error: updateError } = await adminAuthClient.auth.admin.updateUserById(
-                user.id, 
-                { user_metadata: { full_name: name, phone: phone, address: address } }
-            );
-
-            if (updateError) throw updateError;
-            return res.status(200).json({ message: 'Profil berhasil diperbarui!' });
-        } 
-        
-        else {
-            return res.status(405).json({ error: 'Metode tidak diizinkan' });
+            return res.status(200).json(profile);
         }
+
+        // --- JIKA REQUEST PUT (SIMPAN PERUBAHAN PROFIL) ---
+        if (req.method === 'PUT') {
+            const { nama_lengkap, nama_panggilan, no_wa, alamat_lengkap, jenis_kelamin } = req.body;
+
+            // Update atau Insert (Upsert) ke tabel profiles
+            const { data, error: updateError } = await supabase
+                .from('profiles')
+                .upsert({
+                    id: user.id, // Pastikan ID sama dengan user auth
+                    email: user.email, // Email dikunci dari auth asli
+                    nama_lengkap,
+                    nama_panggilan,
+                    no_wa,
+                    alamat_lengkap,
+                    jenis_kelamin,
+                    created_at: new Date().toISOString()
+                }, { onConflict: 'id' })
+                .select()
+                .single();
+
+            if (updateError) {
+                // Tangani error jika nomor WA sudah dipakai akun lain (UNIQUE constraint)
+                if (updateError.code === '23505') {
+                    return res.status(400).json({ error: 'Nomor WhatsApp sudah digunakan oleh akun lain.' });
+                }
+                return res.status(500).json({ error: updateError.message });
+            }
+
+            return res.status(200).json({ message: 'Profil berhasil diperbarui', profile: data });
+        }
+
+        return res.status(405).json({ error: 'Metode tidak diizinkan' });
+
     } catch (error) {
-        return res.status(400).json({ error: error.message });
+        console.error("Server Error:", error);
+        return res.status(500).json({ error: 'Terjadi kesalahan internal server' });
     }
 }
