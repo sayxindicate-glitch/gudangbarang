@@ -37,7 +37,6 @@
         .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
         [data-theme="dark"] .switch-handle { transform: translateX(30px); }
 
-        /* --- SINKRONISASI CSS NAVIGASI DESKTOP (SAMA DENGAN INDEX.HTML) --- */
         .nav-link { color: var(--text-muted); text-decoration: none; position: relative; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
         .nav-link:hover { color: var(--accent-color); }
         .badge-count { position: absolute; top: -10px; right: -15px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -55,13 +54,11 @@
         .btn-back { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--bg-color); color: var(--text-main); text-decoration: none; box-shadow: var(--neu-flat); transition: transform 0.2s; }
         .btn-back:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
 
-        /* TABS FILTER PESANAN */
         .status-tabs { display: flex; gap: 15px; overflow-x: auto; padding: 10px 5px 20px 5px; margin-bottom: 10px; -ms-overflow-style: none; scrollbar-width: none; }
         .status-tabs::-webkit-scrollbar { display: none; }
         .tab-btn { flex-shrink: 0; padding: 10px 25px; border-radius: 50px; background: var(--bg-color); color: var(--text-main); border: none; font-size: 13px; font-weight: 600; box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.3s ease; }
         .tab-btn.active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
-        /* KARTU PESANAN */
         .orders-container { display: flex; flex-direction: column; gap: 25px; padding-bottom: 50px; }
         
         .order-card { background: var(--bg-color); border-radius: 20px; padding: 20px; box-shadow: var(--neu-flat); display: flex; flex-direction: column; gap: 15px; }
@@ -212,20 +209,15 @@
     </nav>
 
     <script>
-        // =========================================================================
-        // 1. GATEKEEPER LOKAL (KEAMANAN LAPIS PERTAMA)
-        // =========================================================================
         const sessionData = localStorage.getItem('user_session');
         if (!sessionData) {
             window.location.replace('login.html');
         }
         const session = JSON.parse(sessionData);
 
-        // --- Variabel Logika Pesanan ---
         let allOrders = [];
         let currentStatusFilter = 'Semua';
 
-        // --- DARK MODE LOGIC ---
         const themeToggle = document.getElementById('themeToggle');
         const switchIcon = document.getElementById('switchIcon');
         const html = document.documentElement;
@@ -239,14 +231,10 @@
             switchIcon.classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
         });
 
-        // =========================================================================
-        // 2. SINKRONISASI NAVIGASI CERDAS (AVATAR & BADGE SEPERTI INDEX.HTML)
-        // =========================================================================
         async function updateNavUI() {
             const loginBtn = document.getElementById('navLoginBtn');
             const mobileAccountBtn = document.getElementById('mobileAccountBtn');
 
-            // Set Avatar lokal agar cepat (Anti-Rasis: baseColor=f9c9b6)
             const savedName = session.name || (session.user && session.user.name) || "User";
             const tempNickname = savedName.split(' ')[0]; 
             const tempAvatar = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(savedName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
@@ -280,9 +268,7 @@
                         mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${nickname}</span>`;
                     }
                 }
-            } catch (e) { 
-                console.error("Mode Offline: Menggunakan sesi lokal.", e); 
-            }
+            } catch (e) {}
         }
 
         async function syncBadges(token) {
@@ -322,12 +308,8 @@
             } catch (e) {}
         }
 
-
-        // =========================================================================
-        // 3. FUNGSI UTAMA: MENGAMBIL PESANAN DARI SERVER
-        // =========================================================================
         async function fetchOrders() {
-            updateNavUI(); // Panggil sinkronisasi UI Profil seketika
+            updateNavUI(); 
 
             try {
                 const response = await fetch('/api/orders', {
@@ -362,11 +344,9 @@
             }
         }
 
-        // --- SISTEM PEMBERSIH ANGKA KEBANGGAAN (ANTI ERROR TITIK/KOMA) ---
         function parsePriceSafe(val) {
             if (!val) return 0;
             if (typeof val === 'number') return val;
-            // Bersihkan semua karakter SELAIN angka (agar "123.000" dan "123" tetap jadi murni angka yang benar)
             const digits = val.toString().replace(/[^0-9]/g, '');
             return parseInt(digits, 10) || 0;
         }
@@ -375,7 +355,6 @@
             return "Rp " + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); 
         }
 
-        // --- FUNGSI MERENDER KARTU PESANAN KE HTML ---
         function renderOrders(statusFilter) {
             const container = document.getElementById('ordersContainer');
             container.innerHTML = '';
@@ -410,14 +389,13 @@
                 if (items.length > 0) {
                     const firstItem = items[0];
                     
-                    // Eksekusi Pemanipulasi Harga Barang
-                    const cleanPrice = parsePriceSafe(firstItem.product_price);
+                    const rawPrice = firstItem.product_price || firstItem.price_at_buy || '0';
+                    const cleanPrice = parsePriceSafe(rawPrice);
                     const itemPriceDisplay = formatRupiah(cleanPrice);
 
-                    // Pengecekan agar gambar yang "undefined" di database diganti dengan rapi
                     const imgUrl = (firstItem.product_img && firstItem.product_img !== "undefined" && firstItem.product_img.startsWith('http')) 
                         ? firstItem.product_img 
-                        : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang+Grosir';
+                        : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
 
                     itemsHTML += `
                         <div class="order-item">
@@ -436,7 +414,6 @@
                     itemsHTML = `<div class="more-items-text">Rincian barang belum dimasukkan.</div>`;
                 }
 
-                // Eksekusi Pemanipulasi Total Harga
                 const cleanTotal = parsePriceSafe(order.total_price);
                 const displayTotal = formatRupiah(cleanTotal);
 
@@ -473,7 +450,6 @@
             });
         }
 
-        // --- FUNGSI FILTER TAB ---
         window.filterOrders = function(status) {
             currentStatusFilter = status;
             document.querySelectorAll('.tab-btn').forEach(btn => {
