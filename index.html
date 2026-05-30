@@ -131,7 +131,6 @@
         .product-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; line-height: 1.3;}
         .product-info { font-size: 11px; color: var(--text-muted); margin-bottom: 15px; flex-grow: 1; }
         
-        /* --- PERBAIKAN TATA LETAK HARGA (RATA BAWAH) --- */
         .price { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; min-height: 45px; margin-bottom: 15px; }
         .price-strike { font-size: 12px; color: var(--text-muted); text-decoration: line-through; font-weight: 400; line-height: 1; margin-bottom: 4px; }
         .price-final { font-size: 18px; font-weight: 700; color: var(--accent-color); line-height: 1; }
@@ -251,6 +250,7 @@
             .btn-eye { width: 35px; font-size: 12px; }
             .neu-btn { font-size: 11px; padding: 8px; }
 
+            /* --- PERBAIKAN TATA LETAK NAVIGASI BAWAH HP --- */
             .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px 10px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
             
@@ -491,6 +491,7 @@
         // SINKRONISASI NAVIGASI CERDAS (AVATAR & BADGE)
         // =========================================================================
         async function updateNavUI() {
+            // Memastikan data sesi tersimpan di memori permanen browser (localStorage)
             const sessionData = localStorage.getItem('user_session');
             const loginBtn = document.getElementById('navLoginBtn');
             const mobileAccountBtn = document.getElementById('mobileAccountBtn');
@@ -498,9 +499,10 @@
             if (sessionData) {
                 const session = JSON.parse(sessionData);
                 
+                // Menerapkan perubahan warna kulit langsung dari cache lokal agar terasa instan
                 const savedName = session.name || (session.user && session.user.name) || "User";
                 const tempNickname = savedName.split(' ')[0]; 
-                const tempAvatar = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(savedName)}&backgroundColor=e0e5ec`;
+                const tempAvatar = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(savedName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
                 loginBtn.className = 'nav-profile-badge hide-on-mobile';
                 loginBtn.href = 'akun.html';
@@ -515,6 +517,8 @@
                     const userRes = await fetch('/api/user', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
                     
                     if (userRes.status === 401 || userRes.status === 403) {
+                        // Jika backend benar-benar menolak token karena kedaluwarsa, 
+                        // barulah sistem log out demi keamanan akun pengguna.
                         localStorage.removeItem('user_session');
                         setLoggedOutUI();
                         return;
@@ -524,7 +528,7 @@
                         const userData = await userRes.json();
                         const fullName = userData.name || "User";
                         const nickname = fullName.split(' ')[0]; 
-                        const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(fullName)}&backgroundColor=e0e5ec`;
+                        const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(fullName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
                         loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${nickname}</span>`;
                         if (mobileAccountBtn) {
@@ -532,7 +536,7 @@
                         }
                     }
                 } catch (e) { 
-                    console.error("Mode Offline atau Server Lambat: Menggunakan sesi lokal.", e); 
+                    console.error("Mode Offline atau Server Lambat: Menggunakan sesi lokal secara aman.", e); 
                 }
                 
                 // Sinkronisasi Angka Background (Keranjang dkk)
@@ -787,7 +791,6 @@
                 const qtyId = `qty-${prod.id}`; 
                 const isPromoActive = prod.is_promo && prod.promo_price;
                 
-                // Gunakan div / span class agar tertata vertikal oleh Flexbox .price
                 const priceHTML = isPromoActive 
                     ? `<span class="price-strike">${prod.price}</span><span class="price-final">${prod.promo_price}</span>` 
                     : `<span class="price-final">${prod.price}</span>`;
