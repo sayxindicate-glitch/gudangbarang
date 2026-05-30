@@ -20,22 +20,42 @@ export default async function handler(req, res) {
         if (!orders || orders.length === 0) return res.status(200).json([]);
 
         const orderIds = orders.map(o => o.id);
-        const { data: items, error: itemsError } = await supabase.from('gg_order_items').select('*').in('order_id', orderIds);
+        
+        // PERBAIKAN UTAMA: Melakukan relasi (JOIN) ke tabel gg_products untuk mengambil nama & foto
+        const { data: items, error: itemsError } = await supabase
+            .from('gg_order_items')
+            .select('*, gg_products(*)') 
+            .in('order_id', orderIds);
+            
         if (itemsError) return res.status(500).json({ error: itemsError.message });
 
         const finalOrders = orders.map(order => {
             const orderItems = items ? items.filter(i => i.order_id === order.id) : [];
-            const mappedItems = orderItems.map(item => ({
-                product_name: item.product_name || 'Barang Grosir',
-                product_img: item.product_img || '',
-                product_price: item.product_price, // Perbaikan harga agar tidak 0
-                quantity: item.quantity
-            }));
-            return { ...order, items: mappedItems };
+            const mappedItems = orderItems.map(item => {
+                // Menarik objek hasil JOIN dari gg_products
+                const prod = item.gg_products || {}; 
+                
+                return {
+                    // Cek nama dari database produk, jika tidak ada baru gunakan fallback
+                    product_name: prod.product_name || prod.name || item.product_name || 'Barang Grosir',
+                    // Cek foto dari database produk
+                    product_img: prod.product_img || prod.image || prod.img_url || item.product_img || '',
+                    // Gunakan price_at_buy sesuai dengan skema database Anda
+                    product_price: item.price_at_buy || item.product_price || prod.price || 0, 
+                    quantity: item.quantity
+                };
+            });
+
+            return {
+                ...order,
+                items: mappedItems
+            };
         });
 
         return res.status(200).json(finalOrders);
+
     } catch (error) {
-        return res.status(500).json({ error: 'Terjadi kesalahan server' });
+        console.error("Server Error:", error);
+        return res.status(500).json({ error: 'Terjadi kesalahan internal server' });
     }
 }
