@@ -17,15 +17,13 @@ export default async function handler(req, res) {
 
         const { shipping_address, phone_number, total_price, items, used_vouchers } = req.body;
 
-        // 1. Buat Baris Pesanan Baru
+        // 1. Buat Baris Pesanan Baru (Sesuai Skema gg_orders)
         const { data: order, error: orderError } = await supabase
             .from('gg_orders')
             .insert([{
                 user_id: user.id,
-                user_name: user.user_metadata?.full_name || 'Pelanggan',
-                shipping_address,
-                phone_number,
                 total_price,
+                shipping_address,
                 status: 'Diproses'
             }])
             .select()
@@ -33,21 +31,21 @@ export default async function handler(req, res) {
 
         if (orderError) throw orderError;
 
-        // 2. Pindahkan rincian barang belanjaan
+        // 2. Pindahkan rincian barang belanjaan (SINKRON DENGAN SKEMA gg_order_items)
         const orderItems = items.map(item => ({
             order_id: order.id,
             product_id: item.product_id,
-            product_name: item.product_name,
-            product_price: item.product_price,
-            product_img: item.product_img,
-            quantity: item.quantity
+            quantity: item.quantity,
+            price_at_buy: item.product_price.toString() // Disimpan sbg text sesuai struktur DB
         }));
-        await supabase.from('gg_order_items').insert(orderItems);
+        
+        const { error: itemsInsertError } = await supabase.from('gg_order_items').insert(orderItems);
+        if (itemsInsertError) throw itemsInsertError;
 
         // 3. Kosongkan keranjang belanja
         await supabase.from('gg_cart_items').delete().eq('user_id', user.id);
 
-        // 4. LOCKING VOUCHER: Ubah atau buat status is_used menjadi TRUE di database
+        // 4. LOCKING VOUCHER
         if (used_vouchers && used_vouchers.length > 0) {
             const claimedData = used_vouchers.map(code => ({
                 user_id: user.id,
@@ -57,8 +55,10 @@ export default async function handler(req, res) {
             await supabase.from('gg_claimed_vouchers').upsert(claimedData, { onConflict: 'user_id, voucher_code' });
         }
 
-        return res.status(200).json({ message: 'Pesanan berhasil dibuat' });
+        return res.status(200).json({ message: 'Pesanan berhasil dibuat', order_id: order.id });
+
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        console.error("Checkout Error:", error);
+        return res.status(500).json({ error: error.message || 'Terjadi kesalahan sistem' });
     }
 }
