@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bantuan & FAQ | Goedang Grosir</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #e0e5ec; --text-main: #2d3436; --text-muted: #636e72; --accent-color: #0984e3;
+            --shadow-light: #ffffff; --shadow-dark: #a3b1c6;
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1b1e; --text-main: #f5f6fa; --text-muted: #a4b0be; --accent-color: #00e5ff;
+            --shadow-light: rgba(255, 255, 255, 0.05); --shadow-dark: rgba(0, 0, 0, 0.6);
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+        .top-nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; background-color: var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        
+        .controls { display: flex; align-items: center; gap: 20px; }
+        .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; flex-shrink: 0; }
+        .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
+        [data-theme="dark"] .switch-handle { transform: translateX(30px); }
+
+        .nav-link { color: var(--text-muted); text-decoration: none; position: relative; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .nav-link:hover { color: var(--accent-color); }
+        .nav-link.active { color: var(--accent-color); }
+        
+        .neu-btn-icon { background: var(--bg-color); color: var(--text-main); border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative; }
+        .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+        .nav-btn-cap { background: var(--bg-color); color: var(--text-main); text-decoration: none; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 50px; box-shadow: var(--neu-flat-sm); }
+        .nav-btn-cap:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+
+        .nav-profile-badge { display: flex; flex-direction: row; align-items: center; justify-content: center; text-decoration: none; gap: 10px; transition: transform 0.2s ease; cursor: pointer; background: var(--bg-color); padding: 5px 15px 5px 5px; border-radius: 50px; box-shadow: var(--neu-flat-sm); }
+        .nav-profile-badge:active { box-shadow: var(--neu-pressed-sm); }
+        .nav-profile-badge img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; box-shadow: var(--neu-pressed-sm); border: 2px solid transparent; }
+        [data-theme="dark"] .nav-profile-badge img { border-color: rgba(255,255,255,0.1); }
+        .nav-profile-badge span { font-size: 13px; font-weight: 700; color: var(--text-main); max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .badge-count { position: absolute; top: -8px; right: -12px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 10;}
+
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; flex: 1; width: 100%; }
+        .page-header { text-align: center; margin-bottom: 50px; }
+        .page-title { font-size: 28px; font-weight: 700; margin-bottom: 10px; color: var(--accent-color); }
+        .page-subtitle { font-size: 14px; color: var(--text-muted); font-weight: 600; }
+
+        /* Accordion Neumorphism Styles */
+        .faq-category { font-size: 18px; font-weight: 700; color: var(--accent-color); margin: 30px 0 15px 0; display: flex; align-items: center; gap: 10px; padding-left: 10px; }
+        .faq-container { display: flex; flex-direction: column; gap: 20px; }
+        
+        .faq-item {
+            background: var(--bg-color); border-radius: 15px; 
+            box-shadow: var(--neu-flat); overflow: hidden; 
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item.active { box-shadow: var(--neu-pressed); }
+        
+        .faq-question {
+            padding: 20px; font-size: 15px; font-weight: 700; color: var(--text-main); 
+            display: flex; justify-content: space-between; align-items: center; 
+            cursor: pointer; user-select: none;
+        }
+        
+        .faq-question i { color: var(--accent-color); transition: transform 0.4s ease; }
+        .faq-item.active .faq-question i { transform: rotate(180deg); color: #ff4757; }
+        
+        .faq-answer {
+            padding: 0 20px; max-height: 0; overflow: hidden; 
+            font-size: 13px; color: var(--text-muted); line-height: 1.8; 
+            transition: max-height 0.4s ease, padding 0.4s ease; opacity: 0;
+        }
+        
+        .faq-item.active .faq-answer { padding: 0 20px 20px 20px; max-height: 500px; opacity: 1; }
+
+        .contact-box {
+            background: var(--bg-color); border-radius: 20px; padding: 30px; 
+            box-shadow: var(--neu-flat); text-align: center; margin-top: 50px;
+            border-left: 8px solid var(--accent-color);
+        }
+        .contact-box h3 { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
+        .contact-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; }
+        .btn-wa {
+            display: inline-flex; align-items: center; gap: 10px; background: #25D366; 
+            color: white; text-decoration: none; padding: 12px 25px; border-radius: 50px; 
+            font-size: 14px; font-weight: 700; box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            transition: all 0.2s; border: none; cursor: pointer;
+        }
+        .btn-wa:active { box-shadow: inset 4px 4px 8px rgba(0,0,0,0.2), inset -4px -4px 8px rgba(255,255,255,0.1); transform: scale(0.98); }
+
+        .bottom-nav { display: none; }
+
+        @media (max-width: 768px) {
+            .top-nav { padding: 15px 20px; }
+            .hide-on-mobile { display: none !important; }
+            body { padding-bottom: 90px; }
+            
+            .bottom-nav { 
+                display: flex; position: fixed; bottom: 0; left: 0; width: 100%; 
+                background-color: var(--bg-color); border-radius: 25px 25px 0 0; 
+                box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; 
+                padding: 10px 15px; justify-content: space-between; 
+                padding-bottom: max(15px, env(safe-area-inset-bottom)); gap: 8px; 
+            }
+            [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
+            
+            .bottom-nav-item { 
+                flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+                text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; 
+                padding: 10px 0; border-radius: 18px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: transparent; 
+            }
+            .bottom-nav-item i { font-size: 20px; margin-bottom: 4px; transition: transform 0.2s ease, color 0.2s ease; }
+            .bottom-nav-item.active { color: var(--accent-color); background: var(--bg-color); box-shadow: var(--neu-pressed-sm); }
+            .bottom-nav-item.active i { transform: scale(1.15); }
+            .badge-container { position: relative; display: inline-flex; }
+            .bottom-nav-item .badge-count { 
+                position: absolute; top: -5px; right: -12px; background: #ff4757; color: white; 
+                font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; 
+                border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 2;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <a href="index.html" class="logo"><i class="fas fa-box-open"></i> GOEDANG</a>
+        <div class="controls">
+            <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
+            
+            <a href="promo.html" class="nav-link hide-on-mobile">
+                <i class="fas fa-tags"></i> <span>Promo</span>
+                <span class="badge-count" id="promoBadge" style="display: none;">0</span>
+            </a>
+            <a href="pesanan.html" class="nav-link hide-on-mobile">
+                <i class="fas fa-box"></i> <span>Pesanan</span>
+                <span class="badge-count" id="orderBadge" style="display: none;">0</span>
+            </a>
+            
+            <a href="keranjang.html" class="neu-btn-icon hide-on-mobile">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge-count" id="cartBadge" style="display: none; top: -5px; right: -5px;">0</span>
+            </a>
+
+            <a href="login.html" class="nav-btn-cap hide-on-mobile" id="navLoginBtn">
+                <i class="fas fa-sign-in-alt"></i> <span>Login</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title"><i class="fas fa-life-ring"></i> Pusat Bantuan (FAQ)</h1>
+            <p class="page-subtitle">Temukan jawaban atas pertanyaan yang paling sering ditanyakan oleh pelanggan kami.</p>
+        </div>
+
+        <div class="faq-category"><i class="fas fa-box"></i> Seputar Pemesanan & Produk</div>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">Apakah ada minimal jumlah pembelian? <i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer">Karena kami melayani pembelian dalam partai besar (grosir), beberapa produk memiliki aturan minimal pembelian (contoh: minimal 1 dus atau 1 lusin). Hal ini bertujuan agar kami bisa memberikan harga pabrik yang paling murah untuk bisnis Anda.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Apakah harga yang tertera sudah termasuk pajak? <i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer">Ya, seluruh harga yang ditampilkan di etalase Goedang Grosir sudah termasuk pajak pertambahan nilai (PPN). Tidak ada biaya tersembunyi selain biaya ongkos kirim.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Bagaimana jika produk yang saya cari sedang kosong (Out of Stock)? <i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer">Barang yang kosong akan otomatis direstock oleh tim gudang kami dalam waktu 1x24 jam. Anda dapat menghubungi CS kami untuk melakukan <em>pre-order</em> barang jika Anda membutuhkan jumlah partai yang sangat besar.</div>
+            </div>
+        </div>
+
+        <div class="faq-category"><i class="fas fa-truck"></i> Pengiriman & Logistik</div>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">Berapa lama waktu pengiriman pesanan? <i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer">Untuk area Batam dan sekitarnya, pesanan yang dibuat sebelum pukul 14.00 WIB akan dikirim pada hari yang sama (Sameday). Pesanan di atas jam tersebut atau untuk pengiriman antar pulau (Kepri) membutuhkan waktu estimasi 1-3 hari kerja.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">Apakah melayani pembayaran di tempat (COD)? <i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer">Saat ini, untuk menjaga keamanan armada logistik kami dalam membawa barang partai besar, sistem COD hanya tersedia untuk pelanggan prioritas atau toko yang sudah pernah bertransaksi minimal 3 kali melalui platform kami.</div>
+            </div>
+        </div>
+
+        <div class="faq-category"><i class="fas fa-undo-alt"></i> Pengembalian & Garansi</div>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">Bagaimana jika barang yang sampai cacat atau kedaluwarsa? <i class="fas fa-chevron-down"></i></div>
+                <div class="faq-answer">Kami memberikan <strong>Garansi 100% Ganti Baru</strong>. Jika Anda menerima barang yang rusak, kemasan bocor, atau kedaluwarsa, silakan rekam video saat membuka kemasan (Video Unboxing) dan kirimkan ke tim CS kami maksimal 24 jam setelah barang diterima. Kami akan menjemput dan mengganti barang tersebut secara gratis.</div>
+            </div>
+        </div>
+
+        <div class="contact-box">
+            <h3>Belum menemukan jawaban yang Anda cari?</h3>
+            <p>Tim Customer Service kami siap melayani Anda setiap hari kerja (Senin - Sabtu, Pukul 08.00 - 17.00 WIB).</p>
+            <a href="https://wa.me/6281234567890" target="_blank" class="btn-wa">
+                <i class="fab fa-whatsapp" style="font-size: 18px;"></i> Hubungi Admin via WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i><span>Beranda</span>
+        </a>
+        
+        <a href="promo.html" class="bottom-nav-item">
+            <div class="badge-container">
+                <i class="fas fa-tags"></i>
+                <span class="badge-count" id="mobilePromoBadge" style="display: none;">0</span>
+            </div>
+            <span>Promo</span>
+        </a>
+        
+        <a href="keranjang.html" class="bottom-nav-item">
+            <div class="badge-container">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge-count" id="mobileCartBadge" style="display: none;">0</span>
+            </div>
+            <span>Keranjang</span>
+        </a>
+        
+        <a href="pesanan.html" class="bottom-nav-item">
+            <div class="badge-container">
+                <i class="fas fa-box"></i>
+                <span class="badge-count" id="mobileOrderBadge" style="display: none;">0</span>
+            </div>
+            <span>Pesanan</span>
+        </a>
+        
+        <a href="akun.html" class="bottom-nav-item" id="mobileAccountBtn">
+            <i class="fas fa-user"></i><span>Akun</span>
+        </a>
+    </nav>
+
+    <script src="analytics.js"></script>
+
+    <script>
+        const sessionData = localStorage.getItem('user_session');
+
+        // =========================================================================
+        // ACCORDION LOGIC (Buka-Tutup FAQ)
+        // =========================================================================
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const parent = question.parentElement;
+                
+                // Tutup FAQ lain yang sedang terbuka
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    if (item !== parent) item.classList.remove('active');
+                });
+                
+                // Buka/tutup FAQ yang diklik
+                parent.classList.toggle('active');
+
+                // Analitik Intelijen: Merekam FAQ apa yang dibaca pengguna
+                if (parent.classList.contains('active') && window.GoedangAnalytics && typeof window.GoedangAnalytics.trackFunnel === 'function') {
+                    window.GoedangAnalytics.trackFunnel('Membaca FAQ: ' + question.innerText.replace(' ', '').trim());
+                }
+            });
+        });
+
+        // =========================================================================
+        // SINKRONISASI NAVIGASI CERDAS (Backend Connection)
+        // =========================================================================
+        async function updateNavUI() {
+            const loginBtn = document.getElementById('navLoginBtn');
+            const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+
+            if (sessionData) {
+                const session = JSON.parse(sessionData);
+                try {
+                    const userRes = await fetch('/api/user', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
+                    
+                    if (userRes.status === 401 || userRes.status === 403) {
+                        localStorage.removeItem('user_session');
+                        setLoggedOutUI();
+                        return;
+                    }
+
+                    if (userRes.ok) {
+                        const userData = await userRes.json();
+                        const displayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
+                        const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
+
+                        loginBtn.className = 'nav-profile-badge hide-on-mobile';
+                        loginBtn.href = 'akun.html';
+                        loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${displayName}</span>`;
+
+                        if (mobileAccountBtn) {
+                            mobileAccountBtn.href = 'akun.html';
+                            mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
+                        }
+                    }
+                } catch (e) { console.log("Koneksi offline"); }
+
+                // Sinkron Badge Keranjang
+                try {
+                    const cartRes = await fetch('/api/cart', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
+                    if (cartRes.ok) {
+                        const cartItems = await cartRes.json();
+                        const totalQty = cartItems.reduce((s, i) => s + i.quantity, 0);
+                        if (totalQty > 0) {
+                            const txt = totalQty > 99 ? '99+' : totalQty;
+                            document.getElementById('cartBadge').style.display = 'flex'; document.getElementById('cartBadge').innerText = txt;
+                            document.getElementById('mobileCartBadge').style.display = 'flex'; document.getElementById('mobileCartBadge').innerText = txt;
+                        }
+                    }
+                } catch (e) {}
+                
+                // Sinkron Badge Pesanan
+                try {
+                    const orderRes = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
+                    if (orderRes.ok) {
+                        const orders = await orderRes.json();
+                        const activeOrders = orders.filter(o => o.status !== 'Selesai' && o.status !== 'Dibatalkan');
+                        if (activeOrders.length > 0) {
+                            document.getElementById('orderBadge').style.display = 'flex'; document.getElementById('orderBadge').innerText = activeOrders.length;
+                            document.getElementById('mobileOrderBadge').style.display = 'flex'; document.getElementById('mobileOrderBadge').innerText = activeOrders.length;
+                        }
+                    }
+                } catch (e) {}
+
+            } else {
+                setLoggedOutUI();
+            }
+        }
+
+        function setLoggedOutUI() {
+            const loginBtn = document.getElementById('navLoginBtn');
+            const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+
+            loginBtn.className = 'nav-btn-cap hide-on-mobile';
+            loginBtn.href = 'login.html';
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span>Login</span>';
+
+            if (mobileAccountBtn) {
+                mobileAccountBtn.href = 'login.html';
+                mobileAccountBtn.innerHTML = '<i class="fas fa-user"></i><span>Akun</span>';
+            }
+        }
+
+        // Pengendali Mode Gelap/Terang
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        if (localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); document.getElementById('switchIcon').classList.replace('fa-sun', 'fa-moon'); }
+        themeToggle.addEventListener('click', () => {
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            document.getElementById('switchIcon').classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateNavUI();
+            
+            // Pemicu Analitik Intelijen
+            if (window.GoedangAnalytics && typeof window.GoedangAnalytics.trackFunnel === 'function') {
+                window.GoedangAnalytics.trackFunnel('Membuka Halaman Pusat Bantuan (FAQ)');
+            }
+        });
+    </script>
+</body>
+</html>
