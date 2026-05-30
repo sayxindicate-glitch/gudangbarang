@@ -9,13 +9,8 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
         :root {
-            --bg-color: #e0e5ec;
-            --text-main: #2d3436;
-            --text-muted: #636e72;
-            --accent-color: #0984e3;
-            --shadow-light: #ffffff;
-            --shadow-dark: #a3b1c6;
-            
+            --bg-color: #e0e5ec; --text-main: #2d3436; --text-muted: #636e72; --accent-color: #0984e3;
+            --shadow-light: #ffffff; --shadow-dark: #a3b1c6;
             --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
             --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
             --neu-hover: 12px 12px 20px var(--shadow-dark), -12px -12px 20px var(--shadow-light);
@@ -24,13 +19,8 @@
         }
 
         [data-theme="dark"] {
-            --bg-color: #1a1b1e;
-            --text-main: #f5f6fa;
-            --text-muted: #a4b0be;
-            --accent-color: #00e5ff;
-            --shadow-light: rgba(255, 255, 255, 0.05);
-            --shadow-dark: rgba(0, 0, 0, 0.6);
-            
+            --bg-color: #1a1b1e; --text-main: #f5f6fa; --text-muted: #a4b0be; --accent-color: #00e5ff;
+            --shadow-light: rgba(255, 255, 255, 0.05); --shadow-dark: rgba(0, 0, 0, 0.6);
             --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
             --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
             --neu-hover: 12px 12px 20px var(--shadow-dark), -12px -12px 20px var(--shadow-light), 0 0 15px rgba(0, 229, 255, 0.2);
@@ -40,78 +30,74 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
 
-        body {
-            background-color: var(--bg-color); color: var(--text-main);
-            min-height: 100vh; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; padding: 20px;
-        }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; position: relative; overflow-y: auto; }
 
-        .top-nav {
-            position: absolute; top: 0; left: 0; width: 100%;
-            padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;
-        }
-        .logo {
-            font-size: 20px; font-weight: 700; color: var(--accent-color); 
-            letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none;
-        }
+        /* --- SINKRONISASI NAVIGASI DESKTOP --- */
+        .top-nav { position: absolute; top: 0; left: 0; width: 100%; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 50; }
+        .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
         .logo:hover { opacity: 0.8; }
+        .controls { display: flex; align-items: center; gap: 20px; }
+        .nav-link { color: var(--text-muted); text-decoration: none; position: relative; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .nav-link:hover { color: var(--accent-color); }
+        .neu-btn-icon { background: var(--bg-color); color: var(--text-main); border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative; }
+        .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+        .nav-btn-cap { background: var(--bg-color); color: var(--text-main); text-decoration: none; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 50px; box-shadow: var(--neu-flat-sm); }
+        .nav-btn-cap:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+        [data-theme="dark"] .nav-btn-cap:hover { color: var(--accent-color); text-shadow: 0 0 5px var(--accent-color); }
 
-        .theme-switch {
-            width: 60px; height: 30px; border-radius: 50px; 
-            background: var(--bg-color); box-shadow: var(--neu-pressed); 
-            position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px;
-        }
-        .switch-handle {
-            width: 22px; height: 22px; border-radius: 50%; 
-            background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px;
-            transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center;
-            color: var(--accent-color); font-size: 10px;
-        }
+        .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; }
+        .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
         [data-theme="dark"] .switch-handle { transform: translateX(30px); }
 
-        .auth-container {
-            background: var(--bg-color); width: 100%; max-width: 400px;
-            border-radius: 30px; padding: 40px 30px; box-shadow: var(--neu-flat);
-            text-align: center;
-        }
+        .auth-container { background: var(--bg-color); width: 100%; max-width: 400px; border-radius: 30px; padding: 40px 30px; box-shadow: var(--neu-flat); text-align: center; margin-top: 50px; margin-bottom: 50px; z-index: 10; }
         .auth-title { font-size: 24px; font-weight: 700; margin-bottom: 5px; color: var(--accent-color); }
         .auth-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 30px; }
 
         .input-group { margin-bottom: 20px; position: relative; }
-        .input-group i {
-            position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
-            color: var(--text-muted); font-size: 16px;
-        }
-        .neu-input {
-            width: 100%; padding: 15px 20px 15px 50px; border-radius: 50px; border: none;
-            background: var(--bg-color); color: var(--text-main);
-            box-shadow: var(--neu-pressed); outline: none; font-size: 14px; font-weight: 600;
-        }
+        .input-group i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; }
+        .neu-input { width: 100%; padding: 15px 20px 15px 50px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed); outline: none; font-size: 14px; font-weight: 600; font-family: 'Poppins', sans-serif;}
         .neu-input::placeholder { color: var(--text-muted); font-weight: 400; }
 
-        .auth-btn {
-            width: 100%; padding: 15px; border-radius: 50px; border: none;
-            background: var(--bg-color); color: var(--text-main);
-            font-size: 15px; font-weight: 700; box-shadow: var(--neu-flat);
-            cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px;
-            margin-top: 10px; transition: all 0.3s;
-        }
+        .forgot-pass { text-align: right; margin-top: -10px; margin-bottom: 25px; padding-right: 15px; font-size: 12px; font-weight: 600; }
+        .forgot-pass a { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+        .forgot-pass a:hover { color: var(--accent-color); }
+
+        .auth-btn { width: 100%; padding: 15px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); font-size: 15px; font-weight: 700; box-shadow: var(--neu-flat); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: all 0.3s; }
         .auth-btn:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
+        .auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         [data-theme="dark"] .auth-btn { color: var(--accent-color); }
 
         .auth-switch { margin-top: 25px; font-size: 13px; color: var(--text-muted); font-weight: 600; }
-        .auth-switch a { color: var(--accent-color); cursor: pointer; text-decoration: underline; margin-left: 5px; }
+        .auth-switch a { color: var(--accent-color); cursor: pointer; text-decoration: none; margin-left: 5px; }
+        .auth-switch a:hover { text-decoration: underline; }
 
-        #alertMsg {
-            margin-top: 20px; font-size: 12px; font-weight: 600; padding: 10px; border-radius: 10px; display: none;
-        }
-        .alert-success { background: rgba(39, 174, 96, 0.1); color: #27ae60; border: 1px solid #27ae60; }
-        .alert-error { background: rgba(255, 71, 87, 0.1); color: #ff4757; border: 1px solid #ff4757; }
+        #alertMsg { margin-top: 20px; font-size: 12px; font-weight: 600; padding: 10px; border-radius: 12px; display: none; }
+        .alert-success { background: rgba(39, 174, 96, 0.1); color: #27ae60; border: 1px solid rgba(39, 174, 96, 0.3); }
+        .alert-error { background: rgba(255, 71, 87, 0.1); color: #ff4757; border: 1px solid rgba(255, 71, 87, 0.3); }
+        .alert-loading { background: rgba(9, 132, 227, 0.1); color: #0984e3; border: 1px solid rgba(9, 132, 227, 0.3); }
+
+        /* --- STYLING MODAL RESET PASSWORD --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content { background: var(--bg-color); width: 90%; max-width: 380px; border-radius: 25px; padding: 35px 25px; box-shadow: var(--neu-flat); transform: translateY(30px); transition: transform 0.3s ease; display: flex; flex-direction: column; position: relative; text-align: center; }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .modal-close { position: absolute; top: 15px; right: 15px; background: var(--bg-color); border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 16px; color: var(--text-main); box-shadow: var(--neu-flat-sm); cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.2s; }
+        .modal-close:active { box-shadow: var(--neu-pressed-sm); color: #ff4757; }
+        .modal-icon { font-size: 45px; color: var(--accent-color); margin-bottom: 15px; }
+
+        .bottom-nav { display: none; }
 
         @media (max-width: 768px) {
             .top-nav { padding: 15px 20px; }
-            .auth-container { padding: 30px 20px; border-radius: 25px; box-shadow: none; background: transparent; }
+            .hide-on-mobile { display: none !important; }
+            .auth-container { padding: 30px 20px; border-radius: 25px; box-shadow: none; background: transparent; margin-top: 50px; margin-bottom: 80px;}
             .neu-input { padding: 12px 20px 12px 45px; }
+            
+            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px 10px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
+            [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
+            .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; }
+            .bottom-nav-item i { font-size: 18px; }
+            .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
         }
     </style>
 </head>
@@ -121,9 +107,18 @@
         <a href="index.html" class="logo">
             <i class="fas fa-box-open"></i> GOEDANG
         </a>
-        <div class="theme-switch" id="themeToggle" title="Toggle Dark Mode">
-            <div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div>
+        
+        <div class="controls hide-on-mobile">
+            <div class="theme-switch" id="themeToggle" title="Toggle Dark Mode">
+                <div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div>
+            </div>
+            <a href="promo.html" class="nav-link"><i class="fas fa-tags"></i> <span>Promo</span></a>
+            <a href="pesanan.html" class="nav-link"><i class="fas fa-box"></i> <span>Pesanan</span></a>
+            <a href="keranjang.html" class="neu-btn-icon"><i class="fas fa-shopping-cart"></i></a>
+            <a href="register.html" class="nav-btn-cap"><i class="fas fa-user-plus"></i> <span>Daftar</span></a>
         </div>
+        
+        <div class="theme-switch" id="themeToggleMobile" style="display: none;"><div class="switch-handle"><i class="fas fa-sun" id="switchIconMobile"></i></div></div>
     </div>
 
     <div class="auth-container">
@@ -140,6 +135,10 @@
             <input type="password" id="password" class="neu-input" placeholder="Password" required>
         </div>
 
+        <p class="forgot-pass">
+            <a href="#" onclick="openResetModal(); return false;">Lupa Password?</a>
+        </p>
+
         <button class="auth-btn" id="submitBtn">
             <i class="fas fa-sign-in-alt"></i> <span>Masuk Sekarang</span>
         </button>
@@ -149,30 +148,72 @@
         <div id="alertMsg"></div>
     </div>
 
-    <script>
-        // LOGIKA TEMA DARK MODE
-        const themeToggle = document.getElementById('themeToggle');
-        const switchIcon = document.getElementById('switchIcon');
-        const html = document.documentElement;
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
+        <a href="promo.html" class="bottom-nav-item"><i class="fas fa-tags"></i><span>Promo</span></a>
+        <a href="keranjang.html" class="bottom-nav-item"><i class="fas fa-shopping-cart"></i><span>Keranjang</span></a>
+        <a href="pesanan.html" class="bottom-nav-item"><i class="fas fa-box"></i><span>Pesanan</span></a>
+        <a href="login.html" class="bottom-nav-item active"><i class="fas fa-user"></i><span>Akun</span></a>
+    </nav>
 
-        if (localStorage.getItem('theme') === 'dark') {
-            html.setAttribute('data-theme', 'dark');
-            switchIcon.classList.replace('fa-sun', 'fa-moon');
+    <div class="modal-overlay" id="resetModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeResetModal()"><i class="fas fa-times"></i></button>
+            <i class="fas fa-key modal-icon"></i>
+            <h2 class="auth-title" style="font-size: 20px;">Lupa Password?</h2>
+            <p class="auth-subtitle" style="margin-bottom: 20px;">Masukkan email Anda. Kami akan mengirimkan tautan untuk mengatur ulang password.</p>
+            
+            <div class="input-group" style="margin-bottom: 25px;">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="resetEmail" class="neu-input" placeholder="Masukkan Email Anda" required>
+            </div>
+            
+            <button class="auth-btn" id="resetBtn" onclick="sendResetLink()">
+                <i class="fas fa-paper-plane"></i> <span>Kirim Tautan</span>
+            </button>
+            
+            <div id="resetAlertMsg" style="margin-top: 15px; font-size: 12px; font-weight: 600; padding: 10px; border-radius: 10px; display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // PENCEGAH ORANG YANG SUDAH LOGIN
+        function checkUserSession() {
+            const session = localStorage.getItem('user_session');
+            if (session) {
+                window.location.href = 'index.html'; 
+            }
+        }
+        checkUserSession();
+
+        // LOGIKA TEMA DARK MODE
+        const html = document.documentElement;
+        const setupTheme = (toggleId, iconId) => {
+            const toggle = document.getElementById(toggleId);
+            const icon = document.getElementById(iconId);
+            if (!toggle) return;
+            
+            if (localStorage.getItem('theme') === 'dark') {
+                html.setAttribute('data-theme', 'dark');
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+            toggle.addEventListener('click', () => {
+                const isDark = html.getAttribute('data-theme') === 'dark';
+                html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+                localStorage.setItem('theme', isDark ? 'light' : 'dark');
+                
+                document.querySelectorAll('.switch-handle i').forEach(i => {
+                    i.classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
+                });
+            });
+        };
+        setupTheme('themeToggle', 'switchIcon');
+        setupTheme('themeToggleMobile', 'switchIconMobile');
+
+        if(window.innerWidth <= 768) {
+            document.getElementById('themeToggleMobile').style.display = 'flex';
         }
 
-        themeToggle.addEventListener('click', () => {
-            if (html.getAttribute('data-theme') === 'light') {
-                html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                switchIcon.classList.replace('fa-sun', 'fa-moon');
-            } else {
-                html.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-                switchIcon.classList.replace('fa-moon', 'fa-sun');
-            }
-        });
-
-        // MESIN KOMUNIKASI DENGAN BACKEND VERCEL
         const submitBtn = document.getElementById('submitBtn');
         const alertMsg = document.getElementById('alertMsg');
 
@@ -182,8 +223,9 @@
             alertMsg.className = isSuccess ? 'alert-success' : 'alert-error';
         }
 
+        // --- FUNGSI LOGIN ---
         submitBtn.addEventListener('click', async () => {
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
             if (!email || !password) {
@@ -203,14 +245,17 @@
 
                 const result = await response.json();
 
-                if (!response.ok) {
-                    throw new Error(result.error || 'Terjadi kesalahan pada server');
-                }
+                if (!response.ok) throw new Error(result.error || 'Terjadi kesalahan pada server');
 
                 showAlert("Login Berhasil! Mengalihkan...", true);
                 
-                // Simpan Sesi
-                localStorage.setItem('user_session', JSON.stringify(result.session));
+                // PERBAIKAN BUG PENYIMPANAN SESI (Membaca format dari backend secara akurat)
+                localStorage.setItem('user_session', JSON.stringify({
+                    access_token: result.access_token,
+                    user: result.user,
+                    name: result.name
+                }));
+                
                 setTimeout(() => { window.location.href = 'index.html'; }, 1000);
 
             } catch (error) {
@@ -224,15 +269,65 @@
             }
         });
 
-        // PENCEGAH ORANG YANG SUDAH LOGIN
-        function checkUserSession() {
-            const session = localStorage.getItem('user_session');
-            if (session) {
-                window.location.href = 'index.html'; 
+        // --- FUNGSI MODAL RESET PASSWORD ---
+        const resetModal = document.getElementById('resetModal');
+        const resetAlertMsg = document.getElementById('resetAlertMsg');
+        const resetBtn = document.getElementById('resetBtn');
+
+        function openResetModal() {
+            resetModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Cegah scroll di belakang
+        }
+
+        function closeResetModal() {
+            resetModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            document.getElementById('resetEmail').value = '';
+            resetAlertMsg.style.display = 'none';
+        }
+
+        // Tutup jika klik di luar modal
+        resetModal.addEventListener('click', (e) => {
+            if (e.target === resetModal) closeResetModal();
+        });
+
+        function showResetAlert(message, type) {
+            resetAlertMsg.style.display = 'block';
+            resetAlertMsg.innerText = message;
+            resetAlertMsg.className = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : 'alert-loading';
+        }
+
+        async function sendResetLink() {
+            const email = document.getElementById('resetEmail').value.trim();
+            if (!email) {
+                showResetAlert("Masukkan alamat email Anda!", "error");
+                return;
+            }
+
+            resetBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+            resetBtn.disabled = true;
+            showResetAlert("Sedang memproses...", "loading");
+
+            try {
+                const response = await fetch('/api/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'reset_password', email: email })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) throw new Error(result.error || 'Gagal mengirim tautan.');
+
+                showResetAlert("Tautan reset berhasil dikirim! Silakan periksa kotak masuk atau spam email Anda.", "success");
+                
+            } catch (error) {
+                showResetAlert(error.message, "error");
+            } finally {
+                resetBtn.innerHTML = '<i class="fas fa-paper-plane"></i> <span>Kirim Tautan</span>';
+                resetBtn.disabled = false;
             }
         }
-        checkUserSession();
-
     </script>
 </body>
 </html>
