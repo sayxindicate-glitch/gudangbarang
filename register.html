@@ -27,9 +27,30 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
-        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        
+        /* Mengembalikan Body ke layout standar aplikasi */
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
-        .register-container { background: var(--bg-color); border-radius: 30px; padding: 40px; box-shadow: var(--neu-flat); width: 100%; max-width: 650px; display: flex; flex-direction: column; gap: 15px; position: relative; }
+        /* --- NAVIGASI ATAS STANDAR --- */
+        .top-nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; background-color: var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        
+        .controls { display: flex; align-items: center; gap: 20px; flex: 1; justify-content: flex-end; }
+        .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; }
+        .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
+        [data-theme="dark"] .switch-handle { transform: translateX(30px); }
+
+        .nav-link { color: var(--text-muted); text-decoration: none; position: relative; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: color 0.3s ease;}
+        .nav-link:hover { color: var(--accent-color); }
+        .neu-btn-icon { background: var(--bg-color); color: var(--text-main); border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative; transition: all 0.2s; }
+        .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+        .nav-btn-cap { background: var(--bg-color); color: var(--text-main); text-decoration: none; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 50px; box-shadow: var(--neu-flat-sm); transition: all 0.2s; }
+        .nav-btn-cap:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+
+        /* --- KONTEN REGISTER --- */
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; flex: 1; width: 100%; display: flex; justify-content: center; align-items: flex-start; }
+        
+        .register-container { background: var(--bg-color); border-radius: 30px; padding: 40px; box-shadow: var(--neu-flat); width: 100%; max-width: 650px; display: flex; flex-direction: column; gap: 15px; position: relative; margin-bottom: 50px;}
         
         .header-text { text-align: center; margin-bottom: 10px; }
         .header-text h1 { font-size: 26px; font-weight: 700; color: var(--accent-color); margin-bottom: 5px; }
@@ -37,31 +58,31 @@
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
 
-        /* PERBAIKAN IKON & INPUT: Absolute Positioning */
         .input-group { position: relative; margin-bottom: 20px; width: 100%; }
         
-        /* Padding Kiri 50px agar teks tidak menabrak ikon */
         .neu-input { 
             width: 100%; padding: 15px 20px 15px 50px; border-radius: 15px; border: none; 
             background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed-sm); 
             outline: none; font-size: 13px; font-weight: 600; transition: all 0.3s ease;
         }
         
-        /* Ikon Terkunci Sempurna di Kiri */
         .input-icon { 
             position: absolute; left: 20px; top: 50%; transform: translateY(-50%); 
             color: var(--text-muted); font-size: 16px; pointer-events: none; transition: color 0.3s ease; 
         }
         
-        /* Animasi Ikon saat kotak diklik (Fokus) */
         .neu-input:focus ~ .input-icon { color: var(--accent-color); }
-        
-        /* Ikon Spesial Textarea agar tidak turun ke tengah saat kotak memanjang */
         .icon-textarea { top: 18px; transform: none; }
 
-        .pwd-rules { font-size: 11px; color: var(--text-muted); margin-top: -10px; margin-bottom: 15px; padding-left: 20px; }
-        .rule-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-        .rule-item i { font-size: 10px; }
+        /* Kotak Syarat Password (Diperbaiki agar tidak terpotong) */
+        .pwd-rules-box {
+            background: var(--bg-color); padding: 15px 20px; border-radius: 15px;
+            box-shadow: var(--neu-pressed-sm); margin-top: -5px; margin-bottom: 20px;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .rule-title { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px;}
+        .rule-item { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; color: var(--text-muted); transition: color 0.3s;}
+        .rule-item i { font-size: 12px; }
         .rule-item.valid { color: #27ae60; }
         .rule-item.invalid { color: #ff4757; }
 
@@ -76,72 +97,128 @@
         .btn-back { position: absolute; top: 25px; left: 25px; width: 40px; height: 40px; border-radius: 50%; background: var(--bg-color); color: var(--text-main); text-decoration: none; display: flex; justify-content: center; align-items: center; box-shadow: var(--neu-flat-sm); transition: transform 0.2s; }
         .btn-back:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
-        .alert-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 12px 30px; border-radius: 50px; background: var(--bg-color); font-size: 13px; font-weight: 700; box-shadow: var(--neu-flat); display: none; z-index: 2000; align-items: center; gap: 10px; animation: fadeIn 0.3s ease; }
+        .alert-toast { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); padding: 12px 30px; border-radius: 50px; background: var(--bg-color); font-size: 13px; font-weight: 700; box-shadow: var(--neu-flat); display: none; z-index: 2000; align-items: center; gap: 10px; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translate(-50%, -10px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
+        .bottom-nav { display: none; }
+
         @media (max-width: 768px) {
-            .register-container { padding: 30px 20px; border-radius: 20px; }
+            .top-nav { padding: 12px 20px; }
+            .hide-on-mobile { display: none !important; }
+            .container { padding-bottom: 120px; margin-top: 10px; }
+            
+            .register-container { padding: 35px 20px; border-radius: 20px; margin-bottom: 20px; }
             .form-grid { grid-template-columns: 1fr; gap: 0; }
             .header-text h1 { font-size: 22px; }
             .btn-back { top: -15px; left: 0; position: relative; margin-bottom: 10px; }
+
+            /* ---> MASTER BOTTOM NAV MOBILE <--- */
+            .bottom-nav { 
+                display: flex; position: fixed; bottom: 0; left: 0; width: 100%; 
+                background-color: var(--bg-color); border-radius: 25px 25px 0 0; 
+                box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; 
+                padding: 10px 15px; 
+                justify-content: space-between; 
+                padding-bottom: max(15px, env(safe-area-inset-bottom)); 
+                gap: 8px; 
+            }
+            [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
+            
+            .bottom-nav-item { 
+                flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+                text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; 
+                padding: 10px 0; border-radius: 18px; 
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: transparent; 
+            }
+            
+            .bottom-nav-item i { 
+                font-size: 20px; margin-bottom: 4px; 
+                transition: transform 0.2s ease, color 0.2s ease; 
+            }
+            
+            .bottom-nav-item.active { 
+                color: var(--accent-color); 
+                background: var(--bg-color); 
+                box-shadow: var(--neu-pressed-sm); 
+            }
+            
+            .bottom-nav-item.active i { 
+                transform: scale(1.15); 
+            }
+            
+            .badge-container { position: relative; display: inline-flex; }
         }
     </style>
 </head>
 <body>
 
-    <div class="register-container">
-        <a href="login.html" class="btn-back"><i class="fas fa-arrow-left"></i></a>
-        
-        <div class="header-text">
-            <h1>Buat Akun Grosir</h1>
-            <p>Lengkapi data di bawah untuk mulai berbelanja.</p>
+    <div class="top-nav">
+        <a href="index.html" class="logo"><i class="fas fa-box-open"></i> GOEDANG</a>
+        <div class="controls">
+            <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
+            <a href="promo.html" class="nav-link hide-on-mobile"><i class="fas fa-tags"></i> <span>Promo</span></a>
+            <a href="pesanan.html" class="nav-link hide-on-mobile"><i class="fas fa-box"></i> <span>Pesanan</span></a>
+            <a href="keranjang.html" class="neu-btn-icon hide-on-mobile"><i class="fas fa-shopping-cart"></i></a>
+            <a href="login.html" class="nav-btn-cap hide-on-mobile"><i class="fas fa-sign-in-alt"></i> <span>Login</span></a>
         </div>
+    </div>
 
-        <form id="registerForm">
-            <div class="form-grid">
-                <div class="input-group">
-                    <input type="text" id="name" class="neu-input" placeholder="Nama Lengkap KTP" required>
-                    <i class="fas fa-id-card input-icon"></i>
+    <div class="container">
+        <div class="register-container">
+            <a href="login.html" class="btn-back"><i class="fas fa-arrow-left"></i></a>
+            
+            <div class="header-text">
+                <h1>Buat Akun Grosir</h1>
+                <p>Lengkapi data di bawah untuk mulai berbelanja.</p>
+            </div>
+
+            <form id="registerForm">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <input type="text" id="name" class="neu-input" placeholder="Nama Lengkap KTP" required>
+                        <i class="fas fa-id-card input-icon"></i>
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="text" id="nickname" class="neu-input" placeholder="Nama Panggilan" required>
+                        <i class="fas fa-smile input-icon"></i>
+                    </div>
                 </div>
-                
+
                 <div class="input-group">
-                    <input type="text" id="nickname" class="neu-input" placeholder="Nama Panggilan" required>
-                    <i class="fas fa-smile input-icon"></i>
+                    <input type="tel" id="phone" class="neu-input" placeholder="Nomor WhatsApp Aktif" required>
+                    <i class="fab fa-whatsapp input-icon" style="font-size: 18px;"></i>
                 </div>
+
+                <div class="input-group">
+                    <textarea id="address" class="neu-input" placeholder="Alamat Lengkap Pengiriman..." style="resize: none; overflow: hidden; min-height: 54px;" oninput="autoResize(this)" required></textarea>
+                    <i class="fas fa-map-marker-alt input-icon icon-textarea"></i>
+                </div>
+
+                <div class="input-group">
+                    <input type="email" id="email" class="neu-input" placeholder="Alamat Email Aktif" required>
+                    <i class="fas fa-envelope input-icon"></i>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <input type="password" id="password" class="neu-input" placeholder="Buat Kata Sandi" required>
+                    <i class="fas fa-lock input-icon"></i>
+                </div>
+
+                <div class="pwd-rules-box">
+                    <div class="rule-title">Keamanan Sandi</div>
+                    <div class="rule-item invalid" id="ruleLength"><i class="fas fa-times-circle"></i> Minimal 6 karakter</div>
+                    <div class="rule-item invalid" id="ruleChar"><i class="fas fa-times-circle"></i> Kombinasi huruf dan angka</div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <i class="fas fa-user-plus"></i> <span>Daftar Sekarang</span>
+                </button>
+            </form>
+
+            <div class="login-link">
+                Sudah punya akun? <a href="login.html">Masuk di sini</a>
             </div>
-
-            <div class="input-group">
-                <input type="tel" id="phone" class="neu-input" placeholder="Nomor WhatsApp Aktif" required>
-                <i class="fab fa-whatsapp input-icon" style="font-size: 18px;"></i>
-            </div>
-
-            <div class="input-group">
-                <textarea id="address" class="neu-input" placeholder="Alamat Lengkap Pengiriman..." style="resize: none; overflow: hidden; min-height: 54px;" oninput="autoResize(this)" required></textarea>
-                <i class="fas fa-map-marker-alt input-icon icon-textarea"></i>
-            </div>
-
-            <div class="input-group">
-                <input type="email" id="email" class="neu-input" placeholder="Alamat Email Aktif" required>
-                <i class="fas fa-envelope input-icon"></i>
-            </div>
-
-            <div class="input-group" style="margin-bottom: 10px;">
-                <input type="password" id="password" class="neu-input" placeholder="Buat Kata Sandi" required>
-                <i class="fas fa-lock input-icon"></i>
-            </div>
-
-            <div class="pwd-rules">
-                <div class="rule-item invalid" id="ruleLength"><i class="fas fa-times"></i> Minimal 6 karakter</div>
-                <div class="rule-item invalid" id="ruleChar"><i class="fas fa-times"></i> Kombinasi huruf dan angka</div>
-            </div>
-
-            <button type="submit" class="btn-submit" id="submitBtn">
-                <i class="fas fa-user-plus"></i> <span>Daftar Sekarang</span>
-            </button>
-        </form>
-
-        <div class="login-link">
-            Sudah punya akun? <a href="login.html">Masuk di sini</a>
         </div>
     </div>
 
@@ -150,7 +227,37 @@
         <span id="alertMessage">Pesan</span>
     </div>
 
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i><span>Beranda</span>
+        </a>
+        
+        <a href="promo.html" class="bottom-nav-item">
+            <div class="badge-container"><i class="fas fa-tags"></i></div>
+            <span>Promo</span>
+        </a>
+        
+        <a href="keranjang.html" class="bottom-nav-item">
+            <div class="badge-container"><i class="fas fa-shopping-cart"></i></div>
+            <span>Keranjang</span>
+        </a>
+        
+        <a href="pesanan.html" class="bottom-nav-item">
+            <div class="badge-container"><i class="fas fa-box"></i></div>
+            <span>Pesanan</span>
+        </a>
+        
+        <a href="akun.html" class="bottom-nav-item active">
+            <i class="fas fa-user"></i><span>Akun</span>
+        </a>
+    </nav>
+
     <script>
+        // Cek jika sudah login, lempar ke index
+        if (localStorage.getItem('user_session')) {
+            window.location.replace('index.html');
+        }
+
         const alertToast = document.getElementById('alertToast');
         const alertIcon = document.getElementById('alertIcon');
         const alertMessage = document.getElementById('alertMessage');
@@ -188,18 +295,18 @@
 
             if(lenValid) { 
                 ruleLength.classList.replace('invalid', 'valid'); 
-                ruleLength.innerHTML = '<i class="fas fa-check"></i> Minimal 6 karakter'; 
+                ruleLength.innerHTML = '<i class="fas fa-check-circle"></i> Minimal 6 karakter'; 
             } else { 
                 ruleLength.classList.replace('valid', 'invalid'); 
-                ruleLength.innerHTML = '<i class="fas fa-times"></i> Minimal 6 karakter'; 
+                ruleLength.innerHTML = '<i class="fas fa-times-circle"></i> Minimal 6 karakter'; 
             }
 
             if(charValid) { 
                 ruleChar.classList.replace('invalid', 'valid'); 
-                ruleChar.innerHTML = '<i class="fas fa-check"></i> Kombinasi huruf dan angka'; 
+                ruleChar.innerHTML = '<i class="fas fa-check-circle"></i> Kombinasi huruf dan angka'; 
             } else { 
                 ruleChar.classList.replace('valid', 'invalid'); 
-                ruleChar.innerHTML = '<i class="fas fa-times"></i> Kombinasi huruf dan angka'; 
+                ruleChar.innerHTML = '<i class="fas fa-times-circle"></i> Kombinasi huruf dan angka'; 
             }
 
             isPwdValid = lenValid && charValid;
@@ -232,13 +339,12 @@
                 const response = await fetch('/api/auth', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    // Payload dikirim sesuai dengan yang diharapkan oleh backend user.js Anda
                     body: JSON.stringify({ action: 'register', name, nickname, phone, address, email, password })
                 });
 
                 const result = await response.json();
 
-                if (!response.ok) throw new Error(result.error || 'Terjadi kesalahan sistem pendaftaran');
+                if (!response.ok) throw new Error(result.error || 'Terjadi kesalahan server');
 
                 showAlert("Pendaftaran Berhasil! Mengalihkan ke Halaman Login...", true);
                 setTimeout(() => { window.location.href = 'login.html'; }, 2500);
@@ -246,13 +352,24 @@
             } catch (error) {
                 let errText = error.message;
                 if(errText.toLowerCase().includes('already registered')) errText = "Email ini sudah terdaftar! Silakan ke halaman Login.";
-                if(errText.toLowerCase().includes('duplicate key value')) errText = "Nomor WhatsApp ini sudah terdaftar oleh akun lain.";
+                if(errText.toLowerCase().includes('duplicate key value')) errText = "Nomor WA ini sudah terdaftar oleh akun lain.";
                 
                 showAlert(errText, false);
                 
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> <span>Daftar Sekarang</span>';
             }
+        });
+
+        // THEME TOGGLE
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        if (localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); document.getElementById('switchIcon').classList.replace('fa-sun', 'fa-moon'); }
+        themeToggle.addEventListener('click', () => {
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            document.getElementById('switchIcon').classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
         });
     </script>
 </body>
