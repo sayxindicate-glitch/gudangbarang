@@ -83,7 +83,7 @@
                 Kami menggunakan teknologi pelacakan analitik tingkat lanjut untuk memahami perilaku belanja Anda dan memberikan penawaran yang dipersonalisasi. Dengan menekan "Terima", Anda menyetujui pengumpulan data metrik performa dan preferensi sesuai dengan Undang-Undang Pelindungan Data.
             </div>
             <div class="gg-cookie-buttons">
-                <button class="gg-cookie-btn" id="gg-btn-decline">Tolak Analitik</button>
+                <button class="gg-cookie-btn" id="gg-btn-decline">Tolak</button>
                 <button class="gg-cookie-btn accept" id="gg-btn-accept">Terima & Lanjutkan</button>
             </div>
         `;
