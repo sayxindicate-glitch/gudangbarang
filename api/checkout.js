@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
         const { shipping_address, phone_number, total_price, items, used_vouchers } = req.body;
 
-        // 1. Buat Pesanan
+        // 1. Buat Baris Pesanan Baru
         const { data: order, error: orderError } = await supabase
             .from('gg_orders')
             .insert([{
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
 
         if (orderError) throw orderError;
 
-        // 2. Pindahkan barang dari keranjang ke pesanan
+        // 2. Pindahkan rincian barang belanjaan
         const orderItems = items.map(item => ({
             order_id: order.id,
             product_id: item.product_id,
@@ -44,16 +44,17 @@ export default async function handler(req, res) {
         }));
         await supabase.from('gg_order_items').insert(orderItems);
 
-        // 3. Bersihkan keranjang
+        // 3. Kosongkan keranjang belanja
         await supabase.from('gg_cart_items').delete().eq('user_id', user.id);
 
-        // 4. MENGUNCI VOUCHER: Catat di database agar tidak bisa dipakai lagi
+        // 4. LOCKING VOUCHER: Ubah atau buat status is_used menjadi TRUE di database
         if (used_vouchers && used_vouchers.length > 0) {
             const claimedData = used_vouchers.map(code => ({
                 user_id: user.id,
-                voucher_code: code
+                voucher_code: code,
+                is_used: true
             }));
-            await supabase.from('gg_claimed_vouchers').insert(claimedData);
+            await supabase.from('gg_claimed_vouchers').upsert(claimedData, { onConflict: 'user_id, voucher_code' });
         }
 
         return res.status(200).json({ message: 'Pesanan berhasil dibuat' });
