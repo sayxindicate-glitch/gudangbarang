@@ -15,37 +15,33 @@ export default async function handler(req, res) {
         const { data: { user }, error: authError } = await supabase.auth.getUser();
         if (authError || !user) throw new Error('Sesi login tidak valid');
 
-        // 1. Ambil Order Count (Pakai try-catch agar tidak crash jika tabel error)
         let safeOrderCount = 0;
         try {
             const { count } = await supabase.from('gg_orders').select('*', { count: 'exact', head: true }).eq('user_id', user.id);
             safeOrderCount = count || 0;
         } catch(e) {}
 
-        // 2. Ambil Voucher yang Sudah Diklaim
         let claimedCodes = [];
         try {
             const { data } = await supabase.from('gg_claimed_vouchers').select('voucher_code').eq('user_id', user.id);
-            if (data) claimedCodes = data.map(c => c.voucher_code);
+            if (data) claimedCodes = data.map(d => d.voucher_code);
         } catch(e) {}
 
-        // Waktu
         const now = new Date();
-        const createdDate = user.created_at ? new Date(user.created_at) : now;
-        const lastSignInDate = user.last_sign_in_at ? new Date(user.last_sign_in_at) : now;
-        
-        const daysSinceCreated = Math.max(0, (now - createdDate) / (1000 * 60 * 60 * 24));
+        const createdAt = new Date(user.created_at);
+        const lastSignInDate = new Date(user.last_sign_in_at || user.created_at);
+        const daysSinceCreated = Math.max(0, (now - createdAt) / (1000 * 60 * 60 * 24));
         const daysSinceLastSignIn = Math.max(0, (now - lastSignInDate) / (1000 * 60 * 60 * 24));
 
-        // 3. Ambil Semua Voucher dari Database
         const { data: dbVouchers, error: dbError } = await supabase.from('gg_vouchers').select('*').order('id', { ascending: true });
         if (dbError) throw dbError;
 
-        // FILTER STRATEGI MARKETING
         const filteredVouchers = (dbVouchers || []).filter(vch => {
             const segment = (vch.target_segment || '').trim().toLowerCase();
             
-            // Buang yang sudah diklaim
+            // CEK KEDALUWARSA: Jika ada tanggal expired dan sudah lewat dari hari ini, sembunyikan!
+            if (vch.expires_at && new Date(vch.expires_at) < now) return false;
+
             if (claimedCodes.includes(vch.code)) return false;
 
             if (segment === 'all') return true;
@@ -58,11 +54,16 @@ export default async function handler(req, res) {
         });
 
         const responseData = filteredVouchers.map(v => ({
-            id: v.id.toString(), code: v.code, title: v.title, desc: v.description || '', color: v.color || '#0984e3'
+            id: v.id.toString(), 
+            code: v.code, 
+            title: v.title, 
+            desc: v.description, 
+            color: v.color,
+            expires_at: v.expires_at // Mengirim data tanggal kedaluwarsa ke HTML
         }));
 
         return res.status(200).json(responseData);
-    } catch (error) { 
-        return res.status(400).json({ error: error.message }); 
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
     }
 }
