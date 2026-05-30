@@ -9,9 +9,8 @@ export default async function handler(req, res) {
     const { action, email, password, name, nickname, phone, address } = req.body;
 
     try {
+        // --- LOGIKA PENDAFTARAN ---
         if (action === 'register') {
-            // 1. CEK NOMOR WA DULU (Memutus "Lingkaran Setan")
-            // Memanggil fungsi SQL 'check_phone_exists' yang baru kita buat
             const { data: isPhoneTaken, error: rpcError } = await supabase.rpc('check_phone_exists', { check_wa: phone });
 
             if (rpcError) {
@@ -19,12 +18,10 @@ export default async function handler(req, res) {
                 throw new Error('Gagal memvalidasi nomor WhatsApp.');
             }
 
-            // Jika WA sudah ada, batalkan SELURUH proses pendaftaran. Email aman, tidak terdaftar!
             if (isPhoneTaken) {
                 return res.status(400).json({ error: 'Nomor WhatsApp ini sudah terdaftar oleh akun lain.' });
             }
 
-            // 2. JIKA WA AMAN, BARU DAFTARKAN EMAIL & PASSWORD
             const { data: authData, error: authError } = await supabase.auth.signUp({
                 email,
                 password,
@@ -32,7 +29,6 @@ export default async function handler(req, res) {
 
             if (authError) throw authError;
 
-            // 3. SIMPAN KE TABEL PROFILES (Sekarang dijamin 100% berhasil karena WA sudah divalidasi)
             if (authData && authData.session) {
                 const userClient = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY, {
                     global: { headers: { Authorization: `Bearer ${authData.session.access_token}` } }
@@ -57,8 +53,8 @@ export default async function handler(req, res) {
             return res.status(200).json({ message: 'Pendaftaran berhasil', user: authData.user });
         } 
         
+        // --- LOGIKA LOGIN ---
         else if (action === 'login') {
-            // Logika Login Standar
             const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
                 email,
                 password,
@@ -66,7 +62,6 @@ export default async function handler(req, res) {
 
             if (authError) throw authError;
 
-            // Tarik nama untuk dipajang di Navbar Desktop & Mobile
             const { data: profile } = await supabase
                 .from('profiles')
                 .select('nama_lengkap, nama_panggilan')
@@ -83,6 +78,16 @@ export default async function handler(req, res) {
                 name: displayName
             });
         }
+
+        // --- LOGIKA LUPA PASSWORD (BARU) ---
+        else if (action === 'reset_password') {
+            // Perintahkan Supabase untuk mengirimkan email reset
+            const { error: resetError } = await supabase.auth.resetPasswordForEmail(email);
+            
+            if (resetError) throw resetError;
+            
+            return res.status(200).json({ message: 'Tautan reset password berhasil dikirim.' });
+        }
         
         else {
             return res.status(400).json({ error: 'Aksi tidak dikenali' });
@@ -94,6 +99,10 @@ export default async function handler(req, res) {
         let errorMessage = error.message;
         if (errorMessage.includes('already registered')) {
             return res.status(400).json({ error: 'Email ini sudah terdaftar! Silakan ke halaman Login.' });
+        }
+        // Jika ada pengguna yang meminta reset password tapi emailnya belum terdaftar
+        if (errorMessage.includes('User not found')) {
+            return res.status(400).json({ error: 'Alamat email tidak ditemukan di database kami.' });
         }
 
         return res.status(400).json({ error: errorMessage });
