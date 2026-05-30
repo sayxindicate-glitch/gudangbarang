@@ -38,7 +38,7 @@
         .nav-link:hover { color: var(--accent-color); }
         .neu-btn-icon { background: var(--bg-color); color: var(--text-main); border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative; }
         .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
-        .nav-btn-cap { background: var(--bg-color); color: var(--text-main); text-decoration: none; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 50px; box-shadow: var(--neu-pressed-sm); color: var(--accent-color); } /* Dibuat active (pressed) karena sedang di halaman login */
+        .nav-btn-cap { background: var(--bg-color); color: var(--text-main); text-decoration: none; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 50px; box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         
         .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; }
         .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
@@ -49,7 +49,7 @@
         .auth-title { font-size: 24px; font-weight: 700; margin-bottom: 5px; color: var(--accent-color); }
         .auth-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 30px; }
         
-        .input-group { margin-bottom: 20px; position: relative; }
+        .input-group { margin-bottom: 20px; position: relative; text-align: left; }
         .input-group i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; }
         .neu-input { width: 100%; padding: 15px 20px 15px 50px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed); outline: none; font-size: 14px; font-weight: 600; }
         .neu-input::placeholder { color: var(--text-muted); font-weight: 400; }
@@ -69,6 +69,19 @@
         .alert-success { background: rgba(39, 174, 96, 0.1); color: #27ae60; border: 1px solid #27ae60; }
         .alert-error { background: rgba(255, 71, 87, 0.1); color: #ff4757; border: 1px solid #ff4757; }
         .alert-loading { background: rgba(9, 132, 227, 0.1); color: #0984e3; border: 1px solid #0984e3; }
+
+        /* --- STYLING MODAL (POP-UP) --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content { background: var(--bg-color); width: 90%; max-width: 380px; border-radius: 25px; padding: 25px; box-shadow: var(--neu-flat); transform: translateY(30px); transition: transform 0.3s ease; display: flex; flex-direction: column; position: relative; }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .modal-title-box h2 { font-size: 18px; font-weight: 700; color: var(--accent-color); display: flex; align-items: center; gap: 10px;}
+        .modal-close { background: var(--bg-color); border: none; width: 35px; height: 35px; border-radius: 50%; font-size: 16px; color: var(--text-main); box-shadow: var(--neu-flat-sm); cursor: pointer; display: flex; justify-content: center; align-items: center; flex-shrink: 0; transition: all 0.2s; }
+        .modal-close:active { box-shadow: var(--neu-pressed-sm); color: #ff4757; }
+        .neu-btn { padding: 12px 20px; border-radius: 15px; border: none; background: var(--bg-color); font-size: 13px; font-weight: 700; box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.3s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .neu-btn:active { box-shadow: var(--neu-pressed-sm); }
+        .neu-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
         .bottom-nav { display: none; }
 
@@ -128,6 +141,31 @@
         <p class="auth-switch">Belum punya akun? <a href="register.html" rel="noopener noreferrer">Daftar di sini</a></p>
         
         <div id="alertMsg"></div>
+    </div>
+
+    <div class="modal-overlay" id="forgotPassModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title-box"><h2><i class="fas fa-key"></i> Reset Password</h2></div>
+                <button class="modal-close" onclick="closeForgotPassModal()"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; text-align: left;">
+                Masukkan alamat email yang terdaftar. Kami akan mengirimkan tautan untuk mengatur ulang password Anda.
+            </p>
+            
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="resetEmailInput" class="neu-input" placeholder="Ketik email Anda..." required>
+            </div>
+            
+            <div id="resetAlertMsg" style="margin-top: -5px; margin-bottom: 15px; font-size: 11px; font-weight: 600; padding: 10px; border-radius: 10px; display: none; word-wrap: break-word; text-align: left;"></div>
+            
+            <div style="display: flex; gap: 15px; margin-top: 10px;">
+                <button class="neu-btn" onclick="closeForgotPassModal()" style="flex: 1; color: var(--text-muted);">Batal</button>
+                <button class="neu-btn" onclick="submitForgotPass()" id="btnSubmitReset" style="flex: 1; color: var(--accent-color);">Kirim Link</button>
+            </div>
+        </div>
     </div>
 
     <nav class="bottom-nav">
@@ -191,15 +229,41 @@
             alertMsg.className = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : 'alert-loading';
         }
 
-        // --- LUPA PASSWORD LENGKAP ---
-        document.getElementById('forgotPassBtn').addEventListener('click', async () => {
-            const emailInput = document.getElementById('email').value.trim();
+        // --- LOGIKA MODAL LUPA PASSWORD ---
+        const forgotPassModal = document.getElementById('forgotPassModal');
+        const resetAlertMsg = document.getElementById('resetAlertMsg');
+        
+        document.getElementById('forgotPassBtn').addEventListener('click', () => {
+            // Pintar: Otomatis salin teks email dari luar ke dalam popup
+            const mainEmail = document.getElementById('email').value.trim();
+            document.getElementById('resetEmailInput').value = mainEmail;
+            
+            resetAlertMsg.style.display = 'none';
+            forgotPassModal.classList.add('active');
+        });
+
+        function closeForgotPassModal() {
+            forgotPassModal.classList.remove('active');
+            document.getElementById('resetEmailInput').value = '';
+        }
+
+        async function submitForgotPass() {
+            const emailInput = document.getElementById('resetEmailInput').value.trim();
+            const btn = document.getElementById('btnSubmitReset');
+
             if(!emailInput) { 
-                showAlert("Masukkan alamat email Anda terlebih dahulu di kolom atas.", 'error'); 
+                resetAlertMsg.style.display = 'block';
+                resetAlertMsg.textContent = "Masukkan alamat email Anda.";
+                resetAlertMsg.className = 'alert-error';
                 return; 
             }
             
-            showAlert("Permintaan reset sedang diproses...", 'loading');
+            resetAlertMsg.style.display = 'block';
+            resetAlertMsg.textContent = "Sedang mengirim tautan...";
+            resetAlertMsg.className = 'alert-loading';
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
             
             try {
                 const response = await fetch('/api/auth', {
@@ -211,11 +275,22 @@
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.error || 'Gagal mengirim tautan.');
 
-                showAlert("Tautan reset berhasil dikirim! Silakan periksa kotak masuk atau spam email Anda.", 'success');
+                resetAlertMsg.textContent = "Tautan reset berhasil dikirim! Silakan periksa kotak masuk atau folder spam Anda.";
+                resetAlertMsg.className = 'alert-success';
+                
+                // Otomatis menutup popup setelah 3 detik jika berhasil
+                setTimeout(() => {
+                    closeForgotPassModal();
+                }, 3000);
+
             } catch (error) {
-                showAlert(error.message, 'error');
+                resetAlertMsg.textContent = error.message;
+                resetAlertMsg.className = 'alert-error';
+            } finally {
+                btn.textContent = 'Kirim Link';
+                btn.disabled = false;
             }
-        });
+        }
 
         // --- PROSES LOGIN (Melindungi Eksekusi Javascript - Ancaman 22) ---
         const submitBtn = document.getElementById('submitBtn');
