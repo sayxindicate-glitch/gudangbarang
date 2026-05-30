@@ -253,7 +253,6 @@
         const alertIcon = document.getElementById('alertIcon');
         const alertMessage = document.getElementById('alertMessage');
 
-        // Fungsi Auto-Resize untuk Kolom Alamat
         function autoResize(el) {
             el.style.height = 'auto';
             el.style.height = el.scrollHeight + 'px';
@@ -297,7 +296,6 @@
                     const alamatInput = document.getElementById('alamatLengkap');
                     alamatInput.value = data.alamat_lengkap || "";
                     
-                    // Picu auto-resize saat data alamat berhasil dimuat dari database
                     autoResize(alamatInput);
 
                     const displayName = data.nama_panggilan || (data.nama_lengkap ? data.nama_lengkap.split(' ')[0] : "User");
@@ -381,8 +379,9 @@
             btn.disabled = true;
 
             try {
+                // DI SINI SUDAH SAYA PERBAIKI MENJADI 'PUT' AGAR SINKRON DENGAN BACKEND
                 const res = await fetch('/api/user', {
-                    method: 'POST',
+                    method: 'PUT', 
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
                     body: JSON.stringify({ nama_lengkap: name, nama_panggilan: nickname, no_wa: phone, alamat_lengkap: address })
                 });
