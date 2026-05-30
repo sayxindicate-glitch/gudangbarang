@@ -105,6 +105,26 @@
 
         .bottom-nav { display: none; }
 
+        /* FOOTER STYLES */
+        .footer-prof { background-color: #1a1b1e; color: #f5f6fa; padding: 50px 20px 80px 20px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr; gap: 30px; }
+        .footer-logo { font-size: 20px; font-weight: 700; color: #00e5ff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .footer-desc { font-size: 13px; color: #a4b0be; line-height: 1.6; margin-bottom: 20px; }
+        .footer-socials { display: flex; gap: 15px; }
+        .social-icon { width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.05); color: #f5f6fa; display: flex; justify-content: center; align-items: center; text-decoration: none; transition: background 0.3s; }
+        .social-icon:hover { background: #00e5ff; color: #1a1b1e; }
+        .footer-title { font-size: 15px; font-weight: 600; margin-bottom: 20px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-links { list-style: none; padding: 0; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: #a4b0be; text-decoration: none; font-size: 13px; transition: color 0.3s; cursor: pointer; }
+        .footer-links a:hover { color: #00e5ff; }
+        .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; color: #a4b0be; font-size: 13px; margin-bottom: 15px; line-height: 1.5; }
+        .footer-contact-item i { color: #00e5ff; margin-top: 3px; }
+        .payment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .pay-box { background-color: #ffffff; border-radius: 6px; height: 38px; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); cursor: default; padding: 5px 8px; }
+        .pay-img { width: 100%; height: 100%; object-fit: contain; }
+
+        @media (max-width: 1024px) { .footer-container { grid-template-columns: 1fr 1fr 1fr; } }
         @media (max-width: 768px) {
             .top-nav { padding: 15px 20px; }
             .hide-on-mobile { display: none !important; }
@@ -133,6 +153,11 @@
                 font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; 
                 border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 2;
             }
+
+            .footer-container { grid-template-columns: 1fr; gap: 30px; text-align: left; }
+            .footer-contact-item { justify-content: flex-start; }
+            .footer-socials { justify-content: flex-start; }
+            .payment-grid { grid-template-columns: repeat(4, 60px); justify-content: flex-start; margin: 0; }
         }
     </style>
 </head>
@@ -208,11 +233,51 @@
         <div class="contact-box">
             <h3>Belum menemukan jawaban yang Anda cari?</h3>
             <p>Tim Customer Service kami siap melayani Anda setiap hari kerja (Senin - Sabtu, Pukul 08.00 - 17.00 WIB).</p>
-            <a href="https://wa.me/6281234567890" target="_blank" class="btn-wa">
+            <a href="https://wa.me/628153335000" target="_blank" class="btn-wa">
                 <i class="fab fa-whatsapp" style="font-size: 18px;"></i> Hubungi Admin via WhatsApp
             </a>
         </div>
     </div>
+
+    <footer class="footer-prof">
+        <div class="footer-container">
+            <div>
+                <div class="footer-logo"><i class="fas fa-box-open"></i> GOEDANG GROSIR</div>
+                <p class="footer-desc">Platform e-commerce grosir terpercaya di Batam. Menyediakan berbagai kebutuhan usaha Anda dengan harga terbaik.</p>
+                <div class="footer-socials">
+                    <a href="https://facebook.com/goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com/goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://tiktok.com/@goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="footer-title">Hubungi Kami</h4>
+                <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>Batam Centre, Kepulauan Riau</span></div>
+                <div class="footer-contact-item"><i class="fas fa-phone-alt"></i><span>0815 333 5000</span></div>
+                <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>admin@goedanggrosir.com</span></div>
+            </div>
+            
+            <div>
+                <h4 class="footer-title">Kategori</h4>
+                <ul class="footer-links" id="footerCategoryList">
+                    <li><i class="fas fa-spinner fa-spin"></i> Memuat...</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="footer-title">Perusahaan</h4>
+                <ul class="footer-links">
+                    <li><a href="tentang-kami.html">Tentang Kami</a></li>
+                    <li><a href="cara-berbelanja.html">Cara Berbelanja</a></li>
+                    <li><a href="bantuan.html">Bantuan (FAQ)</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">Partner Pembayaran</h4>
+                <div class="payment-grid" id="paymentContainer"></div>
+            </div>
+        </div>
+    </footer>
 
     <nav class="bottom-nav">
         <a href="index.html" class="bottom-nav-item">
@@ -261,20 +326,47 @@
             question.addEventListener('click', () => {
                 const parent = question.parentElement;
                 
-                // Tutup FAQ lain yang sedang terbuka
                 document.querySelectorAll('.faq-item').forEach(item => {
                     if (item !== parent) item.classList.remove('active');
                 });
                 
-                // Buka/tutup FAQ yang diklik
                 parent.classList.toggle('active');
 
-                // Analitik Intelijen: Merekam FAQ apa yang dibaca pengguna
                 if (parent.classList.contains('active') && window.GoedangAnalytics && typeof window.GoedangAnalytics.trackFunnel === 'function') {
                     window.GoedangAnalytics.trackFunnel('Membaca FAQ: ' + question.innerText.replace(' ', '').trim());
                 }
             });
         });
+
+        // =========================================================================
+        // LOAD FOOTER DATA (Otomatis tarik kategori & logo)
+        // =========================================================================
+        async function loadFooterData() {
+            try {
+                fetch('/api/logos').then(res => res.json()).then(logos => {
+                    const paymentContainer = document.getElementById('paymentContainer');
+                    if (paymentContainer) {
+                        paymentContainer.innerHTML = '';
+                        logos.forEach(logo => {
+                            paymentContainer.innerHTML += `<div class="pay-box"><img src="${logo.url}" alt="Partner Pembayaran" class="pay-img" title="${logo.name}"></div>`;
+                        });
+                    }
+                }).catch(e => {});
+
+                fetch('/api/products').then(res => res.json()).then(products => {
+                    const uniqueCategories = new Set();
+                    products.forEach(p => { if (p.category) uniqueCategories.add(p.category); });
+                    
+                    const footerCatList = document.getElementById('footerCategoryList');
+                    if (footerCatList) {
+                        footerCatList.innerHTML = `<li><a href="index.html?kategori=Semua Barang">Semua Barang</a></li>`;
+                        Array.from(uniqueCategories).sort().forEach(cat => {
+                            footerCatList.innerHTML += `<li><a href="index.html?kategori=${encodeURIComponent(cat)}">${cat}</a></li>`;
+                        });
+                    }
+                }).catch(e => {});
+            } catch(error) {}
+        }
 
         // =========================================================================
         // SINKRONISASI NAVIGASI CERDAS (Backend Connection)
@@ -369,8 +461,8 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             updateNavUI();
+            loadFooterData(); // Memuat Kategori & Logo Footer Otomatis
             
-            // Pemicu Analitik Intelijen
             if (window.GoedangAnalytics && typeof window.GoedangAnalytics.trackFunnel === 'function') {
                 window.GoedangAnalytics.trackFunnel('Membuka Halaman Pusat Bantuan (FAQ)');
             }
