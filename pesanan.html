@@ -39,14 +39,15 @@
 
         .nav-link { color: var(--text-muted); text-decoration: none; position: relative; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: color 0.3s ease;}
         .nav-link:hover, .nav-link.active { color: var(--accent-color); }
+        .badge-count { position: absolute; top: -10px; right: -15px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .neu-btn-icon { background: var(--bg-color); color: var(--text-main); border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative; transition: all 0.2s; }
         .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+        .nav-btn-cap { background: var(--bg-color); color: var(--text-main); text-decoration: none; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 50px; box-shadow: var(--neu-flat-sm); transition: all 0.2s; }
+        .nav-btn-cap:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         .nav-profile-badge { display: flex; flex-direction: row; align-items: center; justify-content: center; text-decoration: none; gap: 10px; transition: transform 0.2s ease; cursor: pointer; background: var(--bg-color); padding: 5px 15px 5px 5px; border-radius: 50px; box-shadow: var(--neu-flat-sm); }
         .nav-profile-badge:active { box-shadow: var(--neu-pressed-sm); }
         .nav-profile-badge img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; box-shadow: var(--neu-pressed-sm); border: 2px solid transparent; }
         .nav-profile-badge span { font-size: 13px; font-weight: 700; color: var(--text-main); max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        .badge-count { position: absolute; top: -10px; right: -15px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
         .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; flex: 1; width: 100%; }
         .page-title { display: flex; align-items: center; gap: 15px; font-size: 24px; font-weight: 700; margin-bottom: 25px; }
@@ -67,6 +68,7 @@
         .order-date { font-size: 11px; color: var(--text-muted); font-weight: 500; }
         
         .status-badge { padding: 6px 15px; border-radius: 50px; font-size: 11px; font-weight: 700; box-shadow: var(--neu-pressed-sm); text-transform: uppercase; }
+        .status-pending { color: #e67e22; border: 1px solid rgba(230, 126, 34, 0.2); }
         .status-diproses { color: #e67e22; border: 1px solid rgba(230, 126, 34, 0.2); }
         .status-dikirim { color: var(--accent-color); border: 1px solid rgba(9, 132, 227, 0.2); }
         .status-selesai { color: #27ae60; border: 1px solid rgba(39, 174, 96, 0.2); }
@@ -74,7 +76,7 @@
 
         .order-items { display: flex; flex-direction: column; gap: 10px; }
         .order-item { display: flex; align-items: center; gap: 15px; background: var(--bg-color); padding: 10px; border-radius: 15px; box-shadow: var(--neu-pressed-sm); }
-        .item-img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; box-shadow: var(--neu-flat-sm); flex-shrink: 0; }
+        .item-img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; box-shadow: var(--neu-flat-sm); flex-shrink: 0; background-color: var(--bg-color); }
         .item-details { flex: 1; display: flex; flex-direction: column; justify-content: center; }
         .item-name { font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3;}
         .item-qty { font-size: 11px; color: var(--text-muted); font-weight: 600; }
@@ -156,9 +158,14 @@
                 box-shadow: var(--neu-pressed-sm); 
             }
             
-            .bottom-nav-item.active i { transform: scale(1.15); }
+            .bottom-nav-item.active i { 
+                transform: scale(1.15); 
+            }
             
-            .badge-container { position: relative; display: inline-flex; }
+            .badge-container {
+                position: relative;
+                display: inline-flex;
+            }
             
             .bottom-nav-item .badge-count { 
                 position: absolute; top: -5px; right: -12px; background: #ff4757; color: white; 
@@ -188,14 +195,13 @@
                 <span class="badge-count" id="orderBadge" style="display: none;">0</span>
             </a>
             
-            <a href="keranjang.html" class="neu-btn-icon hide-on-mobile" title="Keranjang">
+            <a href="keranjang.html" class="neu-btn-icon hide-on-mobile" id="desktopCartIconTarget" title="Keranjang">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="badge-count" id="cartBadge" style="display: none; top: -5px; right: -5px; width: 18px; height: 18px; padding: 0;">0</span>
             </a>
             
-            <a href="akun.html" class="nav-profile-badge hide-on-mobile" id="navLoginBtn">
-                <img src="https://api.dicebear.com/7.x/micah/svg?seed=User&backgroundColor=e0e5ec" alt="Avatar" id="navAvatar">
-                <span id="navUsername">Memuat...</span>
+            <a href="login.html" class="nav-btn-cap hide-on-mobile" id="navLoginBtn">
+                <i class="fas fa-sign-in-alt"></i> <span>Login</span>
             </a>
         </div>
     </div>
@@ -208,6 +214,7 @@
 
         <div class="status-tabs">
             <button class="tab-btn active" data-status="Semua" onclick="filterOrders('Semua')">Semua</button>
+            <button class="tab-btn" data-status="Pending" onclick="filterOrders('Pending')">Pending</button>
             <button class="tab-btn" data-status="Diproses" onclick="filterOrders('Diproses')">Diproses</button>
             <button class="tab-btn" data-status="Dikirim" onclick="filterOrders('Dikirim')">Dikirim</button>
             <button class="tab-btn" data-status="Selesai" onclick="filterOrders('Selesai')">Selesai</button>
@@ -232,7 +239,9 @@
     </div>
 
     <nav class="bottom-nav">
-        <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i><span>Beranda</span>
+        </a>
         
         <a href="promo.html" class="bottom-nav-item">
             <div class="badge-container">
@@ -265,7 +274,9 @@
 
     <script>
         const sessionData = localStorage.getItem('user_session');
-        if (!sessionData) { window.location.replace('login.html'); }
+        if (!sessionData) {
+            window.location.replace('login.html');
+        }
         const session = JSON.parse(sessionData);
 
         let allOrders = [];
@@ -329,12 +340,13 @@
 
                 if (userRes.ok) {
                     const userData = await userRes.json();
+                    
                     const displayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
                     const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
                     loginBtn.className = 'nav-profile-badge hide-on-mobile';
                     loginBtn.href = 'akun.html';
-                    loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" id="navAvatar"><span id="navUsername">${displayName}</span>`;
+                    loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${displayName}</span>`;
 
                     if (mobileAccountBtn) {
                         mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
@@ -349,6 +361,7 @@
                 if (cartRes.ok) {
                     const cartItems = await cartRes.json();
                     const totalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+                    
                     const cb = document.getElementById('cartBadge');
                     const mcb = document.getElementById('mobileCartBadge');
                     if (cb) { cb.style.display = totalQty > 0 ? 'flex' : 'none'; cb.innerText = totalQty > 99 ? '99+' : totalQty; }
@@ -365,6 +378,17 @@
                     if (pb) { pb.style.display = promos.length > 0 ? 'flex' : 'none'; pb.innerText = promos.length; }
                     if (mpb) { mpb.style.display = promos.length > 0 ? 'flex' : 'none'; mpb.innerText = promos.length; }
                 }
+            } catch (e) {}
+
+            try {
+                const activeOrders = allOrders.filter(o => {
+                    const stat = (o.status || '').toLowerCase();
+                    return stat !== 'selesai' && stat !== 'dibatalkan';
+                });
+                const ob = document.getElementById('orderBadge');
+                const mob = document.getElementById('mobileOrderBadge');
+                if (ob) { ob.style.display = activeOrders.length > 0 ? 'flex' : 'none'; ob.innerText = activeOrders.length; }
+                if (mob) { mob.style.display = activeOrders.length > 0 ? 'flex' : 'none'; mob.innerText = activeOrders.length; }
             } catch (e) {}
         }
 
@@ -384,16 +408,6 @@
                 allOrders.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
                 
                 renderOrders(currentStatusFilter);
-
-                const activeOrders = allOrders.filter(o => {
-                    const stat = (o.status || '').toLowerCase();
-                    return stat !== 'selesai' && stat !== 'dibatalkan';
-                });
-                const ob = document.getElementById('orderBadge');
-                const mob = document.getElementById('mobileOrderBadge');
-                if (ob) { ob.style.display = activeOrders.length > 0 ? 'flex' : 'none'; ob.innerText = activeOrders.length; }
-                if (mob) { mob.style.display = activeOrders.length > 0 ? 'flex' : 'none'; mob.innerText = activeOrders.length; }
-
                 syncBadges(session.access_token);
 
             } catch (error) {
@@ -444,7 +458,7 @@
 
             const filteredOrders = statusFilter === 'Semua' 
                 ? allOrders 
-                : allOrders.filter(o => (o.status || 'Diproses').toLowerCase() === statusFilter.toLowerCase());
+                : allOrders.filter(o => (o.status || 'Pending').toLowerCase() === statusFilter.toLowerCase());
 
             if (filteredOrders.length === 0) {
                 container.innerHTML = `
@@ -459,8 +473,11 @@
             }
 
             filteredOrders.forEach(order => {
-                const rawStatus = order.status || 'Diproses';
+                const rawStatus = order.status || 'Pending';
+                // PERBAIKAN STATUS: Kapitalisasi huruf pertama dengan akurat
+                const displayStatus = rawStatus.charAt(0).toUpperCase() + rawStatus.slice(1).toLowerCase();
                 const statusClass = `status-${rawStatus.toLowerCase()}`;
+                
                 const dateObj = new Date(order.created_at || Date.now());
                 const formattedDate = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' });
 
@@ -471,20 +488,19 @@
                 
                 if (items.length > 0) {
                     const firstItem = items[0];
-
-                    const finalName = firstItem.product_name || 'Barang Grosir';
-                    const finalImg = (firstItem.product_img && firstItem.product_img.startsWith('http')) 
+                    const cleanPrice = parsePriceSafe(firstItem.product_price || firstItem.price_at_buy);
+                    const itemPriceDisplay = formatRupiah(cleanPrice);
+                    
+                    // PERBAIKAN LOGIKA GAMBAR: Hanya cek jika gambar bukan string kosong atau undefined
+                    const imgUrl = (firstItem.product_img && String(firstItem.product_img).trim() !== "undefined" && String(firstItem.product_img).trim() !== '') 
                         ? firstItem.product_img 
                         : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
-                    
-                    const cleanPrice = parsePriceSafe(firstItem.product_price);
-                    const itemPriceDisplay = formatRupiah(cleanPrice);
 
                     itemsHTML += `
                         <div class="order-item">
-                            <img src="${finalImg}" class="item-img" alt="Produk">
+                            <img src="${imgUrl}" class="item-img" alt="Produk">
                             <div class="item-details">
-                                <div class="item-name">${finalName}</div>
+                                <div class="item-name">${firstItem.product_name || 'Barang Belanjaan'}</div>
                                 <div class="item-qty">${firstItem.quantity || 1} Barang x ${itemPriceDisplay}</div>
                                 <div class="item-price">${formatRupiah(cleanPrice * (firstItem.quantity || 1))}</div>
                             </div>
@@ -497,20 +513,18 @@
                         
                         for (let i = 1; i < items.length; i++) {
                             const currItem = items[i];
-
-                            const currFinalName = currItem.product_name || 'Barang Grosir';
-                            const currFinalImg = (currItem.product_img && currItem.product_img.startsWith('http')) 
+                            const currCleanPrice = parsePriceSafe(currItem.product_price || currItem.price_at_buy);
+                            const currPriceDisplay = formatRupiah(currCleanPrice);
+                            
+                            const currImgUrl = (currItem.product_img && String(currItem.product_img).trim() !== "undefined" && String(currItem.product_img).trim() !== '') 
                                 ? currItem.product_img 
                                 : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
-                            
-                            const currCleanPrice = parsePriceSafe(currItem.product_price);
-                            const currPriceDisplay = formatRupiah(currCleanPrice);
 
                             hiddenItemsHTML += `
                                 <div class="order-item">
-                                    <img src="${currFinalImg}" class="item-img" alt="Produk">
+                                    <img src="${currImgUrl}" class="item-img" alt="Produk">
                                     <div class="item-details">
-                                        <div class="item-name">${currFinalName}</div>
+                                        <div class="item-name">${currItem.product_name || 'Barang Belanjaan'}</div>
                                         <div class="item-qty">${currItem.quantity || 1} Barang x ${currPriceDisplay}</div>
                                         <div class="item-price">${formatRupiah(currCleanPrice * (currItem.quantity || 1))}</div>
                                     </div>
@@ -540,7 +554,7 @@
                                 <div class="order-date">${formattedDate}</div>
                             </div>
                         </div>
-                        <div class="status-badge ${statusClass}">${rawStatus}</div>
+                        <div class="status-badge ${statusClass}">${displayStatus}</div>
                     </div>
                     
                     <div class="order-items">
