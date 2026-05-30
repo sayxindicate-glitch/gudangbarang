@@ -32,7 +32,7 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Anda sudah pernah menggunakan promo ini sebelumnya.' });
         }
 
-        // 2. Ambil spesifikasi voucher asli dari brankas database
+        // 2. Ambil spesifikasi voucher asli dari database
         const { data: voucher, error: vError } = await supabase.from('gg_vouchers').select('*').eq('code', upperCode).maybeSingle(); 
         if (vError || !voucher) return res.status(400).json({ error: 'Kode promo tidak ditemukan di database.' });
 
@@ -46,13 +46,15 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: `Minimal belanja Rp ${parseInt(voucher.min_purchase).toLocaleString('id-ID')} untuk pakai kode ini.` });
         }
 
-        // 3. Eksekusi Rumus Perhitungan Diskon Aman
+        // 3. Eksekusi Rumus Perhitungan Diskon (DIPERBAIKI MENYESUAIKAN SKEMA DATABASE)
         let discountAmount = 0;
-        if (voucher.type === 'percent') {
-            discountAmount = subtotal * parseFloat(voucher.value);
+        
+        // Menggunakan voucher.discount_type dan voucher.discount_value
+        if (voucher.discount_type === 'percent') {
+            discountAmount = subtotal * parseFloat(voucher.discount_value);
             if (voucher.max_discount && discountAmount > voucher.max_discount) discountAmount = parseInt(voucher.max_discount);
-        } else if (voucher.type === 'fixed') {
-            discountAmount = parseInt(voucher.value); 
+        } else if (voucher.discount_type === 'fixed') {
+            discountAmount = parseInt(voucher.discount_value); 
         }
 
         if (discountAmount > subtotal) discountAmount = subtotal;
