@@ -309,7 +309,7 @@
         }
 
         // =========================================================================
-        // SISTEM LOAD VOUCHER (DENGAN TANGGAL KEDALUWARSA)
+        // SISTEM LOAD VOUCHER (DENGAN HITUNG MUNDUR REAL-TIME)
         // =========================================================================
         async function loadVouchers() {
             const container = document.getElementById('voucherContainer');
@@ -363,14 +363,12 @@
                     card.className = 'voucher-card';
                     card.style.borderLeftColor = vch.color;
 
-                    // PENANGANAN TANGGAL KEDALUWARSA DINAMIS
+                    // PENANGANAN TANGGAL KEDALUWARSA (DIGANTI MENJADI COUNTDOWN)
                     let expiryInfo = `<i class="fas fa-infinity"></i> Berlaku tanpa batas waktu`;
                     let timerClass = `safe`;
                     
                     if (vch.expires_at) {
-                        const expDate = new Date(vch.expires_at);
-                        const formattedDate = expDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-                        expiryInfo = `<i class="fas fa-clock"></i> Berlaku s/d: ${formattedDate}`;
+                        expiryInfo = `<i class="fas fa-clock"></i> Hangus dalam: <span class="real-countdown-timer" data-expire="${vch.expires_at}">Menghitung...</span>`;
                         timerClass = `warning`;
                     }
 
@@ -386,12 +384,55 @@
                     container.appendChild(card);
                 });
 
+                // Mulai jalankan mesin hitung mundur untuk voucher database
+                initRealCountdowns();
+
             } catch (error) {
                 container.innerHTML = `<div class="empty-state" style="color:#ff4757;"><i class="fas fa-exclamation-triangle"></i> Gagal memuat data voucher. Periksa koneksi Anda.</div>`;
             }
         }
 
-        // --- FUNGSI MESIN HITUNG MUNDUR FOMO ---
+        // --- FUNGSI MESIN HITUNG MUNDUR UNTUK DATA DARI DATABASE ---
+        function initRealCountdowns() {
+            function updateRealTimers() {
+                const now = new Date();
+                const timers = document.querySelectorAll('.real-countdown-timer');
+                
+                timers.forEach(el => {
+                    const expDate = new Date(el.getAttribute('data-expire'));
+                    const diff = expDate - now;
+
+                    if (diff <= 0) {
+                        el.innerText = "Kedaluwarsa";
+                        el.parentElement.classList.remove('warning');
+                        el.parentElement.style.color = '#636e72'; // Berubah abu-abu jika sudah hangus
+                        return;
+                    }
+
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                    let timeString = "";
+                    if (days > 0) {
+                        timeString += days + " Hari, ";
+                    }
+                    
+                    timeString += 
+                        String(hours).padStart(2, '0') + " : " + 
+                        String(minutes).padStart(2, '0') + " : " + 
+                        String(seconds).padStart(2, '0');
+                    
+                    el.innerText = timeString;
+                });
+            }
+            
+            updateRealTimers();
+            setInterval(updateRealTimers, 1000);
+        }
+
+        // --- FUNGSI MESIN HITUNG MUNDUR FOMO (UNTUK USER BELUM LOGIN) ---
         function startCountdownTimer() {
             function updateTimer() {
                 const now = new Date();
