@@ -81,7 +81,6 @@
         .item-qty { font-size: 11px; color: var(--text-muted); font-weight: 600; }
         .item-price { font-size: 13px; font-weight: 700; color: var(--accent-color); margin-top: 2px;}
 
-        /* --- STYLING UNTUK FITUR BUKA TUTUP BARANG LAINNYA --- */
         .hidden-items-container { display: none; flex-direction: column; gap: 10px; margin-top: 5px; padding-top: 10px; border-top: 1px dashed rgba(128,128,128,0.2); animation: slideDown 0.3s ease-out forwards; }
         .hidden-items-container.active { display: flex; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -105,7 +104,6 @@
         .btn-shop-now { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: var(--bg-color); color: var(--accent-color); padding: 12px 30px; border-radius: 50px; text-decoration: none; font-size: 14px; font-weight: 700; box-shadow: var(--neu-flat); transition: all 0.3s; }
         .btn-shop-now:active { box-shadow: var(--neu-pressed); }
 
-        /* --- NOTIFIKASI MODAL --- */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 4000; opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.active { display: flex; opacity: 1; }
         .modal-content { background: var(--bg-color); width: 90%; max-width: 320px; border-radius: 25px; padding: 30px 20px; box-shadow: var(--neu-flat); transform: translateY(30px); transition: transform 0.3s ease; text-align: center; }
@@ -132,11 +130,11 @@
 
             .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 20px 20px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px; justify-content: space-between; }
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
-            .bottom-nav-item { flex: 1; text-align: center; text-decoration: none; color: var(--text-muted); font-size: 9px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative;}
+            
+            /* PERBAIKAN CSS DI SINI: Menghapus position relative pada parent dan override posisi yang salah */
+            .bottom-nav-item { flex: 1; text-align: center; text-decoration: none; color: var(--text-muted); font-size: 9px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; }
             .bottom-nav-item i { font-size: 18px; transition: transform 0.2s ease; }
             .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); padding: 10px 5px; border-radius: 15px;}
-            
-            .badge-count { position: absolute; top: -5px; right: 20%; background: #ff4757; color: white; font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; }
         }
     </style>
 </head>
@@ -208,7 +206,7 @@
         <a href="promo.html" class="bottom-nav-item">
             <div style="position: relative;">
                 <i class="fas fa-tags"></i>
-                <span class="badge-count" id="mobilePromoBadge" style="display: none;">0</span>
+                <span class="badge-count" id="mobilePromoBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span>
             </div>
             <span>Promo</span>
         </a>
@@ -216,7 +214,7 @@
         <a href="keranjang.html" class="bottom-nav-item">
             <div style="position: relative;">
                 <i class="fas fa-shopping-cart"></i>
-                <span class="badge-count" id="mobileCartBadge" style="display: none;">0</span>
+                <span class="badge-count" id="mobileCartBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span>
             </div>
             <span>Keranjang</span>
         </a>
@@ -224,7 +222,7 @@
         <a href="pesanan.html" class="bottom-nav-item active">
             <div style="position: relative;">
                 <i class="fas fa-box"></i>
-                <span class="badge-count" id="mobileOrderBadge" style="display: none;">0</span>
+                <span class="badge-count" id="mobileOrderBadge" style="display: none; top: -5px; right: -10px; font-size: 9px; padding: 2px 5px;">0</span>
             </div>
             <span>Pesanan</span>
         </a>
@@ -244,7 +242,6 @@
         let allOrders = [];
         let currentStatusFilter = 'Semua';
 
-        // --- THEME TOGGLE ---
         const themeToggle = document.getElementById('themeToggle');
         const switchIcon = document.getElementById('switchIcon');
         const html = document.documentElement;
@@ -258,7 +255,6 @@
             switchIcon.classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
         });
 
-        // --- SISTEM NOTIFIKASI ---
         function showNotification(title, message, type, redirectUrl = null) {
             const notifModal = document.getElementById('notificationModal');
             const notifIcon = document.getElementById('notifIcon');
@@ -289,7 +285,6 @@
             notifModal.classList.add('active');
         }
 
-        // --- SINKRONISASI NAVIGASI CERDAS ---
         async function updateNavUI() {
             const loginBtn = document.getElementById('navLoginBtn');
             const mobileAccountBtn = document.getElementById('mobileAccountBtn');
@@ -306,7 +301,6 @@
                 if (userRes.ok) {
                     const userData = await userRes.json();
                     
-                    // PERBAIKAN: Selalu gunakan nama panggilan untuk Navbar (Sama seperti keranjang.html)
                     const displayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
                     const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
@@ -358,7 +352,6 @@
             } catch (e) {}
         }
 
-        // --- FETCH & RENDER PESANAN ---
         async function fetchOrders() {
             updateNavUI(); 
 
@@ -372,8 +365,6 @@
                 if (!response.ok) throw new Error('Gagal terhubung ke database');
                 
                 allOrders = await response.json();
-                
-                // Urutkan dari pesanan terbaru
                 allOrders.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
                 
                 renderOrders(currentStatusFilter);
@@ -397,7 +388,6 @@
             }
         }
 
-        // PENGAMANAN PARSING HARGA (Mencegah NaN)
         function parsePriceSafe(val) {
             if (!val) return 0;
             if (typeof val === 'number') return val;
@@ -409,7 +399,6 @@
             return "Rp " + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); 
         }
 
-        // --- FUNGSI MENGATUR BUKA/TUTUP BARANG LAINNYA ---
         window.toggleItems = function(orderId, hiddenCount) {
             const container = document.getElementById(`hidden-items-${orderId}`);
             const btn = document.getElementById(`toggle-btn-${orderId}`);
@@ -449,14 +438,12 @@
                 const dateObj = new Date(order.created_at || Date.now());
                 const formattedDate = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' });
 
-                // Ekstrak UUID (8 karakter pertama) sebagai Nomor Invoice
                 const shortId = order.id ? order.id.toString().split('-')[0].toUpperCase() : Math.floor(Math.random()*10000);
 
                 const items = order.items || [];
                 let itemsHTML = '';
                 
                 if (items.length > 0) {
-                    // BARANG PERTAMA (Selalu Tampil)
                     const firstItem = items[0];
                     const cleanPrice = parsePriceSafe(firstItem.product_price || firstItem.price_at_buy);
                     const itemPriceDisplay = formatRupiah(cleanPrice);
@@ -475,7 +462,6 @@
                         </div>
                     `;
                     
-                    // JIKA ADA BARANG LAINNYA (Container tersembunyi & tombol expander)
                     if (items.length > 1) {
                         const hiddenCount = items.length - 1;
                         let hiddenItemsHTML = `<div class="hidden-items-container" id="hidden-items-${order.id}">`;
@@ -508,7 +494,6 @@
                     itemsHTML = `<div class="more-items-text">Rincian barang belum dimasukkan.</div>`;
                 }
 
-                // Parsing total harga dari string text DB
                 const cleanTotal = parsePriceSafe(order.total_price);
                 const displayTotal = formatRupiah(cleanTotal);
 
