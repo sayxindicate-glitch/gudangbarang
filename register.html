@@ -28,10 +28,9 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
         
-        /* Mengembalikan Body ke layout standar aplikasi */
         body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
-        /* --- NAVIGASI ATAS STANDAR --- */
+        /* --- NAVIGASI ATAS --- */
         .top-nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; background-color: var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
         
@@ -74,7 +73,7 @@
         .neu-input:focus ~ .input-icon { color: var(--accent-color); }
         .icon-textarea { top: 18px; transform: none; }
 
-        /* Kotak Syarat Password (Diperbaiki agar tidak terpotong) */
+        /* --- KOTAK ATURAN PASSWORD (FULL 5 SYARAT) --- */
         .pwd-rules-box {
             background: var(--bg-color); padding: 15px 20px; border-radius: 15px;
             box-shadow: var(--neu-pressed-sm); margin-top: -5px; margin-bottom: 20px;
@@ -112,7 +111,7 @@
             .header-text h1 { font-size: 22px; }
             .btn-back { top: -15px; left: 0; position: relative; margin-bottom: 10px; }
 
-            /* ---> MASTER BOTTOM NAV MOBILE <--- */
+            /* --- MASTER BOTTOM NAV MOBILE --- */
             .bottom-nav { 
                 display: flex; position: fixed; bottom: 0; left: 0; width: 100%; 
                 background-color: var(--bg-color); border-radius: 25px 25px 0 0; 
@@ -207,8 +206,11 @@
 
                 <div class="pwd-rules-box">
                     <div class="rule-title">Keamanan Sandi</div>
-                    <div class="rule-item invalid" id="ruleLength"><i class="fas fa-times-circle"></i> Minimal 6 karakter</div>
-                    <div class="rule-item invalid" id="ruleChar"><i class="fas fa-times-circle"></i> Kombinasi huruf dan angka</div>
+                    <div class="rule-item invalid" id="rule-length"><i class="fas fa-times"></i> Minimal 8 karakter</div>
+                    <div class="rule-item invalid" id="rule-upper"><i class="fas fa-times"></i> Mengandung huruf besar (A-Z)</div>
+                    <div class="rule-item invalid" id="rule-lower"><i class="fas fa-times"></i> Mengandung huruf kecil (a-z)</div>
+                    <div class="rule-item invalid" id="rule-number"><i class="fas fa-times"></i> Mengandung angka (0-9)</div>
+                    <div class="rule-item invalid" id="rule-symbol"><i class="fas fa-times"></i> Mengandung simbol (!@#$%^&*)</div>
                 </div>
 
                 <button type="submit" class="btn-submit" id="submitBtn">
@@ -253,16 +255,13 @@
     </nav>
 
     <script>
-        // Cek jika sudah login, lempar ke index
-        if (localStorage.getItem('user_session')) {
-            window.location.replace('index.html');
-        }
+        // Redirect jika sudah login
+        if (localStorage.getItem('user_session')) { window.location.replace('index.html'); }
 
         const alertToast = document.getElementById('alertToast');
         const alertIcon = document.getElementById('alertIcon');
         const alertMessage = document.getElementById('alertMessage');
 
-        // Fungsi Auto-Resize untuk Kotak Alamat
         function autoResize(el) {
             el.style.height = 'auto';
             el.style.height = el.scrollHeight + 'px';
@@ -281,35 +280,45 @@
             setTimeout(() => { alertToast.style.display = 'none'; }, 3500);
         }
 
-        // Logika Pengecekan Syarat Password
+        // LOGIKA PENGECEKAN 5 SYARAT PASSWORD
         const passwordInput = document.getElementById('password');
-        const ruleLength = document.getElementById('ruleLength');
-        const ruleChar = document.getElementById('ruleChar');
+        const ruleLength = document.getElementById('rule-length');
+        const ruleUpper = document.getElementById('rule-upper');
+        const ruleLower = document.getElementById('rule-lower');
+        const ruleNumber = document.getElementById('rule-number');
+        const ruleSymbol = document.getElementById('rule-symbol');
         
         let isPwdValid = false;
 
+        function updateRuleUI(element, isValid, text) {
+            if (isValid) {
+                element.classList.replace('invalid', 'valid');
+                element.innerHTML = `<i class="fas fa-check"></i> ${text}`;
+            } else {
+                element.classList.replace('valid', 'invalid');
+                element.innerHTML = `<i class="fas fa-times"></i> ${text}`;
+            }
+        }
+
         passwordInput.addEventListener('input', function() {
             const val = this.value;
-            const lenValid = val.length >= 6;
-            const charValid = /[a-zA-Z]/.test(val) && /[0-9]/.test(val);
 
-            if(lenValid) { 
-                ruleLength.classList.replace('invalid', 'valid'); 
-                ruleLength.innerHTML = '<i class="fas fa-check-circle"></i> Minimal 6 karakter'; 
-            } else { 
-                ruleLength.classList.replace('valid', 'invalid'); 
-                ruleLength.innerHTML = '<i class="fas fa-times-circle"></i> Minimal 6 karakter'; 
-            }
+            // Variabel Validasi RegEx
+            const lenValid = val.length >= 8;
+            const upperValid = /[A-Z]/.test(val);
+            const lowerValid = /[a-z]/.test(val);
+            const numberValid = /[0-9]/.test(val);
+            const symbolValid = /[!@#$%^&*(),.?":{}|<>]/.test(val);
 
-            if(charValid) { 
-                ruleChar.classList.replace('invalid', 'valid'); 
-                ruleChar.innerHTML = '<i class="fas fa-check-circle"></i> Kombinasi huruf dan angka'; 
-            } else { 
-                ruleChar.classList.replace('valid', 'invalid'); 
-                ruleChar.innerHTML = '<i class="fas fa-times-circle"></i> Kombinasi huruf dan angka'; 
-            }
+            // Update Tampilan Masing-Masing Aturan
+            updateRuleUI(ruleLength, lenValid, 'Minimal 8 karakter');
+            updateRuleUI(ruleUpper, upperValid, 'Mengandung huruf besar (A-Z)');
+            updateRuleUI(ruleLower, lowerValid, 'Mengandung huruf kecil (a-z)');
+            updateRuleUI(ruleNumber, numberValid, 'Mengandung angka (0-9)');
+            updateRuleUI(ruleSymbol, symbolValid, 'Mengandung simbol (!@#$%^&*)');
 
-            isPwdValid = lenValid && charValid;
+            // Set Form Validity
+            isPwdValid = lenValid && upperValid && lowerValid && numberValid && symbolValid;
         });
 
         // Proses Eksekusi Pendaftaran
@@ -320,7 +329,7 @@
             e.preventDefault();
             
             if(!isPwdValid) {
-                showAlert("Password belum memenuhi syarat keamanan!", false);
+                showAlert("Semua syarat keamanan password harus terpenuhi!", false);
                 passwordInput.focus();
                 return;
             }
