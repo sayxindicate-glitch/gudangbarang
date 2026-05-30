@@ -39,15 +39,14 @@
 
         .nav-link { color: var(--text-muted); text-decoration: none; position: relative; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: color 0.3s ease;}
         .nav-link:hover, .nav-link.active { color: var(--accent-color); }
-        .badge-count { position: absolute; top: -10px; right: -15px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .neu-btn-icon { background: var(--bg-color); color: var(--text-main); border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative; transition: all 0.2s; }
         .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
-        .nav-btn-cap { background: var(--bg-color); color: var(--text-main); text-decoration: none; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 50px; box-shadow: var(--neu-flat-sm); transition: all 0.2s; }
-        .nav-btn-cap:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         .nav-profile-badge { display: flex; flex-direction: row; align-items: center; justify-content: center; text-decoration: none; gap: 10px; transition: transform 0.2s ease; cursor: pointer; background: var(--bg-color); padding: 5px 15px 5px 5px; border-radius: 50px; box-shadow: var(--neu-flat-sm); }
         .nav-profile-badge:active { box-shadow: var(--neu-pressed-sm); }
         .nav-profile-badge img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; box-shadow: var(--neu-pressed-sm); border: 2px solid transparent; }
         .nav-profile-badge span { font-size: 13px; font-weight: 700; color: var(--text-main); max-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .badge-count { position: absolute; top: -10px; right: -15px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
         .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; flex: 1; width: 100%; }
         .page-title { display: flex; align-items: center; gap: 15px; font-size: 24px; font-weight: 700; margin-bottom: 25px; }
@@ -189,7 +188,7 @@
                 <span class="badge-count" id="orderBadge" style="display: none;">0</span>
             </a>
             
-            <a href="keranjang.html" class="neu-btn-icon hide-on-mobile" id="desktopCartIconTarget" title="Keranjang">
+            <a href="keranjang.html" class="neu-btn-icon hide-on-mobile" title="Keranjang">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="badge-count" id="cartBadge" style="display: none; top: -5px; right: -5px; width: 18px; height: 18px; padding: 0;">0</span>
             </a>
@@ -266,13 +265,10 @@
 
     <script>
         const sessionData = localStorage.getItem('user_session');
-        if (!sessionData) {
-            window.location.replace('login.html');
-        }
+        if (!sessionData) { window.location.replace('login.html'); }
         const session = JSON.parse(sessionData);
 
         let allOrders = [];
-        let allProducts = []; // ARRAY ANTI-NYANGKUT: Mengambil langsung dari master tabel produk
         let currentStatusFilter = 'Semua';
 
         const themeToggle = document.getElementById('themeToggle');
@@ -333,7 +329,6 @@
 
                 if (userRes.ok) {
                     const userData = await userRes.json();
-                    
                     const displayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
                     const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
@@ -373,27 +368,14 @@
             } catch (e) {}
         }
 
-        // =========================================================================
-        // SISTEM ANTI-CACHE: AMBIL PRODUK LALU AMBIL PESANAN
-        // =========================================================================
         async function fetchOrders() {
             updateNavUI(); 
 
             try {
-                // 1. Ambil Semua Produk secara Mandiri (Bypass Orders.js)
-                const prodPromise = fetch('/api/products')
-                    .then(res => res.ok ? res.json() : [])
-                    .catch(() => []);
-
-                // 2. Ambil Pesanan User
-                const orderPromise = fetch('/api/orders', {
+                const response = await fetch('/api/orders', {
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${session.access_token}` }
                 });
-
-                // Tunggu keduanya selesai
-                const [productsData, response] = await Promise.all([prodPromise, orderPromise]);
-                allProducts = productsData; // Simpan ke variabel global anti-nyangkut
 
                 if (response.status === 401 || response.status === 403) throw new Error('Sesi tidak valid');
                 if (!response.ok) throw new Error('Gagal terhubung ke database');
@@ -403,7 +385,6 @@
                 
                 renderOrders(currentStatusFilter);
 
-                // Update badge pesanan aktif
                 const activeOrders = allOrders.filter(o => {
                     const stat = (o.status || '').toLowerCase();
                     return stat !== 'selesai' && stat !== 'dibatalkan';
@@ -457,9 +438,6 @@
             }
         }
 
-        // =========================================================================
-        // RENDERING TAMPILAN: PENCOCOKAN DATA MANUAL
-        // =========================================================================
         function renderOrders(statusFilter) {
             const container = document.getElementById('ordersContainer');
             container.innerHTML = '';
@@ -494,17 +472,12 @@
                 if (items.length > 0) {
                     const firstItem = items[0];
 
-                    // KUNCI PERBAIKAN: Cari info asli dari allProducts berdasarkan ID
-                    const realProduct = allProducts.find(p => String(p.id) === String(firstItem.product_id)) || {};
-
-                    const finalName = realProduct.product_name || firstItem.product_name || 'Barang Grosir';
-                    const finalImg = (realProduct.product_img && realProduct.product_img.startsWith('http')) 
-                        ? realProduct.product_img 
-                        : (firstItem.product_img && firstItem.product_img.startsWith('http')) 
-                            ? firstItem.product_img 
-                            : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
+                    const finalName = firstItem.product_name || 'Barang Grosir';
+                    const finalImg = (firstItem.product_img && firstItem.product_img.startsWith('http')) 
+                        ? firstItem.product_img 
+                        : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
                     
-                    const cleanPrice = parsePriceSafe(firstItem.price_at_buy || firstItem.product_price || realProduct.product_price);
+                    const cleanPrice = parsePriceSafe(firstItem.product_price);
                     const itemPriceDisplay = formatRupiah(cleanPrice);
 
                     itemsHTML += `
@@ -524,16 +497,13 @@
                         
                         for (let i = 1; i < items.length; i++) {
                             const currItem = items[i];
-                            const currRealProduct = allProducts.find(p => String(p.id) === String(currItem.product_id)) || {};
 
-                            const currFinalName = currRealProduct.product_name || currItem.product_name || 'Barang Grosir';
-                            const currFinalImg = (currRealProduct.product_img && currRealProduct.product_img.startsWith('http')) 
-                                ? currRealProduct.product_img 
-                                : (currItem.product_img && currItem.product_img.startsWith('http')) 
-                                    ? currItem.product_img 
-                                    : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
+                            const currFinalName = currItem.product_name || 'Barang Grosir';
+                            const currFinalImg = (currItem.product_img && currItem.product_img.startsWith('http')) 
+                                ? currItem.product_img 
+                                : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
                             
-                            const currCleanPrice = parsePriceSafe(currItem.price_at_buy || currItem.product_price || currRealProduct.product_price);
+                            const currCleanPrice = parsePriceSafe(currItem.product_price);
                             const currPriceDisplay = formatRupiah(currCleanPrice);
 
                             hiddenItemsHTML += `
