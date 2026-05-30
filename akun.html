@@ -7,7 +7,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
         :root {
             --bg-color: #e0e5ec; --text-main: #2d3436; --text-muted: #636e72; --accent-color: #0984e3;
             --shadow-light: #ffffff; --shadow-dark: #a3b1c6;
@@ -16,7 +15,6 @@
             --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
             --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
         }
-
         [data-theme="dark"] {
             --bg-color: #1a1b1e; --text-main: #f5f6fa; --text-muted: #a4b0be; --accent-color: #00e5ff;
             --shadow-light: rgba(255, 255, 255, 0.05); --shadow-dark: rgba(0, 0, 0, 0.6);
@@ -25,68 +23,49 @@
             --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
             --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
-
         body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; position: relative; }
-
         .top-nav { position: absolute; top: 0; left: 0; width: 100%; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
         .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; }
         .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
         [data-theme="dark"] .switch-handle { transform: translateX(30px); }
-
-        .profile-container { background: var(--bg-color); width: 100%; max-width: 500px; border-radius: 30px; padding: 40px 30px; box-shadow: var(--neu-flat); text-align: center; z-index: 10; margin-top: 80px; margin-bottom: 60px; }
-        
-        .avatar-box { margin: 0 auto 15px auto; width: 110px; height: 110px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-pressed); display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; }
+        .profile-container { background: var(--bg-color); width: 100%; max-width: 450px; border-radius: 30px; padding: 40px 30px; box-shadow: var(--neu-flat); text-align: center; z-index: 10; margin-top: 60px; margin-bottom: 60px; }
+        .avatar-box { margin: 0 auto 20px auto; width: 100px; height: 100px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-pressed); display: flex; justify-content: center; align-items: center; overflow: hidden; position: relative; border: 4px solid var(--bg-color); }
         .avatar-box img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; }
-        
-        .profile-title { font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
-        .profile-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 25px; font-weight: 600; display: flex; flex-direction: column; gap: 3px;}
-
-        .input-group { margin-bottom: 20px; position: relative; text-align: left; display: flex; flex-direction: column; }
+        .profile-title { font-size: 22px; font-weight: 700; color: var(--text-main); margin-bottom: 5px; }
+        .profile-email { font-size: 13px; color: var(--text-muted); margin-bottom: 30px; font-weight: 600; }
+        .input-group { margin-bottom: 20px; position: relative; text-align: left; }
         .input-label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; margin-left: 20px; text-transform: uppercase; letter-spacing: 1px; }
-        .input-group i { position: absolute; left: 20px; top: 40px; color: var(--text-muted); font-size: 15px; }
-        
-        .neu-input, .neu-select { width: 100%; padding: 15px 20px 15px 50px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed); outline: none; font-size: 13px; font-weight: 600; font-family: 'Poppins', sans-serif;}
+        .input-group i { position: absolute; left: 20px; top: 38px; color: var(--text-muted); font-size: 16px; }
+        .neu-input { width: 100%; padding: 15px 20px 15px 50px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); box-shadow: var(--neu-pressed); outline: none; font-size: 14px; font-weight: 600; }
         .neu-input::placeholder { color: var(--text-muted); font-weight: 400; opacity: 0.6; }
         .neu-input:disabled { opacity: 0.6; cursor: not-allowed; }
-        
-        /* Select Dropdown Adjustment */
-        .neu-select { appearance: none; -webkit-appearance: none; cursor: pointer; }
-        .select-wrapper { position: relative; width: 100%; }
-        .select-arrow { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--text-muted); font-size: 12px;}
-
-        .btn-group { display: flex; gap: 15px; margin-top: 35px; }
+        .btn-group { display: flex; gap: 15px; margin-top: 30px; }
         .neu-btn { flex: 1; padding: 15px; border-radius: 50px; border: none; background: var(--bg-color); font-size: 13px; font-weight: 700; box-shadow: var(--neu-flat); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.3s; }
         .neu-btn:active { box-shadow: var(--neu-pressed); }
         .btn-save { color: #27ae60; }
         .btn-logout { color: #ff4757; }
-
-        #alertMsg { margin-top: 20px; font-size: 12px; font-weight: 600; padding: 10px 15px; border-radius: 12px; display: none; }
-        .alert-success { background: rgba(39, 174, 96, 0.1); color: #27ae60; border: 1px solid rgba(39, 174, 96, 0.3); }
-        .alert-error { background: rgba(255, 71, 87, 0.1); color: #ff4757; border: 1px solid rgba(255, 71, 87, 0.3); }
-        .alert-loading { background: rgba(9, 132, 227, 0.1); color: #0984e3; border: 1px solid rgba(9, 132, 227, 0.3); }
-
+        #alertMsg { margin-top: 20px; font-size: 12px; font-weight: 600; padding: 10px; border-radius: 10px; display: none; }
+        .alert-success { background: rgba(39, 174, 96, 0.1); color: #27ae60; border: 1px solid #27ae60; }
+        .alert-error { background: rgba(255, 71, 87, 0.1); color: #ff4757; border: 1px solid #ff4757; }
+        .alert-loading { background: rgba(9, 132, 227, 0.1); color: #0984e3; border: 1px solid #0984e3; }
         .bottom-nav { display: none; }
-
         @media (max-width: 768px) {
             .top-nav { padding: 15px 20px; }
-            .profile-container { padding: 30px 20px; border-radius: 25px; box-shadow: none; background: transparent; margin-top: 30px; margin-bottom: 90px; }
-            .neu-input, .neu-select { padding: 12px 20px 12px 45px; font-size: 12px;}
-            .input-group i { top: 36px; }
+            .profile-container { padding: 30px 20px; border-radius: 25px; box-shadow: none; background: transparent; margin-top: 40px; margin-bottom: 80px; }
+            .neu-input { padding: 12px 20px 12px 45px; }
+            .input-group i { top: 35px; }
             body { padding-bottom: 80px; justify-content: flex-start; }
-            
-            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
+            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px 10px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
             .bottom-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; gap: 5px; padding: 10px 5px; border-radius: 15px; flex: 1; text-align: center; }
-            .bottom-nav-item i { font-size: 18px; transition: transform 0.2s ease; }
+            .bottom-nav-item i { font-size: 18px; }
             .bottom-nav-item.active { color: var(--accent-color); box-shadow: var(--neu-pressed-sm); }
         }
     </style>
 </head>
 <body>
-
     <div class="top-nav">
         <a href="index.html" class="logo"><i class="fas fa-box-open"></i> GOEDANG</a>
         <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
@@ -95,71 +74,54 @@
     <div class="profile-container">
         <div id="loadingArea" style="padding: 50px 0; color: var(--accent-color);">
             <i class="fas fa-spinner fa-spin fa-3x"></i>
-            <p style="margin-top: 15px; font-size: 13px; font-weight: 600;">Mengamankan data profil...</p>
+            <p style="margin-top: 15px; font-size: 13px; font-weight: 600;">Memuat profil aman...</p>
         </div>
 
         <div id="formArea" style="display: none;">
             <div class="avatar-box">
                 <img id="userAvatar" src="" alt="Avatar Profil">
             </div>
-            <h2 class="profile-title" id="displayNickname">Memuat...</h2>
-            <div class="profile-subtitle">
-                <span id="displayFullName"></span>
-                <span id="displayEmail" style="font-weight: 400;">Memuat email...</span>
+            <h2 class="profile-title" id="displayTitle">Memuat...</h2>
+            <p class="profile-email" id="displayEmail">Memuat email...</p>
+
+            <div class="input-group">
+                <span class="input-label">Nama Lengkap</span>
+                <i class="fas fa-id-card"></i>
+                <input type="text" id="name" class="neu-input" placeholder="Masukkan nama lengkap">
             </div>
 
             <div class="input-group">
                 <span class="input-label">Nama Panggilan</span>
-                <i class="fas fa-smile"></i>
-                <input type="text" id="nama_panggilan" class="neu-input" placeholder="Nama singkat Anda">
+                <i class="fas fa-user-tag"></i>
+                <input type="text" id="nickname" class="neu-input" placeholder="Nama untuk sapaan">
             </div>
 
             <div class="input-group">
-                <span class="input-label">Nama Lengkap (Sesuai KTP)</span>
-                <i class="fas fa-id-card"></i>
-                <input type="text" id="nama_lengkap" class="neu-input" placeholder="Nama lengkap Anda">
-            </div>
-
-            <div class="input-group">
-                <span class="input-label">Nomor WhatsApp Aktif</span>
-                <i class="fab fa-whatsapp"></i>
-                <input type="tel" id="no_wa" class="neu-input" placeholder="Contoh: 08123456789">
+                <span class="input-label">Nomor WhatsApp / HP</span>
+                <i class="fas fa-phone-alt"></i>
+                <input type="tel" id="phone" class="neu-input" placeholder="Contoh: 08123456789">
             </div>
             
             <div class="input-group">
                 <span class="input-label">Alamat Pengiriman Utama</span>
                 <i class="fas fa-map-marker-alt"></i>
-                <input type="text" id="alamat_lengkap" class="neu-input" placeholder="Jln. Raya, RT/RW, Kota, Kode Pos">
-            </div>
-
-            <div class="input-group">
-                <span class="input-label">Jenis Kelamin</span>
-                <i class="fas fa-venus-mars"></i>
-                <div class="select-wrapper">
-                    <select id="jenis_kelamin" class="neu-select">
-                        <option value="" disabled selected>Pilih Jenis Kelamin</option>
-                        <option value="Laki-laki">Laki-laki</option>
-                        <option value="Perempuan">Perempuan</option>
-                        <option value="Tidak Disebutkan">Rahasiakan</option>
-                    </select>
-                    <i class="fas fa-chevron-down select-arrow"></i>
-                </div>
+                <input type="text" id="address" class="neu-input" placeholder="Jln. Raya, RT/RW, Kota, Kode Pos">
             </div>
 
             <div class="input-group">
                 <span class="input-label">Alamat Email (Akun)</span>
                 <i class="fas fa-envelope"></i>
-                <input type="email" id="email" class="neu-input" disabled title="Email otorisasi tidak bisa diubah di sini">
+                <input type="email" id="email" class="neu-input" disabled title="Email tidak bisa diubah di sini">
             </div>
 
             <div id="alertMsg"></div>
 
             <div class="btn-group">
-                <button class="neu-btn btn-logout" id="logoutBtn" onclick="handleLogout()">
+                <button class="neu-btn btn-logout" onclick="handleLogout()">
                     <i class="fas fa-sign-out-alt"></i> Keluar
                 </button>
                 <button class="neu-btn btn-save" id="saveBtn" onclick="saveProfile()">
-                    <i class="fas fa-save"></i> Simpan Data
+                    <i class="fas fa-save"></i> Simpan
                 </button>
             </div>
         </div>
@@ -174,29 +136,20 @@
     </nav>
 
     <script>
-        // --- CEK KEAMANAN & SESSION LOKAL AWET ---
         const sessionData = localStorage.getItem('user_session');
-        if (!sessionData) {
-            window.location.replace('login.html'); // Usir jika tidak ada tiket
-        }
+        if (!sessionData) window.location.href = 'login.html'; 
         const session = JSON.parse(sessionData);
 
-        // --- DARK MODE LOGIC ---
         const themeToggle = document.getElementById('themeToggle');
-        const switchIcon = document.getElementById('switchIcon');
         const html = document.documentElement;
-
-        if (localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); switchIcon.classList.replace('fa-sun', 'fa-moon'); }
-
+        if (localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); document.getElementById('switchIcon').classList.replace('fa-sun', 'fa-moon'); }
         themeToggle.addEventListener('click', () => {
-            if (html.getAttribute('data-theme') === 'light') {
-                html.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); switchIcon.classList.replace('fa-sun', 'fa-moon');
-            } else {
-                html.setAttribute('data-theme', 'light'); localStorage.setItem('theme', 'light'); switchIcon.classList.replace('fa-moon', 'fa-sun');
-            }
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            document.getElementById('switchIcon').classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
         });
 
-        // --- UI HELPER ---
         const alertMsg = document.getElementById('alertMsg');
         function showAlert(message, type) {
             alertMsg.style.display = 'block';
@@ -204,130 +157,101 @@
             alertMsg.className = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : 'alert-loading';
         }
 
-        // --- FETCH DATA DARI TABEL "PROFILES" SAAT HALAMAN DIBUKA ---
         async function loadProfile() {
             try {
-                // Request GET ke backend api/user yang sudah terhubung ke tabel profiles
                 const response = await fetch('/api/user', {
                     method: 'GET',
                     headers: { 'Authorization': `Bearer ${session.access_token}` }
                 });
 
-                if (response.status === 401 || response.status === 403) throw new Error("Sesi tidak valid");
-                if (!response.ok) throw new Error("Gagal mengambil data dari server");
-                
-                const profileData = await response.json();
+                if (!response.ok) throw new Error("Gagal mengambil data, sesi mungkin kadaluarsa.");
+                const userData = await response.json();
 
-                // Memasukkan data ke form (Mencocokkan nama kolom di Supabase)
-                document.getElementById('nama_panggilan').value = profileData.nama_panggilan || "";
-                document.getElementById('nama_lengkap').value = profileData.nama_lengkap || "";
-                document.getElementById('no_wa').value = profileData.no_wa || "";
-                document.getElementById('alamat_lengkap').value = profileData.alamat_lengkap || "";
-                document.getElementById('jenis_kelamin').value = profileData.jenis_kelamin || "";
-                document.getElementById('email').value = profileData.email || session.user.email;
+                document.getElementById('name').value = userData.nama_lengkap || '';
+                document.getElementById('nickname').value = userData.nama_panggilan || '';
+                document.getElementById('phone').value = userData.no_wa || '';
+                document.getElementById('address').value = userData.alamat_lengkap || '';
+                document.getElementById('email').value = userData.email || '';
                 
-                // Menampilkan nama panggilan (prioritas), atau nama lengkap jika kosong
-                const displayCallName = profileData.nama_panggilan || (profileData.nama_lengkap ? profileData.nama_lengkap.split(' ')[0] : "User");
-                
-                document.getElementById('displayNickname').innerText = displayCallName;
-                document.getElementById('displayFullName').innerText = profileData.nama_lengkap || "Belum mengatur nama lengkap";
-                document.getElementById('displayEmail').innerText = profileData.email || session.user.email;
+                const displayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "Pengguna");
+                document.getElementById('displayTitle').innerText = displayName;
+                document.getElementById('displayEmail').innerText = userData.email;
 
-                // Generator Avatar 3D Anti-Rasis (baseColor=f9c9b6) berbasis nama panggilan
-                const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayCallName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
+                const avatarName = encodeURIComponent(displayName);
+                const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${avatarName}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
                 document.getElementById('userAvatar').src = avatarUrl;
                 
-                // Update navigasi bawah HP
                 const mobileAccountBtn = document.getElementById('mobileAccountBtn');
                 if (mobileAccountBtn) {
-                    mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayCallName}</span>`;
+                    mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
                 }
 
-                // Tampilkan Form, Sembunyikan Loading
                 document.getElementById('loadingArea').style.display = 'none';
                 document.getElementById('formArea').style.display = 'block';
 
             } catch (error) {
-                console.error("Kesalahan:", error);
-                if (error.message === "Sesi tidak valid") {
-                    handleLogout(); // Usir jika tiket palsu/kadaluarsa
-                } else {
-                    showAlert("Gagal memuat profil. Periksa koneksi Anda.", "error");
-                    document.getElementById('loadingArea').style.display = 'none';
-                    document.getElementById('formArea').style.display = 'block';
-                }
+                alert("Sesi login bermasalah. Silakan login kembali.");
+                handleLogout(); 
             }
         }
 
-        // --- FUNGSI SIMPAN PERUBAHAN KE TABEL PROFILES ---
         async function saveProfile() {
             const btn = document.getElementById('saveBtn');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
             btn.disabled = true;
-            showAlert("Mengunggah data aman...", "loading");
+            showAlert("Menyimpan data...", "loading");
 
-            // Ambil semua isi inputan
-            const payload = {
-                nama_panggilan: document.getElementById('nama_panggilan').value.trim(),
-                nama_lengkap: document.getElementById('nama_lengkap').value.trim(),
-                no_wa: document.getElementById('no_wa').value.trim(),
-                alamat_lengkap: document.getElementById('alamat_lengkap').value.trim(),
-                jenis_kelamin: document.getElementById('jenis_kelamin').value
-            };
+            // PERBAIKAN: Tangkap data dengan benar
+            const name = document.getElementById('name').value;
+            const nickname = document.getElementById('nickname').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
 
             try {
-                // Request PUT ke backend
                 const response = await fetch('/api/user', {
                     method: 'PUT',
                     headers: { 
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${session.access_token}` 
                     },
-                    body: JSON.stringify(payload)
+                    // PERBAIKAN: Cocokkan bahasa pengiriman (JSON) dengan permintaan Backend Vercel
+                    body: JSON.stringify({ 
+                        nama_lengkap: name, 
+                        nama_panggilan: nickname,
+                        no_wa: phone, 
+                        alamat_lengkap: address 
+                    })
                 });
 
                 const result = await response.json();
-
-                if (!response.ok) {
-                    // Cek jika nomor WA duplikat (Error dari unique constraint)
-                    throw new Error(result.error || "Gagal menyimpan perubahan.");
-                }
+                if (!response.ok) throw new Error(result.error || "Gagal menyimpan perubahan.");
                 
-                // Update UI Avatar dan Nama secara langsung agar tidak perlu refresh
-                const displayCallName = payload.nama_panggilan || (payload.nama_lengkap ? payload.nama_lengkap.split(' ')[0] : "User");
-                const newAvatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayCallName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
-                
-                document.getElementById('displayNickname').innerText = displayCallName;
-                document.getElementById('displayFullName').innerText = payload.nama_lengkap || "Belum mengatur nama lengkap";
+                const displayName = nickname || name.split(' ')[0];
+                document.getElementById('displayTitle').innerText = displayName;
+                const newAvatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
                 document.getElementById('userAvatar').src = newAvatarUrl;
                 
-                // Sinkron Navigasi HP
                 const mobileAccountBtn = document.getElementById('mobileAccountBtn');
                 if (mobileAccountBtn) {
-                    mobileAccountBtn.innerHTML = `<img src="${newAvatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayCallName}</span>`;
+                    mobileAccountBtn.innerHTML = `<img src="${newAvatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
                 }
                 
-                // Peringatan sukses
-                showAlert("Profil berhasil disimpan & diamankan!", "success");
-                setTimeout(() => { alertMsg.style.display = 'none'; }, 4000);
-                
+                showAlert("Profil berhasil diperbarui!", "success");
+                setTimeout(() => { alertMsg.style.display = 'none'; }, 3000);
             } catch (error) {
                 showAlert(error.message, "error");
             } finally {
-                btn.innerHTML = '<i class="fas fa-save"></i> Simpan Data';
+                btn.innerHTML = '<i class="fas fa-save"></i> Simpan';
                 btn.disabled = false;
             }
         }
 
-        // --- FUNGSI LOGOUT KELUAR (HAPUS SESI SELAMANYA) ---
         function handleLogout() {
             localStorage.removeItem('user_session'); 
-            window.location.replace('login.html'); 
+            window.location.href = 'login.html'; 
         }
 
-        // Jalankan saat halaman siap
         window.addEventListener('DOMContentLoaded', loadProfile);
-
     </script>
 </body>
 </html>
