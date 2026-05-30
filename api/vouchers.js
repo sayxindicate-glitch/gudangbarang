@@ -23,27 +23,31 @@ export default async function handler(req, res) {
 
         let claimedCodes = [];
         try {
+            // Ambil data voucher yang SUDAH PERNAH DIPAKAI oleh user ini
             const { data } = await supabase.from('gg_claimed_vouchers').select('voucher_code').eq('user_id', user.id);
             if (data) claimedCodes = data.map(d => d.voucher_code);
         } catch(e) {}
 
         const now = new Date();
-        const createdAt = new Date(user.created_at);
-        const lastSignInDate = new Date(user.last_sign_in_at || user.created_at);
-        const daysSinceCreated = Math.max(0, (now - createdAt) / (1000 * 60 * 60 * 24));
+        const createdDate = user.created_at ? new Date(user.created_at) : now;
+        const lastSignInDate = user.last_sign_in_at ? new Date(user.last_sign_in_at) : now;
+        const daysSinceCreated = Math.max(0, (now - createdDate) / (1000 * 60 * 60 * 24));
         const daysSinceLastSignIn = Math.max(0, (now - lastSignInDate) / (1000 * 60 * 60 * 24));
 
-        const { data: dbVouchers, error: dbError } = await supabase.from('gg_vouchers').select('*').order('id', { ascending: true });
+        const { data: dbVouchers, error: dbError } = await supabase.from('gg_vouchers').select('*').order('created_at', { ascending: false });
         if (dbError) throw dbError;
 
         const filteredVouchers = (dbVouchers || []).filter(vch => {
-            const segment = (vch.target_segment || '').trim().toLowerCase();
+            // PERBAIKAN: Jika target kosong di database, otomatis jadikan 'all'
+            const segment = (vch.target_segment || 'all').trim().toLowerCase();
             
-            // CEK KEDALUWARSA: Jika ada tanggal expired dan sudah lewat dari hari ini, sembunyikan!
+            // CEK 1: Sembunyikan jika tanggal sudah lewat
             if (vch.expires_at && new Date(vch.expires_at) < now) return false;
 
+            // CEK 2: Sembunyikan jika sudah pernah dipakai user ini (Mencegah pemakaian berkali-kali)
             if (claimedCodes.includes(vch.code)) return false;
 
+            // CEK 3: Strategi Marketing
             if (segment === 'all') return true;
             if (segment === 'new' && safeOrderCount === 0 && daysSinceCreated <= 14) return true;
             if (segment === 'comeback' && safeOrderCount === 0 && daysSinceCreated > 14 && daysSinceLastSignIn > 14) return true;
@@ -54,12 +58,12 @@ export default async function handler(req, res) {
         });
 
         const responseData = filteredVouchers.map(v => ({
-            id: v.id.toString(), 
+            id: v.id ? v.id.toString() : Math.random().toString(), 
             code: v.code, 
             title: v.title, 
-            desc: v.description, 
-            color: v.color,
-            expires_at: v.expires_at // Mengirim data tanggal kedaluwarsa ke HTML
+            desc: v.description || '', 
+            color: v.color || '#0984e3',
+            expires_at: v.expires_at || null
         }));
 
         return res.status(200).json(responseData);
