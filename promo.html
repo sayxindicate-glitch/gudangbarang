@@ -33,7 +33,7 @@
         .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
         
         .controls { display: flex; align-items: center; gap: 20px; }
-        .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; flex-shrink: 0; }
+        .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; flex-shrink: 0;}
         .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
         [data-theme="dark"] .switch-handle { transform: translateX(30px); }
 
@@ -54,57 +54,60 @@
 
         .badge-count { position: absolute; top: -8px; right: -12px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 10;}
 
-        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; flex: 1; width: 100%; }
-        .page-header { text-align: center; margin-bottom: 50px; }
-        .page-title { font-size: 28px; font-weight: 700; margin-bottom: 10px; color: var(--accent-color); }
-        .page-subtitle { font-size: 14px; color: var(--text-muted); font-weight: 600; }
-
-        .voucher-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; flex: 1; width: 100%; }
         
-        .voucher-card {
-            background: var(--bg-color); border-radius: 20px; padding: 25px;
-            box-shadow: var(--neu-flat); display: flex; flex-direction: column;
-            position: relative; overflow: hidden; border-left: 8px solid var(--accent-color);
-            transition: transform 0.3s ease;
-        }
-        .voucher-card:hover { transform: translateY(-5px); }
-        
-        .voucher-card::before, .voucher-card::after {
-            content: ''; position: absolute; width: 30px; height: 30px;
-            background-color: var(--bg-color); border-radius: 50%;
-            top: 50%; transform: translateY(-50%); box-shadow: var(--neu-pressed-sm);
-        }
-        .voucher-card::before { left: -15px; }
-        .voucher-card::after { right: -15px; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
+        .page-title { display: flex; align-items: center; gap: 15px; font-size: 24px; font-weight: 700; }
+        .btn-back { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--bg-color); color: var(--text-main); text-decoration: none; box-shadow: var(--neu-flat); transition: transform 0.2s; }
+        .btn-back:active { box-shadow: var(--neu-pressed); color: var(--accent-color); }
 
-        .voucher-title { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; padding-left: 10px; }
-        .voucher-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.6; padding-left: 10px; flex-grow: 1; }
-        
-        .voucher-timer { font-size: 11px; font-weight: 700; color: #ff4757; padding-left: 10px; margin-bottom: 15px; display: flex; align-items: center; gap: 5px; }
-        .voucher-timer.safe { color: #27ae60; }
-        .voucher-timer.warning i { animation: pulse 1s infinite; color: #ff4757; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .flash-sale-banner { background: var(--bg-color); border-radius: 20px; padding: 20px 30px; box-shadow: var(--neu-pressed); display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border: 2px dashed rgba(255, 71, 87, 0.4); flex-wrap: wrap; gap: 15px; }
+        .flash-sale-text { font-size: 18px; font-weight: 700; color: #ff4757; display: flex; align-items: center; gap: 10px; }
+        .countdown { display: flex; gap: 10px; }
+        .time-box { background: var(--bg-color); box-shadow: var(--neu-flat-sm); width: 45px; height: 45px; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 16px; font-weight: 700; color: var(--text-main); }
 
-        .voucher-code-box {
-            background: var(--bg-color); padding: 12px 20px; border-radius: 12px;
-            box-shadow: var(--neu-pressed-sm); display: flex; justify-content: space-between; align-items: center;
-            border: 2px dashed rgba(128,128,128,0.3); margin: 0 10px;
-        }
-        .voucher-code { font-family: monospace; font-size: 18px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; }
-        .btn-copy {
-            background: var(--bg-color); color: var(--text-main); border: none; border-radius: 8px;
-            padding: 8px 15px; font-size: 12px; font-weight: 700; box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.2s;
-        }
+        .promo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; padding-bottom: 40px; }
+        
+        .promo-card { background: var(--bg-color); border-radius: 20px; padding: 25px; box-shadow: var(--neu-flat); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        .promo-badge { position: absolute; top: 15px; right: -30px; background: #ff4757; color: white; font-size: 10px; font-weight: 700; padding: 5px 30px; transform: rotate(45deg); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .promo-title { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; line-height: 1.3; padding-right: 20px;}
+        .promo-desc { font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 20px; flex-grow: 1; }
+        
+        .promo-code-box { background: var(--bg-color); border-radius: 12px; padding: 12px 15px; box-shadow: var(--neu-pressed-sm); display: flex; justify-content: space-between; align-items: center; border: 1px dashed rgba(128,128,128,0.3); }
+        .code-text { font-size: 16px; font-weight: 800; color: var(--accent-color); letter-spacing: 1px; }
+        .btn-copy { background: var(--bg-color); border: none; padding: 8px 15px; border-radius: 8px; box-shadow: var(--neu-flat-sm); font-size: 11px; font-weight: 700; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
         .btn-copy:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         .btn-copy.copied { color: #27ae60; box-shadow: var(--neu-pressed-sm); }
 
-        .loading-state, .empty-state { text-align: center; padding: 50px; color: var(--text-muted); font-size: 16px; font-weight: 600; grid-column: 1 / -1; }
+        .empty-state { grid-column: 1 / -1; text-align: center; padding: 50px 20px; color: var(--text-muted); font-size: 14px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 15px; }
 
         .bottom-nav { display: none; }
 
+        /* FOOTER STYLES */
+        .footer-prof { background-color: #1a1b1e; color: #f5f6fa; padding: 50px 20px 80px 20px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr; gap: 30px; }
+        .footer-logo { font-size: 20px; font-weight: 700; color: #00e5ff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .footer-desc { font-size: 13px; color: #a4b0be; line-height: 1.6; margin-bottom: 20px; }
+        .footer-socials { display: flex; gap: 15px; }
+        .social-icon { width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.05); color: #f5f6fa; display: flex; justify-content: center; align-items: center; text-decoration: none; transition: background 0.3s; }
+        .social-icon:hover { background: #00e5ff; color: #1a1b1e; }
+        .footer-title { font-size: 15px; font-weight: 600; margin-bottom: 20px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-links { list-style: none; padding: 0; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: #a4b0be; text-decoration: none; font-size: 13px; transition: color 0.3s; cursor: pointer; }
+        .footer-links a:hover { color: #00e5ff; }
+        .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; color: #a4b0be; font-size: 13px; margin-bottom: 15px; line-height: 1.5; }
+        .footer-contact-item i { color: #00e5ff; margin-top: 3px; }
+        .payment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .pay-box { background-color: #ffffff; border-radius: 6px; height: 38px; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); cursor: default; padding: 5px 8px; }
+        .pay-img { width: 100%; height: 100%; object-fit: contain; }
+
+        @media (max-width: 1024px) { .footer-container { grid-template-columns: 1fr 1fr 1fr; } }
+        
         @media (max-width: 768px) {
-            .voucher-grid { grid-template-columns: 1fr; gap: 25px; }
-            .top-nav { padding: 15px 20px; }
+            .promo-grid { grid-template-columns: 1fr; gap: 20px; }
+            .flash-sale-banner { justify-content: center; padding: 15px; }
+            .top-nav { padding: 12px 20px; }
             .hide-on-mobile { display: none !important; }
             body { padding-bottom: 90px; }
             
@@ -112,45 +115,30 @@
                 display: flex; position: fixed; bottom: 0; left: 0; width: 100%; 
                 background-color: var(--bg-color); border-radius: 25px 25px 0 0; 
                 box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; 
-                padding: 10px 15px; 
-                justify-content: space-between; 
-                padding-bottom: max(15px, env(safe-area-inset-bottom)); 
-                gap: 8px; 
+                padding: 10px 15px; justify-content: space-between; 
+                padding-bottom: max(15px, env(safe-area-inset-bottom)); gap: 8px; 
             }
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
             
             .bottom-nav-item { 
                 flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
                 text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; 
-                padding: 10px 0; border-radius: 18px; 
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: transparent; 
+                padding: 10px 0; border-radius: 18px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: transparent; 
             }
-            
-            .bottom-nav-item i { 
-                font-size: 20px; margin-bottom: 4px; 
-                transition: transform 0.2s ease, color 0.2s ease; 
-            }
-            
-            .bottom-nav-item.active { 
-                color: var(--accent-color); 
-                background: var(--bg-color); 
-                box-shadow: var(--neu-pressed-sm); 
-            }
-            
-            .bottom-nav-item.active i { 
-                transform: scale(1.15); 
-            }
-            
-            .badge-container {
-                position: relative;
-                display: inline-flex;
-            }
-            
+            .bottom-nav-item i { font-size: 20px; margin-bottom: 4px; transition: transform 0.2s ease, color 0.2s ease; }
+            .bottom-nav-item.active { color: var(--accent-color); background: var(--bg-color); box-shadow: var(--neu-pressed-sm); }
+            .bottom-nav-item.active i { transform: scale(1.15); }
+            .badge-container { position: relative; display: inline-flex; }
             .bottom-nav-item .badge-count { 
                 position: absolute; top: -5px; right: -12px; background: #ff4757; color: white; 
                 font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; 
                 border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 2;
             }
+
+            .footer-container { grid-template-columns: 1fr; gap: 30px; text-align: left; }
+            .footer-contact-item { justify-content: flex-start; }
+            .footer-socials { justify-content: flex-start; }
+            .payment-grid { grid-template-columns: repeat(4, 60px); justify-content: flex-start; margin: 0; }
         }
     </style>
 <script src="analytics.js"></script>     </head>
@@ -161,12 +149,13 @@
         <div class="controls">
             <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
             
-            <a href="promo.html" class="nav-link hide-on-mobile active">
-                <i class="fas fa-tags"></i> <span>Promo</span>
+            <a href="promo.html" class="nav-link hide-on-mobile active" title="Promo">
+                <i class="fas fa-tags"></i>
                 <span class="badge-count" id="promoBadge" style="display: none;">0</span>
             </a>
-            <a href="pesanan.html" class="nav-link hide-on-mobile">
-                <i class="fas fa-box"></i> <span>Pesanan</span>
+            
+            <a href="pesanan.html" class="nav-link hide-on-mobile" title="Pesanan">
+                <i class="fas fa-box"></i>
                 <span class="badge-count" id="orderBadge" style="display: none;">0</span>
             </a>
             
@@ -174,7 +163,7 @@
                 <i class="fas fa-shopping-cart"></i>
                 <span class="badge-count" id="cartBadge" style="display: none; top: -5px; right: -5px;">0</span>
             </a>
-
+            
             <a href="login.html" class="nav-btn-cap hide-on-mobile" id="navLoginBtn">
                 <i class="fas fa-sign-in-alt"></i> <span>Login</span>
             </a>
@@ -183,14 +172,68 @@
 
     <div class="container">
         <div class="page-header">
-            <h1 class="page-title"><i class="fas fa-ticket-alt"></i> Voucher Spesial Anda</h1>
-            <p class="page-subtitle">Segera klaim kode di bawah ini sebelum kehabisan waktu!</p>
+            <div class="page-title">
+                <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i></a>
+                <div>Promo & Voucher</div>
+            </div>
         </div>
 
-        <div class="voucher-grid" id="voucherContainer">
-            <div class="loading-state"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Memeriksa promo yang tersedia...</div>
+        <div class="flash-sale-banner">
+            <div class="flash-sale-text"><i class="fas fa-bolt"></i> Promo Berakhir Dalam</div>
+            <div class="countdown">
+                <div class="time-box" id="cd-hours">00</div><span style="font-weight:bold; font-size:18px; align-self:center;">:</span>
+                <div class="time-box" id="cd-minutes">00</div><span style="font-weight:bold; font-size:18px; align-self:center;">:</span>
+                <div class="time-box" id="cd-seconds">00</div>
+            </div>
+        </div>
+
+        <div class="promo-grid" id="promoContainer">
+            <div class="empty-state">
+                <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--accent-color); margin-bottom: 10px;"></i>
+                Mencari promo terbaik untuk Anda...
+            </div>
         </div>
     </div>
+
+    <footer class="footer-prof">
+        <div class="footer-container">
+            <div>
+                <div class="footer-logo"><i class="fas fa-box-open"></i> GOEDANG GROSIR</div>
+                <p class="footer-desc">Platform e-commerce grosir terpercaya di Batam. Menyediakan berbagai kebutuhan usaha Anda dengan harga terbaik.</p>
+                <div class="footer-socials">
+                    <a href="https://facebook.com/goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com/goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://tiktok.com/@goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="footer-title">Hubungi Kami</h4>
+                <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>Batam Centre, Kepulauan Riau</span></div>
+                <div class="footer-contact-item"><i class="fas fa-phone-alt"></i><span>0815 333 5000</span></div>
+                <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>admin@goedanggrosir.com</span></div>
+            </div>
+            
+            <div>
+                <h4 class="footer-title">Kategori</h4>
+                <ul class="footer-links" id="footerCategoryList">
+                    <li><i class="fas fa-spinner fa-spin"></i> Memuat...</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="footer-title">Perusahaan</h4>
+                <ul class="footer-links">
+                    <li><a href="tentang-kami.html">Tentang Kami</a></li>
+                    <li><a href="cara-berbelanja.html">Cara Berbelanja</a></li>
+                    <li><a href="bantuan.html">Bantuan (FAQ)</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">Partner Pembayaran</h4>
+                <div class="payment-grid" id="paymentContainer"></div>
+            </div>
+        </div>
+    </footer>
 
     <nav class="bottom-nav">
         <a href="index.html" class="bottom-nav-item">
@@ -227,233 +270,194 @@
     </nav>
 
     <script>
-        const sessionData = localStorage.getItem('user_session');
+        "use strict";
 
         // =========================================================================
-        // SINKRONISASI NAVIGASI CERDAS 
+        // SECURITY PATCH: XSS SANITIZATION (Filter Air Bersih)
         // =========================================================================
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>'"]/g, 
+                tag => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                }[tag] || tag)
+            );
+        }
+        // =========================================================================
+
+        const sessionData = localStorage.getItem('user_session');
+        if (!sessionData) { window.location.replace('login.html'); }
+        const session = JSON.parse(sessionData);
+
+        // =========================================================================
+        // LOAD FOOTER DATA
+        // =========================================================================
+        async function loadFooterData() {
+            try {
+                fetch('/api/logos').then(res => res.json()).then(logos => {
+                    const paymentContainer = document.getElementById('paymentContainer');
+                    if (paymentContainer) {
+                        paymentContainer.innerHTML = '';
+                        logos.forEach(logo => {
+                            paymentContainer.innerHTML += `<div class="pay-box"><img src="${escapeHTML(logo.url)}" alt="Partner Pembayaran" class="pay-img" title="${escapeHTML(logo.name)}"></div>`;
+                        });
+                    }
+                }).catch(e => {});
+
+                fetch('/api/products').then(res => res.json()).then(products => {
+                    const uniqueCategories = new Set();
+                    products.forEach(p => { if (p.category) uniqueCategories.add(p.category); });
+                    
+                    const footerCatList = document.getElementById('footerCategoryList');
+                    if (footerCatList) {
+                        footerCatList.innerHTML = `<li><a href="index.html?kategori=Semua Barang">Semua Barang</a></li>`;
+                        Array.from(uniqueCategories).sort().forEach(cat => {
+                            footerCatList.innerHTML += `<li><a href="index.html?kategori=${encodeURIComponent(cat)}">${escapeHTML(cat)}</a></li>`;
+                        });
+                    }
+                }).catch(e => {});
+            } catch(error) {}
+        }
+
         async function updateNavUI() {
             const loginBtn = document.getElementById('navLoginBtn');
             const mobileAccountBtn = document.getElementById('mobileAccountBtn');
 
-            if (sessionData) {
-                const session = JSON.parse(sessionData);
-                try {
-                    const userRes = await fetch('/api/user', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
-                    
-                    if (userRes.status === 401 || userRes.status === 403) {
-                        localStorage.removeItem('user_session');
-                        setLoggedOutUI();
-                        return;
-                    }
-
-                    if (userRes.ok) {
-                        const userData = await userRes.json();
-                        const displayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
-                        const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
-
-                        loginBtn.className = 'nav-profile-badge hide-on-mobile';
-                        loginBtn.href = 'akun.html';
-                        loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${displayName}</span>`;
-
-                        if (mobileAccountBtn) {
-                            mobileAccountBtn.href = 'akun.html';
-                            mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
-                        }
-                    }
-                } catch (e) { console.log("Koneksi offline"); }
-
-                // Sinkron Badge
-                try {
-                    const cartRes = await fetch('/api/cart', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
-                    if (cartRes.ok) {
-                        const cartItems = await cartRes.json();
-                        const totalQty = cartItems.reduce((s, i) => s + i.quantity, 0);
-                        if (totalQty > 0) {
-                            const txt = totalQty > 99 ? '99+' : totalQty;
-                            document.getElementById('cartBadge').style.display = 'flex'; document.getElementById('cartBadge').innerText = txt;
-                            document.getElementById('mobileCartBadge').style.display = 'flex'; document.getElementById('mobileCartBadge').innerText = txt;
-                        }
-                    }
-                } catch (e) {}
-                
-                try {
-                    const orderRes = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
-                    if (orderRes.ok) {
-                        const orders = await orderRes.json();
-                        const activeOrders = orders.filter(o => o.status !== 'Selesai' && o.status !== 'Dibatalkan');
-                        if (activeOrders.length > 0) {
-                            document.getElementById('orderBadge').style.display = 'flex'; document.getElementById('orderBadge').innerText = activeOrders.length;
-                            document.getElementById('mobileOrderBadge').style.display = 'flex'; document.getElementById('mobileOrderBadge').innerText = activeOrders.length;
-                        }
-                    }
-                } catch (e) {}
-
-            } else {
-                setLoggedOutUI();
-            }
-        }
-
-        function setLoggedOutUI() {
-            const loginBtn = document.getElementById('navLoginBtn');
-            const mobileAccountBtn = document.getElementById('mobileAccountBtn');
-
-            loginBtn.className = 'nav-btn-cap hide-on-mobile';
-            loginBtn.href = 'login.html';
-            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span>Login</span>';
-
-            if (mobileAccountBtn) {
-                mobileAccountBtn.href = 'login.html';
-                mobileAccountBtn.innerHTML = '<i class="fas fa-user"></i><span>Akun</span>';
-            }
-        }
-
-        // =========================================================================
-        // SISTEM LOAD VOUCHER (DENGAN HITUNG MUNDUR REAL-TIME)
-        // =========================================================================
-        async function loadVouchers() {
-            const container = document.getElementById('voucherContainer');
-            
-            // JIKA BELUM LOGIN: FOMO TIMER
-            if (!sessionData) {
-                container.innerHTML = `
-                    <div class="voucher-card" style="border-left-color: #ff4757;">
-                        <div class="voucher-title" style="color: #ff4757;">Promo Kilat Bebas Syarat</div>
-                        <div class="voucher-desc">Diskon 50% maksimal potongan Rp 25.000 untuk semua pelanggan tanpa terkecuali!</div>
-                        <div class="voucher-timer warning"><i class="fas fa-clock"></i> Hangus dalam: <span class="countdown-text">00 : 00 : 00</span></div>
-                        <div class="voucher-code-box">
-                            <span class="voucher-code">HEMAT50</span>
-                            <button class="btn-copy" onclick="window.location.href='login.html'"><i class="fas fa-lock"></i> Klaim</button>
-                        </div>
-                    </div>
-
-                    <div class="voucher-card" style="border-left-color: var(--accent-color); border-style: dashed; justify-content: center; align-items: center; text-align: center; padding: 30px;">
-                        <div class="voucher-title" style="color: var(--accent-color); padding: 0; margin-bottom: 8px;"><i class="fas fa-gift"></i> Voucher Tersembunyi</div>
-                        <div class="voucher-desc" style="padding: 0; margin-bottom: 20px; font-weight: 500;">Yuk masuk ke akun Anda sekarang untuk membuka Voucher Pengguna Baru, Potongan Ongkir, dan diskon rahasia lainnya!</div>
-                        <a href="login.html" class="btn-copy" style="text-decoration: none; background: var(--accent-color); color: white; border-radius: 50px; padding: 10px 25px; box-shadow: var(--neu-flat-sm);">Masuk Akun</a>
-                    </div>
-                `;
-                startCountdownTimer();
-                return;
-            }
-
-            // JIKA SUDAH LOGIN
-            const session = JSON.parse(sessionData);
             try {
-                const response = await fetch('/api/vouchers', {
-                    method: 'GET',
-                    headers: { 'Authorization': `Bearer ${session.access_token}` }
-                });
-
-                if (!response.ok) throw new Error("Gagal mengambil voucher khusus");
+                const userRes = await fetch('/api/user', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
                 
-                const vouchers = await response.json();
-                container.innerHTML = '';
-
-                if (vouchers.length > 0) {
-                    document.getElementById('promoBadge').style.display = 'flex'; document.getElementById('promoBadge').innerText = vouchers.length;
-                    document.getElementById('mobilePromoBadge').style.display = 'flex'; document.getElementById('mobilePromoBadge').innerText = vouchers.length;
-                } else {
-                    container.innerHTML = `<div class="empty-state">Maaf, saat ini belum ada voucher baru yang tersedia untuk Anda.<br><span style="font-size: 11px; opacity: 0.6; margin-top:10px; display:inline-block;">*Jika Anda sudah pernah memakai kode voucher saat checkout, kode tersebut akan disembunyikan.</span></div>`;
+                if (userRes.status === 401 || userRes.status === 403) {
+                    localStorage.removeItem('user_session');
+                    window.location.replace('login.html');
                     return;
                 }
 
-                vouchers.forEach(vch => {
-                    const card = document.createElement('div');
-                    card.className = 'voucher-card';
-                    card.style.borderLeftColor = vch.color;
+                if (userRes.ok) {
+                    const userData = await userRes.json();
+                    const rawDisplayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
+                    const displayName = escapeHTML(rawDisplayName);
+                    const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
-                    // PENANGANAN TANGGAL KEDALUWARSA (DIGANTI MENJADI COUNTDOWN)
-                    let expiryInfo = `<i class="fas fa-infinity"></i> Berlaku tanpa batas waktu`;
-                    let timerClass = `safe`;
-                    
-                    if (vch.expires_at) {
-                        expiryInfo = `<i class="fas fa-clock"></i> Hangus dalam: <span class="real-countdown-timer" data-expire="${vch.expires_at}">Menghitung...</span>`;
-                        timerClass = `warning`;
+                    loginBtn.className = 'nav-profile-badge hide-on-mobile';
+                    loginBtn.href = 'akun.html';
+                    loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${displayName}</span>`;
+
+                    if (mobileAccountBtn) {
+                        mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
                     }
+                }
+                
+                syncBadges(session.access_token);
 
-                    card.innerHTML = `
-                        <div class="voucher-title" style="color: ${vch.color};">${vch.title}</div>
-                        <div class="voucher-desc">${vch.desc}</div>
-                        <div class="voucher-timer ${timerClass}">${expiryInfo}</div>
-                        <div class="voucher-code-box">
-                            <span class="voucher-code" id="code-${vch.id}">${vch.code}</span>
-                            <button class="btn-copy" onclick="copyCode('${vch.id}', this)"><i class="fas fa-copy"></i> Salin</button>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-
-                // Mulai jalankan mesin hitung mundur untuk voucher database
-                initRealCountdowns();
-
-            } catch (error) {
-                container.innerHTML = `<div class="empty-state" style="color:#ff4757;"><i class="fas fa-exclamation-triangle"></i> Gagal memuat data voucher. Periksa koneksi Anda.</div>`;
+            } catch (e) { 
+                console.log("Koneksi offline"); 
             }
         }
 
-        // --- FUNGSI MESIN HITUNG MUNDUR UNTUK DATA DARI DATABASE ---
-        function initRealCountdowns() {
-            function updateRealTimers() {
-                const now = new Date();
-                const timers = document.querySelectorAll('.real-countdown-timer');
-                
-                timers.forEach(el => {
-                    const expDate = new Date(el.getAttribute('data-expire'));
-                    const diff = expDate - now;
+        async function syncBadges(token) {
+            try {
+                const cartRes = await fetch('/api/cart', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (cartRes.ok) {
+                    const cartItems = await cartRes.json();
+                    const totalQty = cartItems.reduce((s, i) => s + i.quantity, 0);
+                    const cb = document.getElementById('cartBadge');
+                    const mcb = document.getElementById('mobileCartBadge');
+                    if (totalQty > 0) {
+                        const txt = totalQty > 99 ? '99+' : totalQty;
+                        cb.style.display = 'flex'; cb.innerText = txt;
+                        if (mcb) { mcb.style.display = 'flex'; mcb.innerText = txt; }
+                    }
+                }
+            } catch (e) {}
 
-                    if (diff <= 0) {
-                        el.innerText = "Kedaluwarsa";
-                        el.parentElement.classList.remove('warning');
-                        el.parentElement.style.color = '#636e72'; // Berubah abu-abu jika sudah hangus
+            try {
+                const promoRes = await fetch('/api/vouchers', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (promoRes.ok) {
+                    const promos = await promoRes.json();
+                    const pb = document.getElementById('promoBadge');
+                    const mpb = document.getElementById('mobilePromoBadge');
+                    if (promos.length > 0) {
+                        pb.style.display = 'flex'; pb.innerText = promos.length;
+                        if (mpb) { mpb.style.display = 'flex'; mpb.innerText = promos.length; }
+                    }
+                }
+            } catch (e) {}
+
+            try {
+                const orderRes = await fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` } });
+                if (orderRes.ok) {
+                    const orders = await orderRes.json();
+                    const activeOrders = orders.filter(o => o.status !== 'Selesai' && o.status !== 'Dibatalkan');
+                    const ob = document.getElementById('orderBadge');
+                    const mob = document.getElementById('mobileOrderBadge');
+                    if (activeOrders.length > 0) {
+                        ob.style.display = 'flex'; ob.innerText = activeOrders.length;
+                        if (mob) { mob.style.display = 'flex'; mob.innerText = activeOrders.length; }
+                    }
+                }
+            } catch (e) {}
+        }
+
+        async function loadVouchers() {
+            const container = document.getElementById('promoContainer');
+            try {
+                const res = await fetch('/api/vouchers', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
+                if (!res.ok) {
+                    if (res.status === 401 || res.status === 403) {
+                        localStorage.removeItem('user_session');
+                        window.location.replace('login.html');
                         return;
                     }
+                    throw new Error("Gagal mengambil data promo");
+                }
+                const vouchers = await res.json();
+                
+                container.innerHTML = '';
+                if(vouchers.length === 0) {
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-ticket-alt fa-3x"></i><br><br>Belum ada promo khusus untuk Anda saat ini.<br>Teruslah berbelanja untuk mendapatkan voucher menarik!</div>`;
+                    return;
+                }
 
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                vouchers.forEach((v, index) => {
+                    // SECURITY: Sanitasi data voucher dari database
+                    const safeColor = escapeHTML(v.color || 'var(--accent-color)');
+                    const safeTitle = escapeHTML(v.title);
+                    const safeDesc = escapeHTML(v.desc);
+                    const safeCode = escapeHTML(v.code);
 
-                    let timeString = "";
-                    if (days > 0) {
-                        timeString += days + " Hari, ";
-                    }
+                    const badgeHtml = v.expires_at ? `<div class="promo-badge">TERBATAS</div>` : '';
                     
-                    timeString += 
-                        String(hours).padStart(2, '0') + " : " + 
-                        String(minutes).padStart(2, '0') + " : " + 
-                        String(seconds).padStart(2, '0');
-                    
-                    el.innerText = timeString;
+                    container.innerHTML += `
+                        <div class="promo-card" style="border-top: 4px solid ${safeColor};">
+                            ${badgeHtml}
+                            <h3 class="promo-title">${safeTitle}</h3>
+                            <p class="promo-desc">${safeDesc}</p>
+                            <div class="promo-code-box">
+                                <span class="code-text" id="code-${index}">${safeCode}</span>
+                                <button class="btn-copy" onclick="copyCode('${index}', this)"><i class="fas fa-copy"></i> Salin</button>
+                            </div>
+                        </div>
+                    `;
                 });
+            } catch (error) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle fa-3x" style="color:#ff4757;"></i><br><br>Gagal memuat promo. Periksa koneksi internet Anda.</div>`;
             }
-            
-            updateRealTimers();
-            setInterval(updateRealTimers, 1000);
         }
 
-        // --- FUNGSI MESIN HITUNG MUNDUR FOMO (UNTUK USER BELUM LOGIN) ---
-        function startCountdownTimer() {
-            function updateTimer() {
-                const now = new Date();
-                const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-                const diff = endOfDay - now;
+        function updateTimer() {
+            const now = new Date();
+            const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+            const diff = endOfDay - now;
 
-                if (diff <= 0) return;
-
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-                const formattedTime = 
-                    String(hours).padStart(2, '0') + " : " + 
-                    String(minutes).padStart(2, '0') + " : " + 
-                    String(seconds).padStart(2, '0');
-
-                document.querySelectorAll('.countdown-text').forEach(el => el.innerText = formattedTime);
+            if (diff > 0) {
+                document.getElementById('cd-hours').innerText = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+                document.getElementById('cd-minutes').innerText = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
+                document.getElementById('cd-seconds').innerText = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
             }
-            updateTimer();
-            setInterval(updateTimer, 1000);
         }
 
         function copyCode(id, btnElement) {
@@ -462,6 +466,11 @@
                 const originalText = btnElement.innerHTML;
                 btnElement.innerHTML = '<i class="fas fa-check"></i> Tersalin!';
                 btnElement.classList.add('copied');
+                
+                if (window.GoedangAnalytics && typeof window.GoedangAnalytics.trackFunnel === 'function') {
+                    window.GoedangAnalytics.trackFunnel('Menyalin Kode Promo: ' + codeText);
+                }
+
                 setTimeout(() => { btnElement.innerHTML = originalText; btnElement.classList.remove('copied'); }, 2000);
             });
         }
@@ -478,7 +487,10 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             updateNavUI();
+            loadFooterData();
             loadVouchers();
+            updateTimer();
+            setInterval(updateTimer, 1000);
         });
     </script>
 </body>
