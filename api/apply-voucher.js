@@ -7,13 +7,8 @@ export default async function handler(req, res) {
     if (!authHeader) return res.status(401).json({ error: 'Sesi tidak valid' });
     const token = authHeader.split(' ')[1];
 
-    // Mengambil kode saja. total_price dari frontend diabaikan demi keamanan mutlak.
-    const { code } = req.body; 
-
-    // VALIDASI INPUT (Mencegah Server Crash akibat format tidak valid)
-    if (!code || typeof code !== 'string') {
-        return res.status(400).json({ error: 'Format kode promo tidak valid.' });
-    }
+    const { code, total_price } = req.body;
+    const subtotal = parseInt(total_price) || 0;
 
     const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY, {
         global: { headers: { Authorization: `Bearer ${token}` } }
@@ -23,41 +18,9 @@ export default async function handler(req, res) {
         const { data: { user }, error: authError } = await supabase.auth.getUser();
         if (authError || !user) return res.status(401).json({ error: 'Sesi tidak valid' });
 
-        const upperCode = code.trim().toUpperCase();
+        const upperCode = String(code).toUpperCase().trim();
 
-        // -------------------------------------------------------------------------
-        // SECURITY PATCH: MENGHITUNG TOTAL BELANJA ASLI DARI DATABASE
-        // -------------------------------------------------------------------------
-        const { data: cartItems, error: cartError } = await supabase
-            .from('gg_cart_items')
-            .select('product_id, quantity')
-            .eq('user_id', user.id);
-        
-        if (cartError) throw new Error('Gagal mengambil data keranjang');
-        if (!cartItems || cartItems.length === 0) {
-            return res.status(400).json({ error: 'Keranjang belanja kosong.' });
-        }
-
-        const productIds = cartItems.map(item => item.product_id);
-        const { data: realProducts, error: prodError } = await supabase
-            .from('gg_products')
-            .select('id, price, promo_price, is_promo')
-            .in('id', productIds);
-
-        if (prodError || !realProducts) throw new Error('Data barang gagal divalidasi');
-
-        let realSubtotal = 0;
-        cartItems.forEach(item => {
-            const realProd = realProducts.find(p => p.id == item.product_id);
-            // Pastikan quantity valid dan positif untuk mencegah underflow (minus)
-            if (realProd && Number.isInteger(item.quantity) && item.quantity > 0) {
-                const finalItemPrice = (realProd.is_promo && realProd.promo_price) ? realProd.promo_price : realProd.price;
-                realSubtotal += (finalItemPrice * item.quantity);
-            }
-        });
-        // -------------------------------------------------------------------------
-
-        // 1. Cek riwayat penggunaan (Mencegah Spam / Abuse)
+        // 1. Cek riwayat penggunaan (Mencegah Spam)
         const { data: claimStatus } = await supabase.from('gg_claimed_vouchers')
             .select('is_used').eq('user_id', user.id).eq('voucher_code', upperCode).maybeSingle();
 
@@ -65,7 +28,7 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Kode voucher ini sudah Anda gunakan sebelumnya.' });
         }
 
-        // 2. Tarik Aturan Voucher
+        // 2. Tarik Aturan Voucher dari Database
         const { data: voucher, error: vchError } = await supabase.from('gg_vouchers')
             .select('*').eq('code', upperCode).maybeSingle();
 
@@ -73,33 +36,46 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Kode promo tidak valid atau tidak ditemukan.' });
         }
 
-        if (voucher.max_usage !== null && voucher.used_count >= voucher.max_usage) {
-            return res.status(400).json({ error: 'Kouta pemakaian promo ini sudah habis (Fully Claimed).' });
-        }
-
+        // Cek Kadaluarsa
         if (voucher.expires_at && new Date(voucher.expires_at) < new Date()) {
             return res.status(400).json({ error: 'Maaf, kode promo ini sudah kadaluarsa.' });
         }
 
-        // Menggunakan realSubtotal hasil hitungan server, bukan dari frontend
-        if (realSubtotal < voucher.min_purchase) {
-            return res.status(400).json({ error: `Minimal belanja Rp ${parseInt(voucher.min_purchase).toLocaleString('id-ID')} untuk pakai kode ini.` });
+        // Cek Syarat Minimal Belanja
+        const minPurchase = parseInt(voucher.min_purchase) || 0;
+        if (subtotal < minPurchase) {
+            return res.status(400).json({ error: `Minimal belanja Rp ${minPurchase.toLocaleString('id-ID')} untuk pakai kode ini.` });
         }
 
-        // 3. Eksekusi Rumus Perhitungan Diskon
+        // 3. Eksekusi Rumus Perhitungan Diskon (TANGGUH & ANTI-GAGAL)
         let discountAmount = 0;
         
-        if (voucher.discount_type === 'percent') {
-            discountAmount = realSubtotal * parseFloat(voucher.discount_value);
-            if (voucher.max_discount && discountAmount > voucher.max_discount) {
-                discountAmount = parseInt(voucher.max_discount);
+        // Standarisasi format tipe (membersihkan spasi & huruf besar yang mungkin masuk ke database)
+        const dType = String(voucher.discount_type || '').trim().toLowerCase();
+        let dValue = parseFloat(voucher.discount_value) || 0;
+        
+        if (dType === 'percent' || dType === 'persen') {
+            // Konversi pintar: Jika admin ketik 50 (maksudnya 50%), otomatis jadi 0.5
+            if (dValue >= 1 && dValue <= 100) {
+                dValue = dValue / 100;
             }
-        } else if (voucher.discount_type === 'fixed') {
-            discountAmount = parseInt(voucher.discount_value); 
+            
+            discountAmount = subtotal * dValue;
+            
+            const maxDisc = parseInt(voucher.max_discount) || 0;
+            if (maxDisc > 0 && discountAmount > maxDisc) {
+                discountAmount = maxDisc;
+            }
+        } else if (dType === 'fixed' || dType === 'nominal') {
+            discountAmount = dValue; 
         }
 
-        if (discountAmount > realSubtotal) discountAmount = realSubtotal;
-        const finalTotal = realSubtotal - discountAmount;
+        // Keamanan tambahan: Diskon tidak boleh melebihi total belanja (menghindari hasil minus)
+        if (discountAmount > subtotal) {
+            discountAmount = subtotal;
+        }
+        
+        const finalTotal = subtotal - discountAmount;
 
         return res.status(200).json({
             message: 'Promo berhasil divalidasi!',
@@ -108,8 +84,6 @@ export default async function handler(req, res) {
         });
 
     } catch (error) {
-        console.error("Apply Voucher API Error:", error);
-        // Jangan ekspos pesan error database ke klien (Mencegah Information Disclosure)
-        return res.status(500).json({ error: 'Terjadi kesalahan sistem internal.' });
+        return res.status(500).json({ error: 'Terjadi kesalahan sistem' });
     }
 }
