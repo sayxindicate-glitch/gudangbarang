@@ -16,18 +16,19 @@ export default async function handler(req, res) {
         // GET: MENGAMBIL DATA KERANJANG
         if (req.method === 'GET') {
             const { data, error } = await supabase.from('gg_cart_items').select('*').eq('user_id', user.id);
-            if (error) throw error;
+            if (error) throw new Error('Gagal memuat data keranjang');
             return res.status(200).json(data);
         } 
         // POST: MENAMBAH BARANG KE KERANJANG (SECURITY PATCHED)
         else if (req.method === 'POST') {
             const { product_id, quantity } = req.body;
             
-            // SECURITY PATCH 1: Mencegah Kuantitas Minus (Integer Underflow) & String
-            const safeQuantity = quantity !== undefined ? parseInt(quantity) : 1;
+            // SECURITY PATCH 1: Mencegah Kuantitas Minus (Integer Underflow) & Injeksi Teks
             if (!product_id) return res.status(400).json({ error: 'ID Produk wajib diisi' });
+            
+            const safeQuantity = quantity !== undefined ? parseInt(quantity) : 1;
             if (isNaN(safeQuantity) || safeQuantity <= 0) {
-                return res.status(400).json({ error: 'Kuantitas barang tidak valid (harus lebih dari 0)' });
+                return res.status(400).json({ error: 'Kuantitas barang tidak valid (harus angka lebih dari 0)' });
             }
             
             // SECURITY: Tarik nama, gambar, dan harga LANGSUNG dari tabel asli
@@ -43,40 +44,42 @@ export default async function handler(req, res) {
                 .select('*').eq('user_id', user.id).eq('product_id', product_id).single();
 
             if (existing) {
-                // SECURITY PATCH 2: Pastikan total kuantitas tidak error/overflow
+                // SECURITY PATCH 2: Cegah penumpukan keranjang di luar batas (Limitasi DoS)
                 const newTotalQty = existing.quantity + safeQuantity;
-                if (newTotalQty > 1000) return res.status(400).json({ error: 'Maksimal kouta per barang tercapai' });
+                if (newTotalQty > 1000) return res.status(400).json({ error: 'Kouta maksimal per barang tercapai' });
 
                 const { error } = await supabase.from('gg_cart_items')
                     .update({ quantity: newTotalQty })
                     .eq('id', existing.id);
-                if (error) throw error;
+                if (error) throw new Error('Gagal memperbarui jumlah barang');
             } else {
                 const { error } = await supabase.from('gg_cart_items').insert([{
                     user_id: user.id, 
                     product_id, 
-                    product_name: realProduct.title,  // Terjamin aman dari XSS karena disalin dari sumber murni
-                    product_price: securePrice,       // Terjamin aman dari Manipulasi Harga
+                    product_name: realProduct.title,  // Terjamin aman dari manipulasi
+                    product_price: securePrice,       // Terjamin aman dari Injeksi Harga
                     product_img: realProduct.img,
-                    quantity: safeQuantity            // Sudah divalidasi keamanannya
+                    quantity: safeQuantity            // Telah divalidasi mutlak
                 }]);
-                if (error) throw error;
+                if (error) throw new Error('Gagal memasukkan barang ke keranjang');
             }
             return res.status(200).json({ message: 'Berhasil masuk keranjang, tervalidasi server' });
         }
         // DELETE: MENGHAPUS BARANG DARI KERANJANG
         else if (req.method === 'DELETE') {
             const { id } = req.body; 
+            
+            // SECURITY PATCH 3: Validasi ID sebelum menghapus
             if (!id) return res.status(400).json({ error: 'ID Barang tidak valid' });
 
             const { error } = await supabase.from('gg_cart_items').delete().eq('id', id).eq('user_id', user.id);
-            if (error) throw error;
+            if (error) throw new Error('Gagal menghapus barang');
             return res.status(200).json({ message: 'Barang dihapus' });
         } else {
             return res.status(405).json({ error: 'Metode tidak diizinkan' });
         }
     } catch (error) {
-        // Mencegah Information Disclosure database
+        // SECURITY PATCH 4: Mencegah Information Disclosure Database Supabase
         console.error("Cart API Error:", error);
         return res.status(400).json({ error: error.message || 'Terjadi kesalahan sistem' });
     }
