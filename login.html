@@ -177,7 +177,9 @@
     </nav>
 
     <script>
-        // MENGUNCI LINGKUNGAN JAVASCRIPT (Keamanan Ekstra)
+        // =========================================================================
+        // SECURITY PATCH: KUNCI LINGKUNGAN JAVASCRIPT & SANITASI
+        // =========================================================================
         "use strict"; 
         
         // MENCEGAH PROTOTYPE POLLUTION (Ancaman 2)
@@ -187,6 +189,21 @@
         if (window.top !== window.self) {
             window.top.location = window.self.location;
         }
+
+        // FUNGSI SANITASI MUTLAK (Anti-XSS & DOM Clobbering)
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>'"]/g, 
+                tag => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                }[tag] || tag)
+            );
+        }
+        // =========================================================================
 
         // Cek Sesi (Mencegah Bypass Login)
         if (localStorage.getItem('user_session')) {
@@ -234,7 +251,6 @@
         const resetAlertMsg = document.getElementById('resetAlertMsg');
         
         document.getElementById('forgotPassBtn').addEventListener('click', () => {
-            // Pintar: Otomatis salin teks email dari luar ke dalam popup
             const mainEmail = document.getElementById('email').value.trim();
             document.getElementById('resetEmailInput').value = mainEmail;
             
@@ -278,7 +294,6 @@
                 resetAlertMsg.textContent = "Tautan reset berhasil dikirim! Silakan periksa kotak masuk atau folder spam Anda.";
                 resetAlertMsg.className = 'alert-success';
                 
-                // Otomatis menutup popup setelah 3 detik jika berhasil
                 setTimeout(() => {
                     closeForgotPassModal();
                 }, 3000);
@@ -301,7 +316,7 @@
             // Mencegah Default Submit Form yang berpotensi membocorkan data ke URL
             event.preventDefault(); 
 
-            // Sanitasi sederhana di sisi Client (Membersihkan spasi berlebih)
+            // Sanitasi sederhana di sisi Client
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
 
@@ -325,11 +340,11 @@
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.error || 'Terjadi kesalahan server');
 
-                // PENYIMPANAN SESI (Sudah dilindungi CSP dari eksfiltrasi - Ancaman 15)
+                // PENYIMPANAN SESI AMAN (Anti Eksfiltrasi - Ancaman 15)
                 localStorage.setItem('user_session', JSON.stringify({
                     access_token: result.session ? result.session.access_token : result.access_token,
                     user: result.session ? result.session.user : result.user,
-                    name: result.name || (result.session && result.session.user.user_metadata.full_name)
+                    name: escapeHTML(result.name || (result.session && result.session.user.user_metadata.full_name))
                 }));
 
                 showAlert("Login Berhasil! Mengalihkan...", 'success');
@@ -340,7 +355,7 @@
                 if(errText.includes('Invalid login credentials')) errText = "Email atau Password salah!";
                 showAlert(errText, 'error');
                 
-                // PENGAMANAN: Kosongkan field password jika gagal login (Praktik Terbaik)
+                // PENGAMANAN: Kosongkan field password jika gagal login
                 document.getElementById('password').value = '';
                 
                 submitBtn.disabled = false;
