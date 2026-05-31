@@ -1,5 +1,5 @@
 // ============================================================================
-// GOEDANG GROSIR - SINGULARITY ANALYTICS MODULE (v.GOD-MODE) + PRIVACY
+// Bakoel - SINGULARITY ANALYTICS MODULE (v.GOD-MODE) + PRIVACY
 // Predictive AI, Micro-Tremors, Kinematics & Cookie Consent Compliance
 // ============================================================================
 
@@ -11,7 +11,7 @@
     // Dideklarasikan di awal agar tidak menyebabkan error di file HTML lain.
     // Jika user menolak Cookie, fungsi ini akan diam (silent) dan tidak melacak.
     // ============================================================================
-    window.GoedangAnalytics = {
+    window.BakoelAnalytics = {
         _safeTrack: function(eventName, payload) {
             if (window.gtag && localStorage.getItem('gg_cookie_consent') === 'accepted') {
                 gtag('event', eventName, payload);
