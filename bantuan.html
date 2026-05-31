@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bantuan & FAQ | Goedang Grosir</title>
+    <title>Bantuan & FAQ | Bakoel</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
@@ -164,7 +164,7 @@
 <body>
 
     <div class="top-nav">
-        <a href="index.html" class="logo"><i class="fas fa-box-open"></i> GOEDANG</a>
+        <a href="index.html" class="logo"><i class="fas fa-box-open"></i>Bakoel</a>
         <div class="controls">
             <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
             
@@ -202,7 +202,7 @@
             </div>
             <div class="faq-item">
                 <div class="faq-question">Apakah harga yang tertera sudah termasuk pajak? <i class="fas fa-chevron-down"></i></div>
-                <div class="faq-answer">Ya, seluruh harga yang ditampilkan di etalase Goedang Grosir sudah termasuk pajak pertambahan nilai (PPN). Tidak ada biaya tersembunyi selain biaya ongkos kirim.</div>
+                <div class="faq-answer">Ya, seluruh harga yang ditampilkan di etalase Bakoel sudah termasuk pajak pertambahan nilai (PPN). Tidak ada biaya tersembunyi selain biaya ongkos kirim.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-question">Bagaimana jika produk yang saya cari sedang kosong (Out of Stock)? <i class="fas fa-chevron-down"></i></div>
@@ -242,19 +242,19 @@
     <footer class="footer-prof">
         <div class="footer-container">
             <div>
-                <div class="footer-logo"><i class="fas fa-box-open"></i> GOEDANG GROSIR</div>
+                <div class="footer-logo"><i class="fas fa-box-open"></i>BAKOEL</div>
                 <p class="footer-desc">Platform e-commerce grosir terpercaya di Batam. Menyediakan berbagai kebutuhan usaha Anda dengan harga terbaik.</p>
                 <div class="footer-socials">
-                    <a href="https://facebook.com/goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://instagram.com/goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="https://tiktok.com/@goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://facebook.com/Bakoel" target="_blank" rel="noopener noreferrer" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com/Bakoel" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://tiktok.com/@Bakoel" target="_blank" rel="noopener noreferrer" class="social-icon" title="TikTok"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
             <div>
                 <h4 class="footer-title">Hubungi Kami</h4>
                 <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>Batam Centre, Kepulauan Riau</span></div>
                 <div class="footer-contact-item"><i class="fas fa-phone-alt"></i><span>0815 333 5000</span></div>
-                <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>admin@goedanggrosir.com</span></div>
+                <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>admin@bakoel.com</span></div>
             </div>
             
             <div>
@@ -337,8 +337,8 @@ function escapeHTML(str) {
                 
                 parent.classList.toggle('active');
 
-                if (parent.classList.contains('active') && window.GoedangAnalytics && typeof window.GoedangAnalytics.trackFunnel === 'function') {
-                    window.GoedangAnalytics.trackFunnel('Membaca FAQ: ' + question.innerText.replace(' ', '').trim());
+                if (parent.classList.contains('active') && window.BakoelAnalytics && typeof window.BakoelAnalytics.trackFunnel === 'function') {
+                    window.BakoelAnalytics.trackFunnel('Membaca FAQ: ' + question.innerText.replace(' ', '').trim());
                 }
             });
         });
@@ -468,8 +468,8 @@ function escapeHTML(str) {
             updateNavUI();
             loadFooterData(); // Memuat Kategori & Logo Footer Otomatis
             
-            if (window.GoedangAnalytics && typeof window.GoedangAnalytics.trackFunnel === 'function') {
-                window.GoedangAnalytics.trackFunnel('Membuka Halaman Pusat Bantuan (FAQ)');
+            if (window.BakoelAnalytics && typeof window.BakoelAnalytics.trackFunnel === 'function') {
+                window.BakoelAnalytics.trackFunnel('Membuka Halaman Pusat Bantuan (FAQ)');
             }
         });
     </script>
