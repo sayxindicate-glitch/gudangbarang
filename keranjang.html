@@ -123,7 +123,7 @@
         .promo-pill-btn:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
         /* ========================================================= */
-        /* MASTER BOTTOM NAV MOBILE (Rapi, Kompak, & Profesional) */
+        /* MASTER BOTTOM NAV MOBILE */
         /* ========================================================= */
         .bottom-nav { display: none; }
         
@@ -144,48 +144,24 @@
             .total-price { font-size: 18px; }
             .btn-checkout { padding: 10px 15px; width: auto; flex: 1; font-size: 13px; border-radius: 15px; }
 
-            /* ---> MASTER BOTTOM NAV IMPLEMENTATION <--- */
             .bottom-nav { 
                 display: flex; position: fixed; bottom: 0; left: 0; width: 100%; 
                 background-color: var(--bg-color); border-radius: 25px 25px 0 0; 
                 box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; 
-                padding: 10px 15px; 
-                justify-content: space-between; 
-                padding-bottom: max(15px, env(safe-area-inset-bottom)); 
-                gap: 8px; 
+                padding: 10px 15px; justify-content: space-between; 
+                padding-bottom: max(15px, env(safe-area-inset-bottom)); gap: 8px; 
             }
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
             
             .bottom-nav-item { 
                 flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
                 text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; 
-                padding: 10px 0; border-radius: 18px; 
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: transparent; 
+                padding: 10px 0; border-radius: 18px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: transparent; 
             }
-            
-            .bottom-nav-item i { 
-                font-size: 20px; margin-bottom: 4px; 
-                transition: transform 0.2s ease, color 0.2s ease; 
-            }
-            
-            /* Efek "Bolong" saat item aktif */
-            .bottom-nav-item.active { 
-                color: var(--accent-color); 
-                background: var(--bg-color); 
-                box-shadow: var(--neu-pressed-sm); 
-            }
-            
-            .bottom-nav-item.active i { 
-                transform: scale(1.15); 
-            }
-            
-            /* Kontainer untuk menjaga ikon dan angka notifikasi tetap menyatu */
-            .badge-container {
-                position: relative;
-                display: inline-flex;
-            }
-            
-            /* Posisi angka notifikasi statis yang presisi */
+            .bottom-nav-item i { font-size: 20px; margin-bottom: 4px; transition: transform 0.2s ease, color 0.2s ease; }
+            .bottom-nav-item.active { color: var(--accent-color); background: var(--bg-color); box-shadow: var(--neu-pressed-sm); }
+            .bottom-nav-item.active i { transform: scale(1.15); }
+            .badge-container { position: relative; display: inline-flex; }
             .bottom-nav-item .badge-count { 
                 position: absolute; top: -5px; right: -12px; background: #ff4757; color: white; 
                 font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; 
@@ -311,7 +287,6 @@
         </div>
     </div>
 
-    MASTER BOTTOM NAV HTML <--- -->
     <nav class="bottom-nav">
         <a href="index.html" class="bottom-nav-item">
             <i class="fas fa-home"></i><span>Beranda</span>
@@ -349,7 +324,23 @@
     <script>
         "use strict";
 
-        // --- SISTEM SESI LOKAL ---
+        // =========================================================================
+        // SECURITY PATCH: XSS SANITIZATION (Filter Air Bersih)
+        // =========================================================================
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>'"]/g, 
+                tag => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                }[tag] || tag)
+            );
+        }
+        // =========================================================================
+
         const sessionData = localStorage.getItem('user_session');
         if (!sessionData) { window.location.replace('login.html'); }
         const session = JSON.parse(sessionData);
@@ -363,7 +354,6 @@
         let globalPhone = "";
         let itemToDelete = null;
 
-        // --- FUNGSI NOTIFIKASI ---
         function showNotification(title, message, type, redirectUrl = null) {
             const notifModal = document.getElementById('notificationModal');
             const notifIcon = document.getElementById('notifIcon');
@@ -385,8 +375,10 @@
                 notifBtn.innerText = redirectUrl ? 'Login Sekarang' : 'Mengerti';
             }
 
-            notifTitle.innerText = title;
-            notifMessage.innerText = message;
+            // Menerapkan escapeHTML untuk keamanan notifikasi
+            notifTitle.innerText = escapeHTML(title);
+            notifMessage.innerText = escapeHTML(message);
+            
             notifBtn.onclick = function() { 
                 notifModal.classList.remove('active'); 
                 if(redirectUrl) window.location.href = redirectUrl;
@@ -394,13 +386,11 @@
             notifModal.classList.add('active');
         }
 
-        // --- SINKRONISASI NAVIGASI CERDAS (AVATAR & ALAMAT) ---
         async function updateNavUI() {
             const loginBtn = document.getElementById('navLoginBtn');
             const mobileAccountBtn = document.getElementById('mobileAccountBtn');
 
             try {
-                // Tarik profil user (nama, no_wa, alamat_lengkap)
                 const userRes = await fetch('/api/user', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
                 
                 if (userRes.status === 401 || userRes.status === 403) {
@@ -411,7 +401,9 @@
                 if (userRes.ok) {
                     const userData = await userRes.json();
                     
-                    const displayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
+                    const rawDisplayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
+                    // Menerapkan escapeHTML pada nama profil
+                    const displayName = escapeHTML(rawDisplayName);
                     const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
                     globalAddress = userData.alamat_lengkap || "";
@@ -421,12 +413,10 @@
                         document.getElementById('summaryAddressVal').innerText = "Sudah Sesuai";
                     }
 
-                    // Terapkan Badge Desktop
                     loginBtn.className = 'nav-profile-badge hide-on-mobile';
                     loginBtn.href = 'akun.html';
                     loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${displayName}</span>`;
 
-                    // Terapkan Badge Mobile (Menyatu dengan ukuran Master Bottom Nav)
                     if (mobileAccountBtn) {
                         mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
                     }
@@ -439,7 +429,6 @@
             }
         }
 
-        // --- SINKRONISASI BADGE (PROMO & PESANAN) ---
         async function syncBadges(token) {
             try {
                 const promoRes = await fetch('/api/vouchers', { headers: { 'Authorization': `Bearer ${token}` } });
@@ -474,7 +463,6 @@
             showNotification("Sesi Berakhir", "Tiket login Anda telah kedaluwarsa. Silakan login kembali.", "warning", "login.html");
         }
 
-        // --- FUNGSI KERANJANG MATEMATIKA ---
         function formatRupiah(number) { return "Rp " + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
         function parsePrice(priceString) { 
             if(typeof priceString === 'number') return priceString;
@@ -500,22 +488,27 @@
                 total += (parsePrice(item.product_price) * item.quantity);
                 
                 const imgUrl = (item.product_img && item.product_img !== "undefined" && item.product_img.startsWith('http')) 
-                                ? item.product_img : 'https://placehold.co/70x70/e0e5ec/a3b1c6?text=Barang';
+                                ? escapeHTML(item.product_img) : 'https://placehold.co/70x70/e0e5ec/a3b1c6?text=Barang';
+
+                // Menerapkan escapeHTML untuk keamanan Mutlak
+                const safeTitle = escapeHTML(item.product_name);
+                const safePrice = escapeHTML(item.product_price);
+                const safeId = escapeHTML(item.id.toString());
 
                 const card = document.createElement('div');
                 card.className = 'cart-card';
                 card.innerHTML = `
                     <img src="${imgUrl}" class="cart-img" alt="Produk">
                     <div class="cart-details">
-                        <div class="cart-title">${item.product_name}</div>
-                        <div class="cart-price">${item.product_price}</div>
+                        <div class="cart-title">${safeTitle}</div>
+                        <div class="cart-price">${safePrice}</div>
                         <div class="cart-actions-inline">
                             <div class="qty-control">
-                                <button class="qty-btn" onclick="changeQty('${item.id}', -1)"><i class="fas fa-minus"></i></button>
+                                <button class="qty-btn" onclick="changeQty('${safeId}', -1)"><i class="fas fa-minus"></i></button>
                                 <input type="text" class="qty-input" value="${item.quantity}" readonly>
-                                <button class="qty-btn" onclick="changeQty('${item.id}', 1)"><i class="fas fa-plus"></i></button>
+                                <button class="qty-btn" onclick="changeQty('${safeId}', 1)"><i class="fas fa-plus"></i></button>
                             </div>
-                            <button class="btn-delete" onclick="confirmDelete('${item.id}')"><i class="fas fa-trash-alt"></i></button>
+                            <button class="btn-delete" onclick="confirmDelete('${safeId}')"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     </div>`;
                 container.appendChild(card);
@@ -523,7 +516,6 @@
 
             rawSubtotal = total;
             
-            // PENTING: Jika ada voucher aktif, sinkronkan ulang diskonnya saat Qty berubah
             if(activeVouchers.length > 0) {
                 syncPromosAndApply();
             } else { 
@@ -534,7 +526,6 @@
             
             document.getElementById('checkoutBtn').disabled = false;
             
-            // Update Badge Keranjang
             const totalQty = cartItems.reduce((s, i) => s + i.quantity, 0);
             document.getElementById('mobileCartBadge').style.display = totalQty > 0 ? 'flex' : 'none';
             document.getElementById('mobileCartBadge').innerText = totalQty > 99 ? '99+' : totalQty;
@@ -572,7 +563,7 @@
                 await fetch('/api/cart', { 
                     method: 'POST', 
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` }, 
-                    body: JSON.stringify({ product_id: i.product_id, product_name: i.product_name, product_price: i.product_price, product_img: i.product_img, quantity: delta }) 
+                    body: JSON.stringify({ product_id: i.product_id, quantity: delta }) 
                 });
             } catch (e) {
                 console.error("Gagal sinkron qty server");
@@ -609,7 +600,6 @@
             }
         }
 
-        // --- SISTEM ALAMAT ---
         function openAddressModal() { 
             document.getElementById('modalShipAddress').value = globalAddress; 
             document.getElementById('modalShipPhone').value = globalPhone; 
@@ -632,7 +622,6 @@
             closeAddressModal(); 
         }
 
-        // --- SISTEM VOUCHER PROMO ---
         function openPromoModal() { 
             document.getElementById('promoModal').classList.add('active'); 
             document.getElementById('modalVoucherMsg').innerText = ''; 
@@ -662,13 +651,19 @@
                 
                 list.forEach(v => {
                     const isUsed = activeVouchers.some(x => x.code === v.code);
+                    
+                    // Sanitasi XSS untuk Voucher
+                    const safeCode = escapeHTML(v.code);
+                    const safeTitle = escapeHTML(v.title);
+                    const safeColor = escapeHTML(v.color || 'var(--accent-color)');
+                    
                     container.innerHTML += `
                         <div class="promo-pill">
                             <div class="promo-pill-info">
-                                <span class="promo-pill-code" style="color: ${v.color || 'var(--accent-color)'};">${v.code}</span>
-                                <div class="promo-pill-desc">${v.title}</div>
+                                <span class="promo-pill-code" style="color: ${safeColor};">${safeCode}</span>
+                                <div class="promo-pill-desc">${safeTitle}</div>
                             </div>
-                            <button class="promo-pill-btn" onclick="executePromo('${v.code}')" ${isUsed ? 'disabled style="opacity:0.5"' : ''}>${isUsed ? 'Terpakai' : 'Pakai'}</button>
+                            <button class="promo-pill-btn" onclick="executePromo('${safeCode}')" ${isUsed ? 'disabled style="opacity:0.5"' : ''}>${isUsed ? 'Terpakai' : 'Pakai'}</button>
                         </div>`;
                 });
             } catch (error) {
@@ -753,7 +748,6 @@
             }
         }
 
-        // FUNGSI SINKRONISASI API ULANG SAAT QTY BERUBAH
         async function syncPromosAndApply() {
             for (let i = 0; i < activeVouchers.length; i++) {
                 try {
@@ -803,7 +797,6 @@
             document.getElementById('totalPriceDisplay').innerText = formatRupiah(finalTotalRp);
         }
 
-        // --- SISTEM CHECKOUT FINAL ---
         function processCheckout() {
             if(!globalAddress || !globalPhone) {
                 return showNotification("Alamat Belum Lengkap", "Harap atur dan simpan Alamat Pengiriman dan No WA Anda terlebih dahulu.", "warning");
@@ -826,6 +819,7 @@
             try {
                 const voucherCodes = activeVouchers.map(v => v.code);
                 
+                // Security Check: Kita hanya mengirim ID barang ke API checkout
                 const res = await fetch('/api/checkout', { 
                     method: 'POST', 
                     headers: { 
@@ -835,7 +829,6 @@
                     body: JSON.stringify({ 
                         shipping_address: globalAddress, 
                         phone_number: globalPhone, 
-                        total_price: formatRupiah(finalTotalRp), 
                         items: cartItems,
                         used_vouchers: voucherCodes
                     }) 
@@ -853,7 +846,6 @@
             }
         }
 
-        // --- THEME TOGGLE ---
         const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
         if (localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); document.getElementById('switchIcon').classList.replace('fa-sun', 'fa-moon'); }
@@ -864,7 +856,6 @@
             document.getElementById('switchIcon').classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
         });
 
-        // INIT
         window.addEventListener('DOMContentLoaded', () => { 
             updateNavUI(); 
             loadCart(); 
