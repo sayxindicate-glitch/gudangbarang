@@ -39,7 +39,7 @@
 
         .nav-link { color: var(--text-muted); text-decoration: none; position: relative; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: color 0.3s ease;}
         .nav-link:hover, .nav-link.active { color: var(--accent-color); }
-        .badge-count { position: absolute; top: -10px; right: -15px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .badge-count { position: absolute; top: -10px; right: -15px; background: #ff4757; color: white; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 10;}
         .neu-btn-icon { background: var(--bg-color); color: var(--text-main); border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 18px; display: flex; justify-content: center; align-items: center; box-shadow: var(--neu-flat-sm); cursor: pointer; text-decoration: none; position: relative; transition: all 0.2s; }
         .neu-btn-icon:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
         .nav-btn-cap { background: var(--bg-color); color: var(--text-main); text-decoration: none; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 50px; box-shadow: var(--neu-flat-sm); transition: all 0.2s; }
@@ -113,6 +113,27 @@
         .neu-btn { padding: 12px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--text-main); font-size: 13px; font-weight: 700; box-shadow: var(--neu-flat-sm); cursor: pointer; transition: all 0.3s; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px;}
         .neu-btn:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
 
+        /* FOOTER STYLES DARI SISTEM LAMA */
+        .footer-prof { background-color: #1a1b1e; color: #f5f6fa; padding: 50px 20px 80px 20px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr; gap: 30px; }
+        .footer-logo { font-size: 20px; font-weight: 700; color: #00e5ff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .footer-desc { font-size: 13px; color: #a4b0be; line-height: 1.6; margin-bottom: 20px; }
+        .footer-socials { display: flex; gap: 15px; }
+        .social-icon { width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.05); color: #f5f6fa; display: flex; justify-content: center; align-items: center; text-decoration: none; transition: background 0.3s; }
+        .social-icon:hover { background: #00e5ff; color: #1a1b1e; }
+        .footer-title { font-size: 15px; font-weight: 600; margin-bottom: 20px; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-links { list-style: none; padding: 0; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: #a4b0be; text-decoration: none; font-size: 13px; transition: color 0.3s; cursor: pointer; }
+        .footer-links a:hover { color: #00e5ff; }
+        .footer-contact-item { display: flex; align-items: flex-start; gap: 10px; color: #a4b0be; font-size: 13px; margin-bottom: 15px; line-height: 1.5; }
+        .footer-contact-item i { color: #00e5ff; margin-top: 3px; }
+        .payment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .pay-box { background-color: #ffffff; border-radius: 6px; height: 38px; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); cursor: default; padding: 5px 8px; }
+        .pay-img { width: 100%; height: 100%; object-fit: contain; }
+
+        @media (max-width: 1024px) { .footer-container { grid-template-columns: 1fr 1fr 1fr; } }
+
         .bottom-nav { display: none; }
 
         @media (max-width: 768px) {
@@ -172,9 +193,15 @@
                 font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; 
                 border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 2;
             }
+
+            .footer-container { grid-template-columns: 1fr; gap: 30px; text-align: left; }
+            .footer-contact-item { justify-content: flex-start; }
+            .footer-socials { justify-content: flex-start; }
+            .payment-grid { grid-template-columns: repeat(4, 60px); justify-content: flex-start; margin: 0; }
         }
     </style>
-<script src="analytics.js"></script>     </head>
+<script src="analytics.js"></script>     
+</head>
 <body>
 
     <div class="top-nav">
@@ -229,14 +256,45 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="notificationModal">
-        <div class="modal-content">
-            <div id="notifIcon" style="font-size: 45px; margin-bottom: 15px;"></div>
-            <h3 id="notifTitle" style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Judul</h3>
-            <p id="notifMessage" style="font-size: 13px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.5;">Pesan</p>
-            <button class="neu-btn" id="notifBtn">Mengerti</button>
+    <footer class="footer-prof">
+        <div class="footer-container">
+            <div>
+                <div class="footer-logo"><i class="fas fa-box-open"></i> GOEDANG GROSIR</div>
+                <p class="footer-desc">Platform e-commerce grosir terpercaya di Batam. Menyediakan berbagai kebutuhan usaha Anda dengan harga terbaik.</p>
+                <div class="footer-socials">
+                    <a href="https://facebook.com/goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com/goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://tiktok.com/@goedanggrosir" target="_blank" rel="noopener noreferrer" class="social-icon" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="footer-title">Hubungi Kami</h4>
+                <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>Batam Centre, Kepulauan Riau</span></div>
+                <div class="footer-contact-item"><i class="fas fa-phone-alt"></i><span>0815 333 5000</span></div>
+                <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>admin@goedanggrosir.com</span></div>
+            </div>
+            
+            <div>
+                <h4 class="footer-title">Kategori</h4>
+                <ul class="footer-links" id="footerCategoryList">
+                    <li><i class="fas fa-spinner fa-spin"></i> Memuat...</li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="footer-title">Perusahaan</h4>
+                <ul class="footer-links">
+                    <li><a href="tentang-kami.html">Tentang Kami</a></li>
+                    <li><a href="cara-berbelanja.html">Cara Berbelanja</a></li>
+                    <li><a href="bantuan.html">Bantuan (FAQ)</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">Partner Pembayaran</h4>
+                <div class="payment-grid" id="paymentContainer"></div>
+            </div>
         </div>
-    </div>
+    </footer>
 
     <nav class="bottom-nav">
         <a href="index.html" class="bottom-nav-item">
@@ -272,28 +330,66 @@
         </a>
     </nav>
 
+    <div class="modal-overlay" id="notificationModal">
+        <div class="modal-content">
+            <div id="notifIcon" style="font-size: 45px; margin-bottom: 15px;"></div>
+            <h3 id="notifTitle" style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Judul</h3>
+            <p id="notifMessage" style="font-size: 13px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.5;">Pesan</p>
+            <button class="neu-btn" id="notifBtn">Mengerti</button>
+        </div>
+    </div>
+
     <script>
-        const sessionData = localStorage.getItem('user_session');
-        if (!sessionData) {
-            window.location.replace('login.html');
+        "use strict";
+
+        // =========================================================================
+        // SECURITY PATCH: KUNCI LINGKUNGAN JAVASCRIPT & SANITASI
+        // =========================================================================
+        // MENCEGAH PROTOTYPE POLLUTION (Ancaman 2)
+        Object.freeze(Object.prototype);
+
+        // MENCEGAH CLICKJACKING / UI REDRESSING FALLBACK (Ancaman 8)
+        if (window.top !== window.self) {
+            window.top.location = window.self.location;
         }
+
+        // FUNGSI SANITASI MUTLAK (Anti-XSS & DOM Clobbering)
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>'"]/g, 
+                tag => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                }[tag] || tag)
+            );
+        }
+
+        // FUNGSI VALIDASI URL (Anti javascript: URI Bypass - Ancaman 1 & 3)
+        function safeURL(url) {
+            if (!url) return 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=GG';
+            const strUrl = String(url).trim();
+            // Hanya mengizinkan URL yang diawali protokol aman atau path internal
+            if (strUrl.startsWith('http://') || strUrl.startsWith('https://') || strUrl.startsWith('/') || strUrl.startsWith('./') || strUrl.startsWith('../')) {
+                return escapeHTML(strUrl);
+            }
+            return 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=GG'; // Tolak skema jahat
+        }
+        // =========================================================================
+
+        const sessionData = localStorage.getItem('user_session');
+        if (!sessionData) { window.location.replace('login.html'); }
         const session = JSON.parse(sessionData);
 
         let allOrders = [];
         let currentStatusFilter = 'Semua';
 
-        const themeToggle = document.getElementById('themeToggle');
-        const switchIcon = document.getElementById('switchIcon');
-        const html = document.documentElement;
-
-        if (localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); switchIcon.classList.replace('fa-sun', 'fa-moon'); }
-
-        themeToggle.addEventListener('click', () => {
-            const isDark = html.getAttribute('data-theme') === 'dark';
-            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            localStorage.setItem('theme', isDark ? 'light' : 'dark');
-            switchIcon.classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
-        });
+        function formatRupiah(number) { 
+            let parsed = parseInt(number) || 0;
+            return "Rp " + parsed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); 
+        }
 
         function showNotification(title, message, type, redirectUrl = null) {
             const notifModal = document.getElementById('notificationModal');
@@ -316,13 +412,63 @@
                 notifBtn.innerText = redirectUrl ? 'Login Sekarang' : 'Mengerti';
             }
 
+            // Mencegah bug Double Encoding (&amp;) dengan innerText langsung
             notifTitle.innerText = title;
             notifMessage.innerText = message;
+            
             notifBtn.onclick = function() { 
                 notifModal.classList.remove('active'); 
                 if(redirectUrl) window.location.href = redirectUrl;
             };
             notifModal.classList.add('active');
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('user_session'); 
+            showNotification("Sesi Berakhir", "Tiket login Anda telah kedaluwarsa. Silakan login kembali.", "warning", "login.html");
+        }
+
+        const themeToggle = document.getElementById('themeToggle');
+        const switchIcon = document.getElementById('switchIcon');
+        const html = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); switchIcon.classList.replace('fa-sun', 'fa-moon'); }
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            switchIcon.classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
+        });
+
+        // =========================================================================
+        // LOAD FOOTER DATA (DARI SISTEM LAMA)
+        // =========================================================================
+        async function loadFooterData() {
+            try {
+                fetch('/api/logos').then(res => res.json()).then(logos => {
+                    const paymentContainer = document.getElementById('paymentContainer');
+                    if (paymentContainer) {
+                        paymentContainer.innerHTML = '';
+                        logos.forEach(logo => {
+                            paymentContainer.innerHTML += `<div class="pay-box"><img src="${safeURL(logo.url)}" alt="Partner Pembayaran" class="pay-img" title="${escapeHTML(logo.name)}"></div>`;
+                        });
+                    }
+                }).catch(e => {});
+
+                fetch('/api/products').then(res => res.json()).then(products => {
+                    const uniqueCategories = new Set();
+                    products.forEach(p => { if (p.category) uniqueCategories.add(p.category); });
+                    
+                    const footerCatList = document.getElementById('footerCategoryList');
+                    if (footerCatList) {
+                        footerCatList.innerHTML = `<li><a href="index.html?kategori=Semua Barang">Semua Barang</a></li>`;
+                        Array.from(uniqueCategories).sort().forEach(cat => {
+                            footerCatList.innerHTML += `<li><a href="index.html?kategori=${encodeURIComponent(cat)}">${escapeHTML(cat)}</a></li>`;
+                        });
+                    }
+                }).catch(e => {});
+            } catch(error) {}
         }
 
         async function updateNavUI() {
@@ -333,15 +479,15 @@
                 const userRes = await fetch('/api/user', { headers: { 'Authorization': `Bearer ${session.access_token}` } });
                 
                 if (userRes.status === 401 || userRes.status === 403) {
-                    localStorage.removeItem('user_session');
-                    window.location.replace('login.html');
+                    handleLogout();
                     return;
                 }
 
                 if (userRes.ok) {
                     const userData = await userRes.json();
                     
-                    const displayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
+                    const rawDisplayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
+                    const displayName = escapeHTML(rawDisplayName);
                     const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
                     loginBtn.className = 'nav-profile-badge hide-on-mobile';
@@ -352,7 +498,7 @@
                         mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${displayName}</span>`;
                     }
                 }
-            } catch (e) { console.log("Offline mode aktif"); }
+            } catch (e) { console.log("Offline mode aktif, fallback ke profil lokal"); }
         }
 
         async function syncBadges(token) {
@@ -401,8 +547,10 @@
                     headers: { 'Authorization': `Bearer ${session.access_token}` }
                 });
 
-                if (response.status === 401 || response.status === 403) throw new Error('Sesi tidak valid');
-                if (!response.ok) throw new Error('Gagal terhubung ke database');
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) throw new Error('Sesi tidak valid');
+                    throw new Error('Gagal terhubung ke database');
+                }
                 
                 allOrders = await response.json();
                 allOrders.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
@@ -413,8 +561,7 @@
             } catch (error) {
                 console.error("Keamanan/Jaringan Error:", error);
                 if(error.message === 'Sesi tidak valid') {
-                    localStorage.removeItem('user_session');
-                    window.location.replace('login.html');
+                    handleLogout();
                 } else {
                     document.getElementById('ordersContainer').innerHTML = `
                         <div class="empty-state">
@@ -426,17 +573,6 @@
                     `;
                 }
             }
-        }
-
-        function parsePriceSafe(val) {
-            if (!val) return 0;
-            if (typeof val === 'number') return val;
-            const digits = val.toString().replace(/[^0-9]/g, '');
-            return parseInt(digits, 10) || 0;
-        }
-
-        function formatRupiah(number) { 
-            return "Rp " + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); 
         }
 
         window.toggleItems = function(orderId, hiddenCount) {
@@ -452,6 +588,7 @@
             }
         }
 
+        // FUNGSI RENDER AMAN (XSS PREVENTED) DENGAN TAMPILAN BARU
         function renderOrders(statusFilter) {
             const container = document.getElementById('ordersContainer');
             container.innerHTML = '';
@@ -465,7 +602,7 @@
                     <div class="empty-state">
                         <i class="fas fa-box-open empty-icon"></i>
                         <div class="empty-text">Tidak Ada Pesanan</div>
-                        <div class="empty-subtext">Anda belum memiliki pesanan dengan status ini.</div>
+                        <div class="empty-subtext">Anda belum memiliki pesanan dengan status '${escapeHTML(statusFilter)}'.</div>
                         <a href="index.html" class="btn-shop-now"><i class="fas fa-shopping-cart"></i> Mulai Belanja</a>
                     </div>
                 `;
@@ -473,60 +610,56 @@
             }
 
             filteredOrders.forEach(order => {
-                const rawStatus = order.status || 'Pending';
-                // PERBAIKAN STATUS: Kapitalisasi huruf pertama dengan akurat
+                // SECURITY ENFORCEMENT PADA DATA PESANAN UTAMA
+                const rawStatus = escapeHTML(order.status || 'Pending');
                 const displayStatus = rawStatus.charAt(0).toUpperCase() + rawStatus.slice(1).toLowerCase();
                 const statusClass = `status-${rawStatus.toLowerCase()}`;
                 
                 const dateObj = new Date(order.created_at || Date.now());
-                const formattedDate = dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' });
+                const formattedDate = escapeHTML(dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' }));
 
-                const shortId = order.id ? order.id.toString().split('-')[0].toUpperCase() : Math.floor(Math.random()*10000);
+                const safeOrderId = escapeHTML(order.id ? order.id.toString() : '');
+                const shortId = safeOrderId.split('-')[0].toUpperCase() || Math.floor(Math.random()*10000);
 
                 const items = order.items || [];
                 let itemsHTML = '';
                 
                 if (items.length > 0) {
                     const firstItem = items[0];
-                    const cleanPrice = parsePriceSafe(firstItem.product_price || firstItem.price_at_buy);
-                    const itemPriceDisplay = formatRupiah(cleanPrice);
+                    const safeFirstImg = safeURL(firstItem.product_img);
+                    const safeFirstName = escapeHTML(firstItem.product_name || 'Barang Belanjaan');
+                    const safeFirstQty = escapeHTML(firstItem.quantity || 1);
+                    const safeFirstPriceRaw = (firstItem.product_price || firstItem.price_at_buy || 0);
                     
-                    // PERBAIKAN LOGIKA GAMBAR: Hanya cek jika gambar bukan string kosong atau undefined
-                    const imgUrl = (firstItem.product_img && String(firstItem.product_img).trim() !== "undefined" && String(firstItem.product_img).trim() !== '') 
-                        ? firstItem.product_img 
-                        : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
-
                     itemsHTML += `
                         <div class="order-item">
-                            <img src="${imgUrl}" class="item-img" alt="Produk">
+                            <img src="${safeFirstImg}" class="item-img" alt="Produk">
                             <div class="item-details">
-                                <div class="item-name">${firstItem.product_name || 'Barang Belanjaan'}</div>
-                                <div class="item-qty">${firstItem.quantity || 1} Barang x ${itemPriceDisplay}</div>
-                                <div class="item-price">${formatRupiah(cleanPrice * (firstItem.quantity || 1))}</div>
+                                <div class="item-name">${safeFirstName}</div>
+                                <div class="item-qty">${safeFirstQty} Barang x ${formatRupiah(safeFirstPriceRaw)}</div>
+                                <div class="item-price">${formatRupiah(safeFirstPriceRaw * safeFirstQty)}</div>
                             </div>
                         </div>
                     `;
                     
                     if (items.length > 1) {
                         const hiddenCount = items.length - 1;
-                        let hiddenItemsHTML = `<div class="hidden-items-container" id="hidden-items-${order.id}">`;
+                        let hiddenItemsHTML = `<div class="hidden-items-container" id="hidden-items-${safeOrderId}">`;
                         
                         for (let i = 1; i < items.length; i++) {
                             const currItem = items[i];
-                            const currCleanPrice = parsePriceSafe(currItem.product_price || currItem.price_at_buy);
-                            const currPriceDisplay = formatRupiah(currCleanPrice);
-                            
-                            const currImgUrl = (currItem.product_img && String(currItem.product_img).trim() !== "undefined" && String(currItem.product_img).trim() !== '') 
-                                ? currItem.product_img 
-                                : 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=Barang';
+                            const safeCurrImg = safeURL(currItem.product_img);
+                            const safeCurrName = escapeHTML(currItem.product_name || 'Barang Belanjaan');
+                            const safeCurrQty = escapeHTML(currItem.quantity || 1);
+                            const safeCurrPriceRaw = (currItem.product_price || currItem.price_at_buy || 0);
 
                             hiddenItemsHTML += `
                                 <div class="order-item">
-                                    <img src="${currImgUrl}" class="item-img" alt="Produk">
+                                    <img src="${safeCurrImg}" class="item-img" alt="Produk">
                                     <div class="item-details">
-                                        <div class="item-name">${currItem.product_name || 'Barang Belanjaan'}</div>
-                                        <div class="item-qty">${currItem.quantity || 1} Barang x ${currPriceDisplay}</div>
-                                        <div class="item-price">${formatRupiah(currCleanPrice * (currItem.quantity || 1))}</div>
+                                        <div class="item-name">${safeCurrName}</div>
+                                        <div class="item-qty">${safeCurrQty} Barang x ${formatRupiah(safeCurrPriceRaw)}</div>
+                                        <div class="item-price">${formatRupiah(safeCurrPriceRaw * safeCurrQty)}</div>
                                     </div>
                                 </div>
                             `;
@@ -534,14 +667,13 @@
                         hiddenItemsHTML += `</div>`;
                         
                         itemsHTML += hiddenItemsHTML;
-                        itemsHTML += `<button class="toggle-items-btn" id="toggle-btn-${order.id}" onclick="toggleItems('${order.id}', ${hiddenCount})">+ ${hiddenCount} barang lainnya</button>`;
+                        itemsHTML += `<button class="toggle-items-btn" id="toggle-btn-${safeOrderId}" onclick="toggleItems('${safeOrderId}', ${hiddenCount})">+ ${hiddenCount} barang lainnya</button>`;
                     }
                 } else {
                     itemsHTML = `<div class="more-items-text">Rincian barang belum dimasukkan.</div>`;
                 }
 
-                const cleanTotal = parsePriceSafe(order.total_price);
-                const displayTotal = formatRupiah(cleanTotal);
+                const displayTotal = formatRupiah(order.total_price || 0);
 
                 const card = document.createElement('div');
                 card.className = 'order-card';
@@ -585,7 +717,10 @@
             renderOrders(status);
         }
 
-        document.addEventListener('DOMContentLoaded', fetchOrders);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFooterData();
+            fetchOrders();
+        });
 
     </script>
 </body>
