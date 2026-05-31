@@ -40,9 +40,12 @@ export default async function handler(req, res) {
         const daysSinceCreated = Math.max(0, (now - createdDate) / (1000 * 60 * 60 * 24));
         const daysSinceLastSignIn = Math.max(0, (now - lastSignInDate) / (1000 * 60 * 60 * 24));
 
-        // Ambil data murni dari database gg_vouchers
-        const { data: dbVouchers, error: dbError } = await supabase.from('gg_vouchers').select('*');
-        if (dbError) throw dbError;
+        // SECURITY & PERFORMANCE PATCH: Jangan gunakan select('*')
+        // Tarik hanya kolom yang spesifik dibutuhkan untuk mencegah Server Overload
+        const { data: dbVouchers, error: dbError } = await supabase.from('gg_vouchers')
+            .select('id, code, title, description, color, expires_at, target_segment');
+            
+        if (dbError) throw new Error('Gagal memuat data promosi dari server'); // Menyamarkan error DB
 
         const filteredVouchers = (dbVouchers || []).filter(vch => {
             const segment = (vch.target_segment || 'all').trim().toLowerCase();
@@ -80,6 +83,8 @@ export default async function handler(req, res) {
 
         return res.status(200).json(responseData);
     } catch (error) { 
-        return res.status(400).json({ error: error.message }); 
+        console.error("Vouchers API Error:", error);
+        // SECURITY PATCH: Cegah Information Disclosure (Jangan bocorkan error.message ke publik)
+        return res.status(400).json({ error: 'Tidak dapat memuat daftar promo saat ini.' }); 
     }
 }
