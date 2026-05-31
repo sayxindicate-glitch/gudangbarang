@@ -295,7 +295,8 @@
         }
 
         function showAlert(msg, isSuccess) {
-            alertMessage.innerText = escapeHTML(msg); // Sanitasi Output Error
+            // PERBAIKAN: Menggunakan innerText tidak perlu escapeHTML untuk mencegah bug Double Encoding
+            alertMessage.innerText = msg; 
             if(isSuccess) {
                 alertIcon.innerHTML = '<i class="fas fa-check-circle" style="color: #27ae60;"></i>';
                 alertToast.style.color = '#27ae60';
