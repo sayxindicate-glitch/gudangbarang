@@ -325,8 +325,17 @@
         "use strict";
 
         // =========================================================================
-        // SECURITY PATCH: XSS SANITIZATION (Filter Air Bersih)
+        // SECURITY PATCH: KUNCI LINGKUNGAN JAVASCRIPT & SANITASI
         // =========================================================================
+        // MENCEGAH PROTOTYPE POLLUTION (Ancaman 2)
+        Object.freeze(Object.prototype);
+
+        // MENCEGAH CLICKJACKING / UI REDRESSING FALLBACK (Ancaman 8)
+        if (window.top !== window.self) {
+            window.top.location = window.self.location;
+        }
+
+        // FUNGSI SANITASI MUTLAK (Anti-XSS & DOM Clobbering)
         function escapeHTML(str) {
             if (!str) return '';
             return String(str).replace(/[&<>'"]/g, 
@@ -338,6 +347,17 @@
                     '"': '&quot;'
                 }[tag] || tag)
             );
+        }
+
+        // FUNGSI VALIDASI URL (Anti javascript: URI Bypass - Ancaman 1 & 3)
+        function safeURL(url) {
+            if (!url) return 'https://placehold.co/70x70/e0e5ec/a3b1c6?text=Barang';
+            const strUrl = String(url).trim();
+            // Hanya mengizinkan URL yang diawali protokol aman atau path internal
+            if (strUrl.startsWith('http://') || strUrl.startsWith('https://') || strUrl.startsWith('/') || strUrl.startsWith('./') || strUrl.startsWith('../')) {
+                return escapeHTML(strUrl);
+            }
+            return '#'; // Tolak skema jahat
         }
         // =========================================================================
 
@@ -375,9 +395,10 @@
                 notifBtn.innerText = redirectUrl ? 'Login Sekarang' : 'Mengerti';
             }
 
-            // Menerapkan escapeHTML untuk keamanan notifikasi
-            notifTitle.innerText = escapeHTML(title);
-            notifMessage.innerText = escapeHTML(message);
+            // SECURITY PATCH: Menghapus escapeHTML karena innerText otomatis mencegah XSS
+            // Ini akan memperbaiki bug &amp; menjadi simbol & yang benar di layar
+            notifTitle.innerText = title;
+            notifMessage.innerText = message;
             
             notifBtn.onclick = function() { 
                 notifModal.classList.remove('active'); 
@@ -487,8 +508,9 @@
             cartItems.forEach(item => {
                 total += (parsePrice(item.product_price) * item.quantity);
                 
+                // SECURITY PATCH: Sanitasi Skema URL Mutlak untuk Gambar
                 const imgUrl = (item.product_img && item.product_img !== "undefined" && item.product_img.startsWith('http')) 
-                                ? escapeHTML(item.product_img) : 'https://placehold.co/70x70/e0e5ec/a3b1c6?text=Barang';
+                                ? safeURL(item.product_img) : 'https://placehold.co/70x70/e0e5ec/a3b1c6?text=Barang';
 
                 // Menerapkan escapeHTML untuk keamanan Mutlak
                 const safeTitle = escapeHTML(item.product_name);
