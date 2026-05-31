@@ -73,7 +73,7 @@
         .neu-input:focus ~ .input-icon { color: var(--accent-color); }
         .icon-textarea { top: 18px; transform: none; }
 
-        /* --- KOTAK ATURAN PASSWORD (FULL 5 SYARAT) --- */
+        /* --- KOTAK ATURAN PASSWORD --- */
         .pwd-rules-box {
             background: var(--bg-color); padding: 15px 20px; border-radius: 15px;
             box-shadow: var(--neu-pressed-sm); margin-top: -5px; margin-bottom: 20px;
@@ -255,7 +255,34 @@
     </nav>
 
     <script>
-        // Redirect jika sudah login
+        // =========================================================================
+        // SECURITY PATCH: KUNCI LINGKUNGAN JAVASCRIPT
+        // =========================================================================
+        "use strict"; 
+        
+        // Mencegah eksploitasi Prototype Pollution
+        Object.freeze(Object.prototype);
+
+        // Mencegah Clickjacking / UI Redressing
+        if (window.top !== window.self) {
+            window.top.location = window.self.location;
+        }
+
+        // Fungsi Sanitasi (Anti-XSS)
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>'"]/g, 
+                tag => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                }[tag] || tag)
+            );
+        }
+        // =========================================================================
+
         if (localStorage.getItem('user_session')) { window.location.replace('index.html'); }
 
         const alertToast = document.getElementById('alertToast');
@@ -268,7 +295,7 @@
         }
 
         function showAlert(msg, isSuccess) {
-            alertMessage.innerText = msg;
+            alertMessage.innerText = escapeHTML(msg); // Sanitasi Output Error
             if(isSuccess) {
                 alertIcon.innerHTML = '<i class="fas fa-check-circle" style="color: #27ae60;"></i>';
                 alertToast.style.color = '#27ae60';
@@ -280,7 +307,6 @@
             setTimeout(() => { alertToast.style.display = 'none'; }, 3500);
         }
 
-        // LOGIKA PENGECEKAN 5 SYARAT PASSWORD
         const passwordInput = document.getElementById('password');
         const ruleLength = document.getElementById('rule-length');
         const ruleUpper = document.getElementById('rule-upper');
@@ -293,35 +319,31 @@
         function updateRuleUI(element, isValid, text) {
             if (isValid) {
                 element.classList.replace('invalid', 'valid');
-                element.innerHTML = `<i class="fas fa-check"></i> ${text}`;
+                element.innerHTML = `<i class="fas fa-check"></i> ${escapeHTML(text)}`;
             } else {
                 element.classList.replace('valid', 'invalid');
-                element.innerHTML = `<i class="fas fa-times"></i> ${text}`;
+                element.innerHTML = `<i class="fas fa-times"></i> ${escapeHTML(text)}`;
             }
         }
 
         passwordInput.addEventListener('input', function() {
             const val = this.value;
 
-            // Variabel Validasi RegEx
             const lenValid = val.length >= 8;
             const upperValid = /[A-Z]/.test(val);
             const lowerValid = /[a-z]/.test(val);
             const numberValid = /[0-9]/.test(val);
             const symbolValid = /[!@#$%^&*(),.?":{}|<>]/.test(val);
 
-            // Update Tampilan Masing-Masing Aturan
             updateRuleUI(ruleLength, lenValid, 'Minimal 8 karakter');
             updateRuleUI(ruleUpper, upperValid, 'Mengandung huruf besar (A-Z)');
             updateRuleUI(ruleLower, lowerValid, 'Mengandung huruf kecil (a-z)');
             updateRuleUI(ruleNumber, numberValid, 'Mengandung angka (0-9)');
             updateRuleUI(ruleSymbol, symbolValid, 'Mengandung simbol (!@#$%^&*)');
 
-            // Set Form Validity
             isPwdValid = lenValid && upperValid && lowerValid && numberValid && symbolValid;
         });
 
-        // Proses Eksekusi Pendaftaran
         const form = document.getElementById('registerForm');
         const submitBtn = document.getElementById('submitBtn');
 
@@ -356,6 +378,10 @@
                 if (!response.ok) throw new Error(result.error || 'Terjadi kesalahan server');
 
                 showAlert("Pendaftaran Berhasil! Mengalihkan ke Halaman Login...", true);
+                
+                // PENGAMANAN: Kosongkan field sensitif segera setelah sukses
+                passwordInput.value = '';
+                
                 setTimeout(() => { window.location.href = 'login.html'; }, 2500);
 
             } catch (error) {
@@ -365,12 +391,14 @@
                 
                 showAlert(errText, false);
                 
+                // Kosongkan password jika registrasi gagal
+                passwordInput.value = '';
+                
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> <span>Daftar Sekarang</span>';
             }
         });
 
-        // THEME TOGGLE
         const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
         if (localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); document.getElementById('switchIcon').classList.replace('fa-sun', 'fa-moon'); }
