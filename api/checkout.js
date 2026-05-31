@@ -16,7 +16,9 @@ export default async function handler(req, res) {
         if (authError || !user) throw new Error('Sesi tidak valid');
 
         const { shipping_address, phone_number, items, used_vouchers } = req.body;
-        if (!items || items.length === 0) throw new Error('Keranjang kosong');
+        
+        // SECURITY PATCH: Pastikan item adalah array dan tidak kosong
+        if (!items || !Array.isArray(items) || items.length === 0) throw new Error('Keranjang kosong');
 
         // SECURITY 1: AMBIL HARGA ASLI DARI DATABASE, JANGAN PERCAYA BROWSER!
         const productIds = items.map(item => item.product_id);
@@ -30,20 +32,27 @@ export default async function handler(req, res) {
             const realProd = realProducts.find(p => p.id == item.product_id);
             if (!realProd) throw new Error(`Barang ID ${item.product_id} tidak valid.`);
             
+            // SECURITY PATCH KRITIS: Cegah Kuantitas Minus & Pastikan berupa Angka
+            const safeQty = parseInt(item.quantity);
+            if (isNaN(safeQty) || safeQty <= 0) {
+                throw new Error(`Kuantitas untuk barang ID ${item.product_id} tidak valid!`);
+            }
+
             const finalItemPrice = (realProd.is_promo && realProd.promo_price) ? realProd.promo_price : realProd.price;
-            serverCalculatedTotal += (finalItemPrice * item.quantity);
+            serverCalculatedTotal += (finalItemPrice * safeQty);
 
             return {
                 product_id: item.product_id,
-                quantity: item.quantity,
+                quantity: safeQty,
                 price_at_buy: finalItemPrice.toString()
             };
         });
 
         // SECURITY 2: VALIDASI VOUCHER DAN HITUNG POTONGAN MURNI DI SERVER
-        if (used_vouchers && used_vouchers.length > 0) {
+        if (used_vouchers && Array.isArray(used_vouchers) && used_vouchers.length > 0) {
+            const safeVoucherCode = String(used_vouchers[0]).toUpperCase().trim();
             const { data: voucher } = await supabase.from('gg_vouchers')
-                .select('*').eq('code', used_vouchers[0].toUpperCase()).single();
+                .select('*').eq('code', safeVoucherCode).single();
                 
             if (voucher && serverCalculatedTotal >= voucher.min_purchase) {
                 let discount = voucher.discount_type === 'percent' 
@@ -59,34 +68,40 @@ export default async function handler(req, res) {
 
         if (serverCalculatedTotal < 0) serverCalculatedTotal = 0;
 
+        // SECURITY PATCH: Batasi panjang string untuk mencegah Database Overload (DoS)
+        const safeAddress = String(shipping_address).substring(0, 500);
+        const safePhone = String(phone_number).substring(0, 50);
+
         // 1. Buat Baris Pesanan Baru DENGAN HARGA HASIL HITUNGAN SERVER
         const { data: order, error: orderError } = await supabase.from('gg_orders').insert([{
             user_id: user.id,
             total_price: serverCalculatedTotal, // AMAN 100%
-            shipping_address: `${shipping_address} (Telp: ${phone_number})`,
+            shipping_address: `${safeAddress} (Telp: ${safePhone})`,
             status: 'Diproses'
         }]).select().single();
 
-        if (orderError) throw orderError;
+        // Menyembunyikan pesan error internal Supabase
+        if (orderError) throw new Error('Gagal memproses pesanan di peladen');
 
         // 2. Pindahkan rincian barang belanjaan
         const orderItemsWithOrderId = secureOrderItems.map(i => ({ ...i, order_id: order.id }));
         const { error: itemsInsertError } = await supabase.from('gg_order_items').insert(orderItemsWithOrderId);
-        if (itemsInsertError) throw itemsInsertError;
+        if (itemsInsertError) throw new Error('Gagal mencatat rincian barang pesanan');
 
         // 3. Kosongkan keranjang belanja
         await supabase.from('gg_cart_items').delete().eq('user_id', user.id);
 
         // 4. LOCKING VOUCHER (Kunci voucher agar tidak bisa di-spam)
-        if (used_vouchers && used_vouchers.length > 0) {
+        if (used_vouchers && Array.isArray(used_vouchers) && used_vouchers.length > 0) {
             const claimedData = used_vouchers.map(code => ({
-                user_id: user.id, voucher_code: code, is_used: true
+                user_id: user.id, voucher_code: String(code).toUpperCase().trim(), is_used: true
             }));
             await supabase.from('gg_claimed_vouchers').upsert(claimedData, { onConflict: 'user_id, voucher_code' });
         }
 
         return res.status(200).json({ message: 'Pesanan diverifikasi & dibuat', order_id: order.id });
     } catch (error) {
-        return res.status(500).json({ error: error.message || 'Terjadi kesalahan sistem' });
+        console.error("Checkout API Error:", error);
+        return res.status(400).json({ error: error.message || 'Terjadi kesalahan sistem' });
     }
 }
