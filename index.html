@@ -416,6 +416,23 @@
     </div>
 
     <script>
+        // =========================================================================
+        // SECURITY PATCH: XSS SANITIZATION (Filter Air Bersih)
+        // =========================================================================
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.replace(/[&<>'"]/g, 
+                tag => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                }[tag] || tag)
+            );
+        }
+        // =========================================================================
+
         const themeToggle = document.getElementById('themeToggle');
         const switchIcon = document.getElementById('switchIcon');
         const html = document.documentElement;
@@ -455,6 +472,20 @@
         const filterTagsContainer = document.getElementById('filterTagsContainer');
         const clearFiltersBtn = document.getElementById('clearFilters');
 
+        window.addEventListener('DOMContentLoaded', () => {
+            // PENANGKAP SINYAL KATEGORI FOOTER
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('kategori')) {
+                currentCategory = urlParams.get('kategori');
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            productContainer.innerHTML = `<div class="empty-state">Menarik data dari gudang... <br><i class="fas fa-spinner fa-spin" style="margin-top: 15px; font-size: 24px;"></i></div>`;
+            fetchProductsFromAPI(); 
+            fetchLogosFromAPI(); 
+            updateNavUI(); 
+        });
+
         async function updateNavUI() {
             const sessionData = localStorage.getItem('user_session');
             const loginBtn = document.getElementById('navLoginBtn');
@@ -471,7 +502,7 @@
                     return;
                 }
                 
-                const savedName = session.name || (session.user && session.user.name) || "User";
+                const savedName = escapeHTML(session.name || (session.user && session.user.name) || "User");
                 const tempNickname = savedName.split(' ')[0]; 
                 const tempAvatar = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(savedName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
@@ -495,7 +526,8 @@
 
                     if (userRes.ok) {
                         const userData = await userRes.json();
-                        const displayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
+                        const rawDisplayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
+                        const displayName = escapeHTML(rawDisplayName);
                         const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
                         loginBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar"><span>${displayName}</span>`;
@@ -598,8 +630,8 @@
                 notifBtn.innerText = redirectUrl ? 'Login Sekarang' : 'Mengerti';
             }
 
-            notifTitle.innerText = title;
-            notifMessage.innerText = message;
+            notifTitle.innerText = escapeHTML(title);
+            notifMessage.innerText = escapeHTML(message);
             
             notifBtn.onclick = function() {
                 notifModal.classList.remove('active');
@@ -632,24 +664,21 @@
                 logos.forEach(logo => {
                     const box = document.createElement('div');
                     box.className = 'pay-box';
-                    box.innerHTML = `<img src="${logo.url}" alt="Partner Pembayaran" class="pay-img" title="${logo.name}">`;
+                    const safeUrl = escapeHTML(logo.url);
+                    const safeName = escapeHTML(logo.name);
+                    box.innerHTML = `<img src="${safeUrl}" alt="Partner Pembayaran" class="pay-img" title="${safeName}">`;
                     paymentContainer.appendChild(box);
                 });
             } catch (error) {}
         }
 
-        // =========================================================================
-        // PERBAIKAN: OTOMATISASI KATEGORI FOOTER
-        // =========================================================================
         function renderCategories(customCategories = null) {
             const uniqueCategories = customCategories || new Set();
             
-            // Kumpulkan kategori unik dari seluruh produk jika tidak ada filter custom
             if (!customCategories) {
                 allProducts.forEach(prod => { if(prod.category) uniqueCategories.add(prod.category); });
             }
             
-            // 1. UPDATE KATEGORI SLIDER (DI ATAS)
             categoryContainer.innerHTML = ''; 
             const allBtn = document.createElement('button');
             allBtn.className = `cat-btn ${currentCategory === 'Semua Barang' ? 'active' : ''}`;
@@ -658,45 +687,37 @@
             allBtn.onclick = () => handleCategoryClick(allBtn, 'Semua Barang');
             categoryContainer.appendChild(allBtn);
 
-            // 2. KOSONGKAN KATEGORI FOOTER (Hanya saat halaman pertama dimuat)
             const footerCatList = document.getElementById('footerCategoryList');
             if (footerCatList && !customCategories) {
                 footerCatList.innerHTML = '';
-                // Tambahkan opsi 'Semua Barang'
                 footerCatList.innerHTML += `<li><a onclick="handleCategoryClick(null, 'Semua Barang'); window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Semua Barang</a></li>`;
             }
 
             Array.from(uniqueCategories).sort().forEach(cat => {
-                // Tambah tombol ke Slider Atas
+                const safeCat = escapeHTML(cat);
                 const btn = document.createElement('button');
                 btn.className = `cat-btn ${currentCategory === cat ? 'active' : ''}`;
-                btn.setAttribute('data-category', cat);
-                btn.innerText = cat;
+                btn.setAttribute('data-category', safeCat);
+                btn.innerText = safeCat;
                 btn.onclick = () => handleCategoryClick(btn, cat);
                 categoryContainer.appendChild(btn);
 
-                // Tambah link ke Footer Bawah (Hanya saat halaman pertama dimuat)
                 if (footerCatList && !customCategories) {
-                    // Gunakan replace untuk menangani kategori yang mengandung tanda kutip (misal: "Barang's")
                     const safeCatName = cat.replace(/'/g, "\\'");
-                    footerCatList.innerHTML += `<li><a onclick="handleCategoryClick(null, '${safeCatName}'); window.scrollTo({top: 0, behavior: 'smooth'}); return false;">${cat}</a></li>`;
+                    footerCatList.innerHTML += `<li><a onclick="handleCategoryClick(null, '${safeCatName}'); window.scrollTo({top: 0, behavior: 'smooth'}); return false;">${safeCat}</a></li>`;
                 }
             });
         }
 
         window.handleCategoryClick = function(clickedBtn, categoryName) {
-            // Bersihkan semua tombol aktif
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
             
             if (clickedBtn) {
-                // Jika ditekan dari slider atas
                 clickedBtn.classList.add('active');
             } else {
-                // PERBAIKAN: Jika ditekan dari footer, cari tombolnya dengan aman
                 document.querySelectorAll('.cat-btn').forEach(b => {
-                    if (b.getAttribute('data-category') === categoryName) {
+                    if (b.getAttribute('data-category') === escapeHTML(categoryName)) {
                         b.classList.add('active');
-                        // Otomatis geser slider atas ke posisi tombol yang aktif
                         b.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
                     }
                 });
@@ -756,7 +777,7 @@
                 groupDiv.className = 'filter-group';
                 const labelDiv = document.createElement('div');
                 labelDiv.className = 'filter-group-label';
-                labelDiv.innerText = groupName;
+                labelDiv.innerText = escapeHTML(groupName);
                 groupDiv.appendChild(labelDiv);
                 const tagsDiv = document.createElement('div');
                 tagsDiv.className = 'filter-tags';
@@ -765,7 +786,7 @@
                     const btn = document.createElement('button');
                     btn.className = 'filter-tag';
                     if(activeTags.includes(tag)) btn.classList.add('active');
-                    btn.innerText = tag;
+                    btn.innerText = escapeHTML(tag);
                     btn.onclick = () => {
                         if(activeTags.includes(tag)) activeTags = activeTags.filter(t => t !== tag);
                         else activeTags.push(tag);
@@ -794,17 +815,25 @@
                 const qtyId = `qty-${prod.id}`; 
                 const isPromoActive = prod.is_promo && prod.promo_price;
                 
+                // Menerapkan Escape HTML untuk keamanan Mutlak
+                const safeImg = escapeHTML(prod.img);
+                const safeTitle = escapeHTML(prod.title);
+                const safeInfo = escapeHTML(prod.info);
+                const safePrice = escapeHTML(prod.price);
+                const safePromoPrice = escapeHTML(prod.promo_price);
+                const safeId = escapeHTML(prod.id.toString());
+
                 const priceHTML = isPromoActive 
-                    ? `<span class="price-strike">${prod.price}</span><span class="price-final">${prod.promo_price}</span>` 
-                    : `<span class="price-final">${prod.price}</span>`;
+                    ? `<span class="price-strike">${safePrice}</span><span class="price-final">${safePromoPrice}</span>` 
+                    : `<span class="price-final">${safePrice}</span>`;
 
                 const card = document.createElement('div');
                 card.className = 'neu-card';
                 card.innerHTML = `
                     ${isPromoActive ? `<div style="position:absolute; top:10px; right:10px; background:#ff4757; color:white; font-size:10px; font-weight:700; padding:4px 8px; border-radius:10px; z-index:2;">PROMO</div>` : ''}
-                    <img src="${prod.img}" alt="${prod.title}" class="product-img" loading="lazy">
-                    <h3 class="product-title">${prod.title}</h3>
-                    <p class="product-info">${prod.info}</p>
+                    <img src="${safeImg}" alt="${safeTitle}" class="product-img" loading="lazy">
+                    <h3 class="product-title">${safeTitle}</h3>
+                    <p class="product-info">${safeInfo}</p>
                     <div class="price">${priceHTML}</div>
                     
                     <div class="qty-wrapper">
@@ -814,10 +843,10 @@
                     </div>
 
                     <div class="card-actions">
-                        <button class="btn-eye" onclick="openModal('${prod.id}')" title="Detail Barang">
+                        <button class="btn-eye" onclick="openModal('${safeId}')" title="Detail Barang">
                             <i class="fas fa-eye"></i>
                         </button>
-                        <button class="neu-btn" onclick="addToCart('${prod.id}', '${qtyId}', event)">
+                        <button class="neu-btn" onclick="addToCart('${safeId}', '${qtyId}', event)">
                             <i class="fas fa-cart-plus"></i> Beli
                         </button>
                     </div>
@@ -919,7 +948,6 @@
 
             const qtyInput = document.getElementById(qtyInputId);
             const quantity = parseInt(qtyInput.value) || 1;
-            const finalPrice = (prod.is_promo && prod.promo_price) ? prod.promo_price : prod.price;
 
             if (event && (event.clientX || event.touches)) {
                 const startX = event.clientX || event.touches[0].clientX;
@@ -939,6 +967,8 @@
             }
 
             try {
+                // Keamanan Backend sudah diperbarui: Frontend sekarang HANYA MENGIRIM ID & QTY.
+                // Harga tidak dikirim dari browser karena akan dihitung ulang secara aman di Server!
                 const response = await fetch('/api/cart', {
                     method: 'POST',
                     headers: { 
@@ -947,9 +977,6 @@
                     },
                     body: JSON.stringify({
                         product_id: prod.id,
-                        product_name: prod.title,
-                        product_price: finalPrice,
-                        product_img: prod.img,
                         quantity: quantity
                     })
                 });
@@ -970,13 +997,6 @@
                 }
             }
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            productContainer.innerHTML = `<div class="empty-state">Menarik data dari gudang... <br><i class="fas fa-spinner fa-spin" style="margin-top: 15px; font-size: 24px;"></i></div>`;
-            fetchProductsFromAPI(); 
-            fetchLogosFromAPI(); 
-            updateNavUI(); 
-        });
 
         searchInput.addEventListener('input', (e) => {
             const keyword = e.target.value.toLowerCase();
@@ -1063,15 +1083,18 @@
         window.openModal = function(productId) {
             const prod = allProducts.find(p => p.id == productId); 
             if(prod) {
-                document.getElementById('modalTitle').innerText = prod.title;
+                document.getElementById('modalTitle').innerText = prod.title; // innerText otomatis aman dari XSS
                 document.getElementById('modalImg').src = prod.img;
                 
                 const isPromoActive = prod.is_promo && prod.promo_price;
+                const safePrice = escapeHTML(prod.price);
+                const safePromo = escapeHTML(prod.promo_price);
+                
                 document.getElementById('modalPrice').innerHTML = isPromoActive 
-                    ? `<span style="text-decoration: line-through; font-size:16px; color:var(--text-muted); margin-right:5px; font-weight:400;">${prod.price}</span> ${prod.promo_price}`
-                    : prod.price;
+                    ? `<span style="text-decoration: line-through; font-size:16px; color:var(--text-muted); margin-right:5px; font-weight:400;">${safePrice}</span> ${safePromo}`
+                    : safePrice;
                     
-                document.getElementById('modalDesc').innerText = prod.desc;
+                document.getElementById('modalDesc').innerText = prod.desc; // innerText otomatis aman dari XSS
                 document.getElementById('modalQty').value = 1;
 
                 document.getElementById('modalAddToCartBtn').onclick = function(event) {
