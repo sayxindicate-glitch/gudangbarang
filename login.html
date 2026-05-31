@@ -341,10 +341,14 @@
                 if (!response.ok) throw new Error(result.error || 'Terjadi kesalahan server');
 
                 // PENYIMPANAN SESI AMAN (Anti Eksfiltrasi - Ancaman 15)
+                // PERBAIKAN UX: Menyimpan string murni (tanpa escapeHTML) agar tidak terjadi bug Double Encoding 
+                // (&amp;amp;) saat nama dipanggil dan disanitasi ulang di index.html atau akun.html
+                const rawName = result.name || (result.session && result.session.user && result.session.user.user_metadata ? result.session.user.user_metadata.full_name : "User");
+                
                 localStorage.setItem('user_session', JSON.stringify({
                     access_token: result.session ? result.session.access_token : result.access_token,
                     user: result.session ? result.session.user : result.user,
-                    name: escapeHTML(result.name || (result.session && result.session.user.user_metadata.full_name))
+                    name: rawName 
                 }));
 
                 showAlert("Login Berhasil! Mengalihkan...", 'success');
