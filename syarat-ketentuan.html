@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syarat & Ketentuan | Goedang Grosir</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #e0e5ec; --text-main: #2d3436; --text-muted: #636e72; --accent-color: #0984e3;
+            --shadow-light: #ffffff; --shadow-dark: #a3b1c6;
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1b1e; --text-main: #f5f6fa; --text-muted: #a4b0be; --accent-color: #00e5ff;
+            --shadow-light: rgba(255, 255, 255, 0.05); --shadow-dark: rgba(0, 0, 0, 0.6);
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+        .top-nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; background-color: var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        
+        .controls { display: flex; align-items: center; gap: 20px; }
+        .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; flex-shrink: 0; }
+        .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
+        [data-theme="dark"] .switch-handle { transform: translateX(30px); }
+
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; flex: 1; width: 100%; }
+        .page-header { text-align: center; margin-bottom: 50px; }
+        .page-title { font-size: 28px; font-weight: 700; margin-bottom: 10px; color: var(--accent-color); }
+        .page-subtitle { font-size: 14px; color: var(--text-muted); font-weight: 600; }
+
+        .legal-card { background: var(--bg-color); border-radius: 20px; padding: 40px; box-shadow: var(--neu-flat); margin-bottom: 40px; }
+        
+        .legal-section { margin-bottom: 30px; }
+        .legal-section h3 { font-size: 16px; font-weight: 700; color: var(--accent-color); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .legal-section p { font-size: 13px; color: var(--text-muted); line-height: 1.8; margin-bottom: 10px; text-align: justify; }
+        .legal-section ul { margin-left: 20px; margin-bottom: 15px; }
+        .legal-section li { font-size: 13px; color: var(--text-muted); line-height: 1.8; margin-bottom: 5px; }
+
+        .footer-prof { background-color: #1a1b1e; color: #f5f6fa; padding: 50px 20px 80px 20px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr; gap: 30px; }
+        .footer-logo { font-size: 20px; font-weight: 700; color: #00e5ff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .footer-desc { font-size: 13px; color: #a4b0be; line-height: 1.6; margin-bottom: 20px; }
+        
+        @media (max-width: 768px) {
+            .legal-card { padding: 25px; }
+            .top-nav { padding: 15px 20px; }
+            .hide-on-mobile { display: none !important; }
+            .footer-container { grid-template-columns: 1fr; text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <a href="index.html" class="logo"><i class="fas fa-box-open"></i> GOEDANG</a>
+        <div class="controls">
+            <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title"><i class="fas fa-file-contract"></i> Syarat & Ketentuan</h1>
+            <p class="page-subtitle">Aturan penggunaan dan kebijakan transaksi di platform Goedang Grosir.</p>
+        </div>
+
+        <div class="legal-card">
+            
+            <div class="legal-section">
+                <h3>1. KETENTUAN PENGGUNAAN (CONDITIONS OF USE)</h3>
+                <p>GOEDANG GROSIR ditawarkan kepada Anda, selaku pengguna, dengan syarat Anda menerima syarat, ketentuan, dan pemberitahuan yang termuat atau digabungkan berdasarkan referensi di sini dan syarat, ketentuan, perjanjian, dan pemberitahuan tambahan lainnya yang mungkin berlaku untuk halaman atau bagian mana pun dari Situs ini.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>2. GAMBARAN UMUM (OVERVIEW)</h3>
+                <p>Penggunaan Anda atas Situs ini merupakan bentuk persetujuan Anda terhadap semua syarat, ketentuan, dan pemberitahuan. Silakan baca dengan saksama. Dengan menggunakan Situs ini, Anda menyetujui Syarat dan Ketentuan ini, serta pedoman atau aturan lain yang berlaku untuk bagian mana pun dari Situs ini, tanpa batasan atau kualifikasi. Jika Anda tidak menyetujui Syarat dan Ketentuan ini, Anda harus segera keluar dari Situs dan menghentikan penggunaan informasi atau produk apa pun dari Situs ini.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>3. MODIFIKASI SITUS DAN SYARAT & KETENTUAN</h3>
+                <p>GOEDANG GROSIR berhak untuk mengubah, memodifikasi, menambah, memperbarui, atau menghentikan syarat, ketentuan, dan pemberitahuan di mana Situs ini ditawarkan beserta tautan, konten, informasi, harga, dan materi lain yang ditawarkan melalui Situs ini kapan saja tanpa pemberitahuan lebih lanjut. Kami berhak untuk menyesuaikan harga dari waktu ke waktu. Jika karena alasan tertentu terdapat kesalahan harga, GOEDANG GROSIR berhak menolak pesanan tersebut. Dengan terus menggunakan Situs ini setelah modifikasi, Anda setuju untuk terikat oleh perubahan tersebut.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>4. HAK CIPTA (COPYRIGHTS)</h3>
+                <p>Situs ini dimiliki dan dioperasikan oleh GOEDANG GROSIR. Kecuali ditentukan lain, semua materi di Situs ini, merek dagang, merek layanan, dan logo adalah milik GOEDANG GROSIR dan dilindungi oleh undang-undang hak cipta Indonesia dan undang-undang hak cipta yang berlaku di seluruh dunia. Tidak ada materi yang diterbitkan oleh GOEDANG GROSIR di Situs ini yang boleh disalin, direproduksi, dimodifikasi, diunggah, diposting, atau didistribusikan dalam bentuk apa pun tanpa izin tertulis sebelumnya dari GOEDANG GROSIR.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>5. PENDAFTARAN (SIGN UP)</h3>
+                <p>Anda perlu mendaftar di Situs ini untuk melakukan pembelian dengan memasukkan nama pengguna dan kata sandi. Anda akan diminta untuk memberikan informasi yang akurat dan terkini pada formulir pendaftaran. Anda bertanggung jawab penuh untuk menjaga kerahasiaan nama pengguna dan kata sandi akun Anda, serta aktivitas apa pun yang terjadi di bawah akun Anda. Anda tidak boleh menyalahgunakan akun Anda atau memalsukan identitas Anda.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>6. KOMUNIKASI ELEKTRONIK</h3>
+                <p>Anda setuju bahwa GOEDANG GROSIR dapat mengirimkan email elektronik kepada Anda dengan tujuan memberi tahu Anda tentang perubahan, penambahan pada Situs, tentang produk atau layanan GOEDANG GROSIR, atau untuk tujuan lain yang kami anggap tepat.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>7. DESKRIPSI PRODUK</h3>
+                <p>Kami selalu berusaha sebaik mungkin untuk menampilkan informasi dan warna produk yang muncul di Situs seakurat mungkin. Namun, kami tidak dapat menjamin bahwa tampilan warna pada monitor Anda akan akurat 100% karena bergantung pada kualitas monitor yang Anda gunakan.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>8. RISIKO KEHILANGAN (RISK OF LOSS)</h3>
+                <p>Semua barang yang dibeli dari GOEDANG GROSIR dibuat berdasarkan kontrak pengiriman. Ini berarti bahwa risiko kehilangan dan hak milik atas barang-barang tersebut berpindah kepada Anda saat kami menyerahkan barang tersebut kepada kurir/pihak pengangkut.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>9. SYARAT PENGEMBALIAN (CONDITIONS OF RETURNS)</h3>
+                <ul>
+                    <li>Barang harus dikembalikan dalam waktu 7 hari sejak tanggal diterima.</li>
+                    <li>Barang harus dalam kondisi asli.</li>
+                    <li>Barang harus memiliki semua label/tag yang terpasang.</li>
+                    <li>Barang yang dibeli pada saat promosi (Sale items) tidak memenuhi syarat untuk dikembalikan.</li>
+                </ul>
+                <p><em>Catatan Penting: Biaya pengiriman dan penanganan (Shipping and handling charges) tidak dapat dikembalikan.</em></p>
+            </div>
+
+            <div class="legal-section">
+                <h3>10. KEBIJAKAN PRIVASI (PRIVACY POLICY)</h3>
+                <p>Informasi Anda aman bersama kami. GOEDANG GROSIR memahami bahwa masalah privasi sangat penting bagi pelanggan kami. Anda dapat yakin bahwa informasi apa pun yang Anda berikan kepada kami tidak akan disalahgunakan, diselewengkan, atau dijual kepada pihak lain mana pun. Kami hanya menggunakan informasi pribadi Anda untuk menyelesaikan pesanan grosir Anda.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>11. GANTI RUGI (INDEMNITY)</h3>
+                <p>Anda setuju untuk mengganti kerugian, membela, dan membebaskan GOEDANG GROSIR dari dan terhadap setiap dan semua klaim, kewajiban, kerusakan, kerugian, atau biaya pihak ketiga (termasuk biaya pengacara yang wajar) yang timbul dari, atau sehubungan dengan akses dan/atau penggunaan Anda atas Situs ini.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>12. PENYANGKALAN (DISCLAIMER)</h3>
+                <p>GOEDANG GROSIR tidak bertanggung jawab atas keakuratan, ketepatan waktu, atau konten dari Materi yang disediakan di Situs ini. Anda tidak boleh berasumsi bahwa Materi di Situs ini terus diperbarui. GOEDANG GROSIR tidak bertanggung jawab untuk menyediakan konten yang telah kedaluwarsa atau dihapus.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>13. HUKUM YANG BERLAKU (APPLICABLE LAWS)</h3>
+                <p>Syarat dan Ketentuan ini diatur dan ditafsirkan berdasarkan hukum yang berlaku di negara Republik Indonesia.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>14. PERTANYAAN DAN UMPAN BALIK</h3>
+                <p>Kami menyambut baik pertanyaan, komentar, dan kekhawatiran Anda tentang privasi atau informasi apa pun yang dikumpulkan dari Anda. Silakan kirimkan umpan balik apa pun yang berkaitan dengan privasi atau masalah lainnya kepada tim dukungan kami.</p>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid rgba(128,128,128,0.2); margin: 30px 0;">
+            <p style="font-size: 11px; color: var(--text-muted); text-align: center;"><strong>Pemberitahuan Hukum:</strong> GOEDANG GROSIR adalah merek yang dioperasikan secara sah. Hak Cipta Dilindungi Undang-Undang.</p>
+
+        </div>
+    </div>
+
+    <footer class="footer-prof">
+        <div class="footer-container">
+            <div>
+                <div class="footer-logo"><i class="fas fa-box-open"></i> GOEDANG GROSIR</div>
+                <p class="footer-desc">Platform e-commerce grosir terpercaya. Menyediakan berbagai kebutuhan usaha Anda dengan harga terbaik.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Pengendali Mode Gelap/Terang
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        if (localStorage.getItem('theme') === 'dark') { 
+            html.setAttribute('data-theme', 'dark'); 
+            document.getElementById('switchIcon').classList.replace('fa-sun', 'fa-moon'); 
+        }
+        themeToggle.addEventListener('click', () => {
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            document.getElementById('switchIcon').classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
+        });
+    </script>
+</body>
+</html>

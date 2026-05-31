@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kebijakan Privasi | Goedang Grosir</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #e0e5ec; --text-main: #2d3436; --text-muted: #636e72; --accent-color: #0984e3;
+            --shadow-light: #ffffff; --shadow-dark: #a3b1c6;
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1b1e; --text-main: #f5f6fa; --text-muted: #a4b0be; --accent-color: #00e5ff;
+            --shadow-light: rgba(255, 255, 255, 0.05); --shadow-dark: rgba(0, 0, 0, 0.6);
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+        .top-nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; background-color: var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        
+        .controls { display: flex; align-items: center; gap: 20px; }
+        .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; flex-shrink: 0; }
+        .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
+        [data-theme="dark"] .switch-handle { transform: translateX(30px); }
+
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; flex: 1; width: 100%; }
+        .page-header { text-align: center; margin-bottom: 50px; }
+        .page-title { font-size: 28px; font-weight: 700; margin-bottom: 10px; color: var(--accent-color); }
+        .page-subtitle { font-size: 14px; color: var(--text-muted); font-weight: 600; }
+
+        .legal-card { background: var(--bg-color); border-radius: 20px; padding: 40px; box-shadow: var(--neu-flat); margin-bottom: 40px; }
+        
+        .legal-section { margin-bottom: 30px; }
+        .legal-section h3 { font-size: 16px; font-weight: 700; color: var(--accent-color); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .legal-section p { font-size: 13px; color: var(--text-muted); line-height: 1.8; margin-bottom: 10px; text-align: justify; }
+        .legal-section ul { margin-left: 20px; margin-bottom: 15px; }
+        .legal-section li { font-size: 13px; color: var(--text-muted); line-height: 1.8; margin-bottom: 5px; }
+
+        .footer-prof { background-color: #1a1b1e; color: #f5f6fa; padding: 50px 20px 80px 20px; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr; gap: 30px; }
+        .footer-logo { font-size: 20px; font-weight: 700; color: #00e5ff; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .footer-desc { font-size: 13px; color: #a4b0be; line-height: 1.6; margin-bottom: 20px; }
+        
+        @media (max-width: 768px) {
+            .legal-card { padding: 25px; }
+            .top-nav { padding: 15px 20px; }
+            .hide-on-mobile { display: none !important; }
+            .footer-container { grid-template-columns: 1fr; text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <a href="index.html" class="logo"><i class="fas fa-box-open"></i> GOEDANG</a>
+        <div class="controls">
+            <div class="theme-switch" id="themeToggle"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title"><i class="fas fa-shield-alt"></i> Kebijakan Privasi</h1>
+            <p class="page-subtitle">Komitmen kami dalam melindungi dan menjaga kerahasiaan data Anda.</p>
+        </div>
+
+        <div class="legal-card">
+            
+            <div class="legal-section">
+                <h3>1. PENDAHULUAN</h3>
+                <p>Informasi Anda aman bersama kami. GOEDANG GROSIR menyadari dan memahami bahwa masalah privasi adalah hal yang sangat penting dan krusial bagi pelanggan kami. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi pribadi Anda saat Anda mengakses dan menggunakan layanan e-commerce kami.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>2. INFORMASI YANG KAMI KUMPULKAN</h3>
+                <p>Untuk memberikan pengalaman berbelanja grosir yang optimal, kami mengumpulkan informasi yang Anda berikan secara langsung kepada kami saat melakukan pendaftaran akun maupun checkout pesanan, antara lain:</p>
+                <ul>
+                    <li>Nama lengkap dan nama panggilan.</li>
+                    <li>Alamat email yang valid.</li>
+                    <li>Nomor telepon / WhatsApp yang aktif.</li>
+                    <li>Alamat lengkap pengiriman barang.</li>
+                    <li>Riwayat pesanan dan transaksi di platform kami.</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <h3>3. PENGGUNAAN INFORMASI (USE OF INFORMATION)</h3>
+                <p>Kami hanya menggunakan informasi pribadi Anda semata-mata untuk memproses dan menyelesaikan pesanan Anda. Ini termasuk untuk tujuan:</p>
+                <ul>
+                    <li>Memvalidasi dan mengamankan akun pengguna Anda.</li>
+                    <li>Menghubungi Anda terkait status pesanan, pembayaran, atau kendala pengiriman.</li>
+                    <li>Mendistribusikan barang pesanan ke alamat yang tepat melalui mitra logistik kami.</li>
+                    <li>Memberikan informasi mengenai promo diskon atau voucher yang relevan dengan Anda.</li>
+                </ul>
+            </div>
+
+            <div class="legal-section">
+                <h3>4. KEAMANAN DAN PERLINDUNGAN DATA (DATA SECURITY)</h3>
+                <p>Anda dapat yakin dan tenang bahwa informasi apa pun yang Anda kirimkan dan percayakan kepada kami <strong>tidak akan disalahgunakan, diselewengkan, atau dijual kepada pihak lain mana pun</strong>. Kami menggunakan langkah-langkah keamanan teknis tingkat lanjut (termasuk enkripsi kata sandi dan token sesi) untuk mencegah pelanggaran keamanan di server kami dan melindungi data Anda dari akses yang tidak sah.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>5. PEMBAGIAN INFORMASI KEPADA PIHAK KETIGA</h3>
+                <p>Kami tidak akan menyewakan atau menjual data pribadi Anda. Kami hanya akan membagikan informasi Anda kepada pihak ketiga yang memiliki kerja sama resmi dan bersifat krusial untuk operasional kami, seperti:</p>
+                <ul>
+                    <li><strong>Mitra Pembayaran (Payment Gateway):</strong> Seperti Midtrans, untuk memproses transaksi Anda secara aman dan sah.</li>
+                    <li><strong>Mitra Logistik:</strong> Untuk keperluan pelabelan resi dan pengantaran barang ke alamat Anda.</li>
+                </ul>
+                <p>Mitra-mitra tersebut juga terikat oleh kebijakan kerahasiaan data yang ketat sesuai dengan hukum yang berlaku di Indonesia.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>6. PERSETUJUAN (CONSENT)</h3>
+                <p>Dengan menggunakan situs web GOEDANG GROSIR dan memberikan informasi pribadi Anda, Anda menyetujui pengumpulan dan penggunaan informasi Anda sebagaimana diuraikan dalam Kebijakan Privasi ini. Jika kami memutuskan untuk mengubah kebijakan privasi kami, kami akan memperbaruinya di halaman ini agar Anda selalu mengetahui informasi apa yang kami kumpulkan dan bagaimana kami menggunakannya.</p>
+            </div>
+
+            <div class="legal-section">
+                <h3>7. PERTANYAAN DAN MASUKAN (QUESTIONS AND FEEDBACK)</h3>
+                <p>Kami menyambut baik dan terbuka terhadap pertanyaan, komentar, serta kekhawatiran Anda mengenai privasi atau informasi apa pun yang dikumpulkan. Silakan kirimkan semua masukan yang berkaitan dengan privasi atau masalah lainnya kepada layanan pelanggan kami.</p>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid rgba(128,128,128,0.2); margin: 30px 0;">
+            <p style="font-size: 11px; color: var(--text-muted); text-align: center;"><strong>Pemberitahuan Hukum:</strong> GOEDANG GROSIR berkomitmen penuh pada privasi pengguna. Hak Cipta Dilindungi Undang-Undang.</p>
+
+        </div>
+    </div>
+
+    <footer class="footer-prof">
+        <div class="footer-container">
+            <div>
+                <div class="footer-logo"><i class="fas fa-box-open"></i> GOEDANG GROSIR</div>
+                <p class="footer-desc">Platform e-commerce grosir terpercaya. Menyediakan berbagai kebutuhan usaha Anda dengan harga terbaik.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Pengendali Mode Gelap/Terang
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        if (localStorage.getItem('theme') === 'dark') { 
+            html.setAttribute('data-theme', 'dark'); 
+            document.getElementById('switchIcon').classList.replace('fa-sun', 'fa-moon'); 
+        }
+        themeToggle.addEventListener('click', () => {
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            document.getElementById('switchIcon').classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
+        });
+    </script>
+</body>
+</html>
