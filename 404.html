@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Tidak Ditemukan | Goedang Grosir</title>
+    <!-- SECURITY PATCH: FontAwesome dengan Subresource Integrity (SRI) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #e0e5ec; --text-main: #2d3436; --text-muted: #636e72; --accent-color: #0984e3;
+            --shadow-light: #ffffff; --shadow-dark: #a3b1c6;
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1b1e; --text-main: #f5f6fa; --text-muted: #a4b0be; --accent-color: #00e5ff;
+            --shadow-light: rgba(255, 255, 255, 0.05); --shadow-dark: rgba(0, 0, 0, 0.6);
+            --neu-flat: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+            --neu-pressed: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+            --neu-flat-sm: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+            --neu-pressed-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.4s ease, color 0.4s ease; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* --- NAVIGASI ATAS --- */
+        .top-nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; background-color: var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .logo { font-size: 20px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        
+        .controls { display: flex; align-items: center; gap: 20px; flex: 1; justify-content: flex-end; }
+        .theme-switch { width: 60px; height: 30px; border-radius: 50px; background: var(--bg-color); box-shadow: var(--neu-pressed); position: relative; cursor: pointer; display: flex; align-items: center; padding: 4px; }
+        .switch-handle { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-color); box-shadow: var(--neu-flat); position: absolute; left: 4px; transition: transform 0.4s ease; display: flex; justify-content: center; align-items: center; color: var(--accent-color); font-size: 10px; }
+        [data-theme="dark"] .switch-handle { transform: translateX(30px); }
+
+        .nav-btn-cap { background: var(--bg-color); color: var(--text-main); text-decoration: none; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 50px; box-shadow: var(--neu-flat-sm); transition: all 0.2s; }
+        .nav-btn-cap:active { box-shadow: var(--neu-pressed-sm); color: var(--accent-color); }
+
+        /* --- KONTEN ERROR 404 --- */
+        .container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px 20px; width: 100%; max-width: 1200px; margin: 0 auto; }
+        
+        .error-card { background: var(--bg-color); border-radius: 40px; padding: 60px 40px; box-shadow: var(--neu-flat); text-align: center; max-width: 500px; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        .error-code { font-size: 120px; font-weight: 800; color: var(--bg-color); text-shadow: 6px 6px 10px var(--shadow-dark), -6px -6px 10px var(--shadow-light); line-height: 1; margin-bottom: 20px; letter-spacing: 5px; }
+        [data-theme="dark"] .error-code { text-shadow: 6px 6px 10px rgba(0,0,0,0.8), -6px -6px 10px rgba(255,255,255,0.05); color: var(--accent-color); opacity: 0.8; }
+        
+        .error-icon { font-size: 60px; color: #ff4757; margin-bottom: 20px; filter: drop-shadow(3px 3px 5px var(--shadow-dark)); }
+        
+        .error-title { font-size: 24px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
+        .error-desc { font-size: 14px; color: var(--text-muted); font-weight: 500; margin-bottom: 40px; line-height: 1.6; }
+
+        .btn-home { padding: 15px 35px; border-radius: 50px; border: none; background: var(--bg-color); color: var(--accent-color); font-size: 15px; font-weight: 700; box-shadow: var(--neu-flat); cursor: pointer; display: inline-flex; justify-content: center; align-items: center; gap: 10px; text-decoration: none; transition: all 0.3s; }
+        .btn-home:active { box-shadow: var(--neu-pressed); }
+
+        /* --- BOTTOM NAV MOBILE --- */
+        .bottom-nav { display: none; }
+
+        @media (max-width: 768px) {
+            .top-nav { padding: 15px 20px; }
+            .hide-on-mobile { display: none !important; }
+            .container { padding-bottom: 120px; }
+            
+            .error-card { padding: 40px 20px; border-radius: 30px; box-shadow: none; background: transparent; }
+            .error-code { font-size: 90px; }
+            .error-icon { font-size: 50px; }
+            .error-title { font-size: 20px; }
+
+            .bottom-nav { 
+                display: flex; position: fixed; bottom: 0; left: 0; width: 100%; 
+                background-color: var(--bg-color); border-radius: 25px 25px 0 0; 
+                box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; 
+                padding: 10px 15px; justify-content: space-between; 
+                padding-bottom: max(15px, env(safe-area-inset-bottom)); gap: 8px; 
+            }
+            [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
+            
+            .bottom-nav-item { 
+                flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+                text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; 
+                padding: 10px 0; border-radius: 18px; transition: all 0.3s ease; 
+            }
+            .bottom-nav-item i { font-size: 20px; margin-bottom: 4px; }
+            .bottom-nav-item.active { color: var(--accent-color); background: var(--bg-color); box-shadow: var(--neu-pressed-sm); }
+        }
+    </style>
+    <script src="analytics.js"></script>
+</head>
+<body>
+
+    <div class="top-nav">
+        <a href="index.html" class="logo"><i class="fas fa-box-open"></i> GOEDANG</a>
+        <div class="controls">
+            <div class="theme-switch" id="themeToggle" title="Ganti Tema"><div class="switch-handle"><i class="fas fa-sun" id="switchIcon"></i></div></div>
+            <a href="index.html" class="nav-btn-cap hide-on-mobile"><i class="fas fa-home"></i> <span>Beranda</span></a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="error-card">
+            <i class="fas fa-search-minus error-icon"></i>
+            <div class="error-code">404</div>
+            <h2 class="error-title">Oops! Halaman Tidak Ditemukan</h2>
+            <p class="error-desc">Maaf, halaman yang Anda cari mungkin telah dihapus, diubah namanya, atau memang tidak pernah ada di server kami.</p>
+            <a href="index.html" class="btn-home">
+                <i class="fas fa-arrow-left"></i> Kembali ke Beranda
+            </a>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
+        <a href="promo.html" class="bottom-nav-item"><i class="fas fa-tags"></i><span>Promo</span></a>
+        <a href="keranjang.html" class="bottom-nav-item"><i class="fas fa-shopping-cart"></i><span>Keranjang</span></a>
+        <a href="pesanan.html" class="bottom-nav-item"><i class="fas fa-box"></i><span>Pesanan</span></a>
+        <a href="akun.html" class="bottom-nav-item"><i class="fas fa-user"></i><span>Akun</span></a>
+    </nav>
+
+    <script>
+        // =========================================================================
+        // SECURITY PATCH: KUNCI LINGKUNGAN JAVASCRIPT
+        // =========================================================================
+        "use strict"; 
+        Object.freeze(Object.prototype);
+        if (window.top !== window.self) { window.top.location = window.self.location; }
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+        }
+        // =========================================================================
+
+        // --- THEME TOGGLE ---
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        if (localStorage.getItem('theme') === 'dark') { 
+            html.setAttribute('data-theme', 'dark'); 
+            document.getElementById('switchIcon').classList.replace('fa-sun', 'fa-moon'); 
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
+            document.getElementById('switchIcon').classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
+        });
+    </script>
+</body>
+</html>
