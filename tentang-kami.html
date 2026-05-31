@@ -266,6 +266,11 @@
     <script src="analytics.js"></script>
 
     <script>
+        // SECURITY PATCH: XSS SANITIZATION
+function escapeHTML(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+}
         const sessionData = localStorage.getItem('user_session');
 
         // =========================================================================
