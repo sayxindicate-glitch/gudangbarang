@@ -21,22 +21,32 @@ export default async function handler(req, res) {
         if (authError || !user) return res.status(401).json({ error: 'Sesi tidak valid' });
 
         // 1. Ambil data pesanan utama dari gg_orders
-        const { data: orders, error: dbError } = await supabase.from('gg_orders').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
-        if (dbError) return res.status(500).json({ error: dbError.message });
+        const { data: orders, error: dbError } = await supabase.from('gg_orders')
+            .select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+            
+        // SECURITY PATCH: Menyamarkan pesan error asli dari Database Supabase
+        if (dbError) throw new Error('Gagal memuat pesanan'); 
+        
         if (!orders || orders.length === 0) return res.status(200).json([]);
 
         const orderIds = orders.map(o => o.id);
         
         // 2. Ambil rincian barang dari gg_order_items
-        const { data: items, error: itemsError } = await supabase.from('gg_order_items').select('*').in('order_id', orderIds);
-        if (itemsError) return res.status(500).json({ error: itemsError.message });
+        const { data: items, error: itemsError } = await supabase.from('gg_order_items')
+            .select('*').in('order_id', orderIds);
+            
+        // SECURITY PATCH: Menyamarkan pesan error asli dari Database Supabase
+        if (itemsError) throw new Error('Gagal memuat rincian pesanan');
 
         // 3. Tarik data dari gg_products berdasarkan product_id
         const productIds = [...new Set(items.map(i => i.product_id).filter(id => id != null))];
         let productsDict = {};
         
         if (productIds.length > 0) {
-            const { data: products } = await supabase.from('gg_products').select('*').in('id', productIds);
+            // SECURITY & PERFORMANCE PATCH: Jangan gunakan select('*') agar tidak membuat server lelah (DoS)
+            const { data: products } = await supabase.from('gg_products')
+                .select('id, title, img, price, promo_price, product_name, product_price, image, img_url').in('id', productIds);
+                
             if (products) {
                 products.forEach(p => { productsDict[String(p.id)] = p; }); 
             }
@@ -64,7 +74,8 @@ export default async function handler(req, res) {
         return res.status(200).json(finalOrders);
 
     } catch (error) {
-        console.error("Server Error:", error);
-        return res.status(500).json({ error: 'Terjadi kesalahan internal server' });
+        console.error("Orders API Error:", error);
+        // SECURITY PATCH: Filter terakhir untuk memastikan tidak ada pesan error teknis yang bocor ke publik
+        return res.status(500).json({ error: error.message || 'Terjadi kesalahan internal server' });
     }
 }
