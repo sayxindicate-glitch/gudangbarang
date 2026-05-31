@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Akun Saya | Goedang Grosir</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
@@ -89,47 +89,16 @@
             .action-buttons { flex-direction: column; gap: 15px; }
             .btn-action { padding: 12px; font-size: 13px; }
 
-            /* ---> MASTER BOTTOM NAV MOBILE <--- */
-            .bottom-nav { 
-                display: flex; position: fixed; bottom: 0; left: 0; width: 100%; 
-                background-color: var(--bg-color); border-radius: 25px 25px 0 0; 
-                box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; 
-                padding: 10px 15px; 
-                justify-content: space-between; 
-                padding-bottom: max(15px, env(safe-area-inset-bottom)); 
-                gap: 8px; 
-            }
+            .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background-color: var(--bg-color); border-radius: 25px 25px 0 0; box-shadow: 0 -8px 20px rgba(0,0,0,0.05); z-index: 999; padding: 10px 15px; justify-content: space-between; padding-bottom: max(15px, env(safe-area-inset-bottom)); gap: 8px; }
             [data-theme="dark"] .bottom-nav { box-shadow: 0 -8px 20px rgba(0,0,0,0.4); }
             
-            .bottom-nav-item { 
-                flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-                text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; 
-                padding: 10px 0; border-radius: 18px; 
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: transparent; 
-            }
-            
-            .bottom-nav-item i { 
-                font-size: 20px; margin-bottom: 4px; 
-                transition: transform 0.2s ease, color 0.2s ease; 
-            }
-            
-            .bottom-nav-item.active { 
-                color: var(--accent-color); 
-                background: var(--bg-color); 
-                box-shadow: var(--neu-pressed-sm); 
-            }
-            
-            .bottom-nav-item.active i { 
-                transform: scale(1.15); 
-            }
+            .bottom-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-decoration: none; color: var(--text-muted); font-size: 10px; font-weight: 600; padding: 10px 0; border-radius: 18px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: transparent; }
+            .bottom-nav-item i { font-size: 20px; margin-bottom: 4px; transition: transform 0.2s ease, color 0.2s ease; }
+            .bottom-nav-item.active { color: var(--accent-color); background: var(--bg-color); box-shadow: var(--neu-pressed-sm); }
+            .bottom-nav-item.active i { transform: scale(1.15); }
             
             .badge-container { position: relative; display: inline-flex; }
-            
-            .bottom-nav-item .badge-count { 
-                position: absolute; top: -5px; right: -12px; background: #ff4757; color: white; 
-                font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; 
-                border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 2;
-            }
+            .bottom-nav-item .badge-count { position: absolute; top: -5px; right: -12px; background: #ff4757; color: white; font-size: 9px; font-weight: bold; padding: 2px 5px; border-radius: 10px; border: 2px solid var(--bg-color); display: flex; justify-content: center; align-items: center; z-index: 2; }
         }
     </style>
 <script src="analytics.js"></script>     </head>
@@ -212,31 +181,18 @@
         <a href="index.html" class="bottom-nav-item">
             <i class="fas fa-home"></i><span>Beranda</span>
         </a>
-        
         <a href="promo.html" class="bottom-nav-item">
-            <div class="badge-container">
-                <i class="fas fa-tags"></i>
-                <span class="badge-count" id="mobilePromoBadge" style="display: none;">0</span>
-            </div>
+            <div class="badge-container"><i class="fas fa-tags"></i><span class="badge-count" id="mobilePromoBadge" style="display: none;">0</span></div>
             <span>Promo</span>
         </a>
-        
         <a href="keranjang.html" class="bottom-nav-item">
-            <div class="badge-container">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="badge-count" id="mobileCartBadge" style="display: none;">0</span>
-            </div>
+            <div class="badge-container"><i class="fas fa-shopping-cart"></i><span class="badge-count" id="mobileCartBadge" style="display: none;">0</span></div>
             <span>Keranjang</span>
         </a>
-        
         <a href="pesanan.html" class="bottom-nav-item">
-            <div class="badge-container">
-                <i class="fas fa-box"></i>
-                <span class="badge-count" id="mobileOrderBadge" style="display: none;">0</span>
-            </div>
+            <div class="badge-container"><i class="fas fa-box"></i><span class="badge-count" id="mobileOrderBadge" style="display: none;">0</span></div>
             <span>Pesanan</span>
         </a>
-        
         <a href="akun.html" class="bottom-nav-item active" id="mobileAccountBtn">
             <i class="fas fa-user"></i><span>Akun</span>
         </a>
@@ -244,6 +200,12 @@
 
     <script>
         "use strict";
+
+        // SECURITY PATCH: XSS SANITIZATION
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+        }
 
         const sessionData = localStorage.getItem('user_session');
         if (!sessionData) { window.location.replace('login.html'); }
@@ -253,13 +215,10 @@
         const alertIcon = document.getElementById('alertIcon');
         const alertMessage = document.getElementById('alertMessage');
 
-        function autoResize(el) {
-            el.style.height = 'auto';
-            el.style.height = el.scrollHeight + 'px';
-        }
+        function autoResize(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
 
         function showAlert(msg, type) {
-            alertMessage.innerText = msg;
+            alertMessage.innerText = escapeHTML(msg); // Sanitasi pesan
             if(type === 'success') {
                 alertIcon.innerHTML = '<i class="fas fa-check-circle" style="color: #27ae60;"></i>';
                 alertToast.style.color = '#27ae60';
@@ -273,17 +232,13 @@
 
         async function loadProfile() {
             try {
-                document.getElementById('displayEmail').innerText = session.user?.email || "";
+                document.getElementById('displayEmail').innerText = escapeHTML(session.user?.email || "");
                 
                 const res = await fetch('/api/user', {
                     headers: { 'Authorization': `Bearer ${session.access_token}` }
                 });
 
-                if (res.status === 401 || res.status === 403) {
-                    handleLogout();
-                    return;
-                }
-
+                if (res.status === 401 || res.status === 403) { handleLogout(); return; }
                 if (!res.ok) throw new Error("Gagal mengambil data profil.");
 
                 const data = await res.json();
@@ -295,32 +250,28 @@
                     
                     const alamatInput = document.getElementById('alamatLengkap');
                     alamatInput.value = data.alamat_lengkap || "";
-                    
                     autoResize(alamatInput);
 
                     const displayName = data.nama_panggilan || (data.nama_lengkap ? data.nama_lengkap.split(' ')[0] : "User");
-                    updateAvatarUI(displayName);
+                    updateAvatarUI(escapeHTML(displayName)); // SANITASI SEBELUM RENDER
                 }
-                
                 syncBadges(session.access_token);
-
             } catch (error) {
                 showAlert(error.message, "error");
-                const fallbackName = session.name || "User";
-                updateAvatarUI(fallbackName);
+                updateAvatarUI(escapeHTML(session.name || "User"));
             }
         }
 
         function updateAvatarUI(name) {
             const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
-            
-            document.getElementById('displayTitle').innerText = name;
+            document.getElementById('displayTitle').innerText = name; // innerText sudah aman
             document.getElementById('userAvatar').src = avatarUrl;
             document.getElementById('navAvatar').src = avatarUrl;
-            document.getElementById('navUsername').innerText = name;
+            document.getElementById('navUsername').innerText = name; // innerText sudah aman
 
             const mobileAccountBtn = document.getElementById('mobileAccountBtn');
             if (mobileAccountBtn) {
+                // NAME SUDAH DI-ESCAPEHTML DARI PEMANGGIL
                 mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${name}</span>`;
             }
         }
@@ -369,17 +320,13 @@
             const phone = document.getElementById('noWa').value.trim();
             const address = document.getElementById('alamatLengkap').value.trim();
 
-            if (!name || !phone || !address) {
-                showAlert("Nama, No WA, dan Alamat wajib diisi!", "error");
-                return;
-            }
+            if (!name || !phone || !address) { showAlert("Nama, No WA, dan Alamat wajib diisi!", "error"); return; }
 
             const btn = document.getElementById('btnSave');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
             btn.disabled = true;
 
             try {
-                // DI SINI SUDAH SAYA PERBAIKI MENJADI 'PUT' AGAR SINKRON DENGAN BACKEND
                 const res = await fetch('/api/user', {
                     method: 'PUT', 
                     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
@@ -390,7 +337,7 @@
                 if (!res.ok) throw new Error(result.error || "Gagal menyimpan perubahan.");
 
                 const finalName = nickname || name.split(' ')[0];
-                updateAvatarUI(finalName);
+                updateAvatarUI(escapeHTML(finalName));
                 
                 session.name = finalName;
                 localStorage.setItem('user_session', JSON.stringify(session));
@@ -404,10 +351,7 @@
             }
         }
 
-        function handleLogout() {
-            localStorage.removeItem('user_session');
-            window.location.href = 'login.html';
-        }
+        function handleLogout() { localStorage.removeItem('user_session'); window.location.href = 'login.html'; }
 
         const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
