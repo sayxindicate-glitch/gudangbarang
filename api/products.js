@@ -1,6 +1,16 @@
 import { createClient } from '@supabase/supabase-js'
 
 export default async function handler(req, res) {
+    // SECURITY PATCH 1: Batasi API agar HANYA menerima metode GET (Mencegah penyalahgunaan)
+    if (req.method !== 'GET') {
+        return res.status(405).json({ error: 'Metode tidak diizinkan' });
+    }
+
+    // PERFORMANCE PATCH: Terapkan sistem Caching
+    // Menyimpan data produk di memori peladen sementara (60 detik) untuk mencegah Server Down / DoS
+    // sekaligus sangat menghemat kuota pembacaan database Supabase Anda.
+    res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+
     // Vercel akan mengambil kunci rahasia ini dari Environment Variables,
     // sehingga sama sekali tidak terekspos ke frontend HTML Anda.
     const supabaseUrl = process.env.SUPABASE_URL;
@@ -15,11 +25,14 @@ export default async function handler(req, res) {
             .select('*')
             .order('id', { ascending: true });
 
-        if (error) throw error;
+        // SECURITY PATCH 2: Menyamarkan error database
+        if (error) throw new Error('Gagal mengakses data katalog');
         
         // Mengirimkan data dalam bentuk JSON ke website
-        res.status(200).json(data);
+        return res.status(200).json(data || []);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("Products API Error:", error);
+        // SECURITY PATCH 3: Mencegah Information Disclosure ke peretas
+        return res.status(500).json({ error: 'Terjadi kesalahan sistem saat memuat produk.' });
     }
 }
