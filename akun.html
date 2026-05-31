@@ -199,13 +199,25 @@
     </nav>
 
     <script>
+        // =========================================================================
+        // SECURITY PATCH: KUNCI LINGKUNGAN JAVASCRIPT & SANITASI
+        // =========================================================================
         "use strict";
 
-        // SECURITY PATCH: XSS SANITIZATION
+        // MENCEGAH PROTOTYPE POLLUTION (Ancaman 2)
+        Object.freeze(Object.prototype);
+
+        // MENCEGAH CLICKJACKING / UI REDRESSING FALLBACK (Ancaman 8)
+        if (window.top !== window.self) {
+            window.top.location = window.self.location;
+        }
+
+        // FUNGSI SANITASI MUTLAK (Anti-XSS & DOM Clobbering)
         function escapeHTML(str) {
             if (!str) return '';
             return String(str).replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
         }
+        // =========================================================================
 
         const sessionData = localStorage.getItem('user_session');
         if (!sessionData) { window.location.replace('login.html'); }
@@ -218,7 +230,9 @@
         function autoResize(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
 
         function showAlert(msg, type) {
-            alertMessage.innerText = escapeHTML(msg); // Sanitasi pesan
+            // SECURITY PATCH: Menghapus escapeHTML karena innerText otomatis mencegah XSS.
+            // Ini mencegah bug Double Encoding (&amp;)
+            alertMessage.innerText = msg; 
             if(type === 'success') {
                 alertIcon.innerHTML = '<i class="fas fa-check-circle" style="color: #27ae60;"></i>';
                 alertToast.style.color = '#27ae60';
@@ -232,7 +246,8 @@
 
         async function loadProfile() {
             try {
-                document.getElementById('displayEmail').innerText = escapeHTML(session.user?.email || "");
+                // innerText sudah aman dari XSS
+                document.getElementById('displayEmail').innerText = session.user?.email || "";
                 
                 const res = await fetch('/api/user', {
                     headers: { 'Authorization': `Bearer ${session.access_token}` }
@@ -253,26 +268,29 @@
                     autoResize(alamatInput);
 
                     const displayName = data.nama_panggilan || (data.nama_lengkap ? data.nama_lengkap.split(' ')[0] : "User");
-                    updateAvatarUI(escapeHTML(displayName)); // SANITASI SEBELUM RENDER
+                    updateAvatarUI(displayName); // Kirim teks murni tanpa escapeHTML untuk mencegah bug &amp;
                 }
                 syncBadges(session.access_token);
             } catch (error) {
                 showAlert(error.message, "error");
-                updateAvatarUI(escapeHTML(session.name || "User"));
+                updateAvatarUI(session.name || "User");
             }
         }
 
         function updateAvatarUI(name) {
             const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(name)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
-            document.getElementById('displayTitle').innerText = name; // innerText sudah aman
+            
+            // Penggunaan innerText sudah mutlak aman dari XSS tanpa perlu escapeHTML tambahan
+            document.getElementById('displayTitle').innerText = name; 
+            document.getElementById('navUsername').innerText = name; 
+            
             document.getElementById('userAvatar').src = avatarUrl;
             document.getElementById('navAvatar').src = avatarUrl;
-            document.getElementById('navUsername').innerText = name; // innerText sudah aman
 
             const mobileAccountBtn = document.getElementById('mobileAccountBtn');
             if (mobileAccountBtn) {
-                // NAME SUDAH DI-ESCAPEHTML DARI PEMANGGIL
-                mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${name}</span>`;
+                // Karena elemen ini menggunakan innerHTML, kita WAJIB menggunakan escapeHTML di baris ini
+                mobileAccountBtn.innerHTML = `<img src="${avatarUrl}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; margin-bottom: 2px;"><span>${escapeHTML(name)}</span>`;
             }
         }
 
@@ -337,7 +355,7 @@
                 if (!res.ok) throw new Error(result.error || "Gagal menyimpan perubahan.");
 
                 const finalName = nickname || name.split(' ')[0];
-                updateAvatarUI(escapeHTML(finalName));
+                updateAvatarUI(finalName); // Teks murni
                 
                 session.name = finalName;
                 localStorage.setItem('user_session', JSON.stringify(session));
