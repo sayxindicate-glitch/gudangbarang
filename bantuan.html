@@ -353,7 +353,7 @@ function escapeHTML(str) {
                     if (paymentContainer) {
                         paymentContainer.innerHTML = '';
                         logos.forEach(logo => {
-                            paymentContainer.innerHTML += `<div class="pay-box"><img src="${logo.url}" alt="Partner Pembayaran" class="pay-img" title="${logo.name}"></div>`;
+                            paymentContainer.innerHTML += `<div class="pay-box"><img src="${escapeHTML(logo.url)}" alt="Partner Pembayaran" class="pay-img" title="${escapeHTML(logo.name)}"></div>`;
                         });
                     }
                 }).catch(e => {});
@@ -366,7 +366,7 @@ function escapeHTML(str) {
                     if (footerCatList) {
                         footerCatList.innerHTML = `<li><a href="index.html?kategori=Semua Barang">Semua Barang</a></li>`;
                         Array.from(uniqueCategories).sort().forEach(cat => {
-                            footerCatList.innerHTML += `<li><a href="index.html?kategori=${encodeURIComponent(cat)}">${cat}</a></li>`;
+                            footerCatList.innerHTML += `<li><a href="index.html?kategori=${encodeURIComponent(cat)}">${escapeHTML(cat)}</a></li>`;
                         });
                     }
                 }).catch(e => {});
