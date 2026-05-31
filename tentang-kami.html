@@ -323,7 +323,7 @@ function escapeHTML(str) {
 
                     if (userRes.ok) {
                         const userData = await userRes.json();
-                        const displayName = userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User");
+                        const displayName = escapeHTML(userData.nama_panggilan || (userData.nama_lengkap ? userData.nama_lengkap.split(' ')[0] : "User"));
                         const avatarUrl = `https://api.dicebear.com/7.x/micah/svg?seed=${encodeURIComponent(displayName)}&backgroundColor=e0e5ec&baseColor=f9c9b6`;
 
                         loginBtn.className = 'nav-profile-badge hide-on-mobile';
