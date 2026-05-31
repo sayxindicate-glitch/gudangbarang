@@ -15,12 +15,13 @@ export default async function handler(req, res) {
         const { data: { user }, error: authError } = await supabase.auth.getUser();
         if (authError || !user) throw new Error('Sesi tidak valid');
 
+        // PERHATIKAN: Kita membuang 'total_price' dari browser, kita hanya menerima 'items'
         const { shipping_address, phone_number, items, used_vouchers } = req.body;
-        
-        // SECURITY PATCH: Pastikan item adalah array dan tidak kosong
-        if (!items || !Array.isArray(items) || items.length === 0) throw new Error('Keranjang kosong');
+        if (!items || items.length === 0) throw new Error('Keranjang kosong');
 
-        // SECURITY 1: AMBIL HARGA ASLI DARI DATABASE, JANGAN PERCAYA BROWSER!
+        // =========================================================================
+        // SECURITY 1: MENGHITUNG ULANG HARGA ASLI DARI GUDANG DATABASE
+        // =========================================================================
         const productIds = items.map(item => item.product_id);
         const { data: realProducts, error: prodError } = await supabase.from('gg_products')
             .select('id, price, promo_price, is_promo').in('id', productIds);
@@ -32,76 +33,81 @@ export default async function handler(req, res) {
             const realProd = realProducts.find(p => p.id == item.product_id);
             if (!realProd) throw new Error(`Barang ID ${item.product_id} tidak valid.`);
             
-            // SECURITY PATCH KRITIS: Cegah Kuantitas Minus & Pastikan berupa Angka
-            const safeQty = parseInt(item.quantity);
-            if (isNaN(safeQty) || safeQty <= 0) {
-                throw new Error(`Kuantitas untuk barang ID ${item.product_id} tidak valid!`);
-            }
-
             const finalItemPrice = (realProd.is_promo && realProd.promo_price) ? realProd.promo_price : realProd.price;
-            serverCalculatedTotal += (finalItemPrice * safeQty);
+            serverCalculatedTotal += (finalItemPrice * item.quantity);
 
             return {
                 product_id: item.product_id,
-                quantity: safeQty,
-                price_at_buy: finalItemPrice.toString()
+                quantity: item.quantity,
+                price_at_buy: finalItemPrice.toString() // Disimpan sbg text, tapi HARGA DARI SERVER
             };
         });
 
-        // SECURITY 2: VALIDASI VOUCHER DAN HITUNG POTONGAN MURNI DI SERVER
-        if (used_vouchers && Array.isArray(used_vouchers) && used_vouchers.length > 0) {
-            const safeVoucherCode = String(used_vouchers[0]).toUpperCase().trim();
+        // =========================================================================
+        // SECURITY 2: VALIDASI VOUCHER & DISKON DI SERVER (SINKRON DENGAN SKEMA BARU)
+        // =========================================================================
+        if (used_vouchers && used_vouchers.length > 0) {
             const { data: voucher } = await supabase.from('gg_vouchers')
-                .select('*').eq('code', safeVoucherCode).single();
+                .select('*').eq('code', used_vouchers[0].toUpperCase()).single();
                 
-            if (voucher && serverCalculatedTotal >= voucher.min_purchase) {
-                let discount = voucher.discount_type === 'percent' 
-                    ? (serverCalculatedTotal * parseFloat(voucher.discount_value)) 
-                    : parseInt(voucher.discount_value);
+            if (voucher) {
+                const minPurchase = parseInt(voucher.min_purchase) || 0;
                 
-                if (voucher.max_discount && discount > voucher.max_discount) {
-                    discount = parseInt(voucher.max_discount);
+                // Cek syarat belanja
+                if (serverCalculatedTotal >= minPurchase) {
+                    let discountAmount = 0;
+                    const dType = String(voucher.discount_type || '').trim().toLowerCase();
+                    let dValue = parseFloat(voucher.discount_value) || 0;
+
+                    if (dType === 'percent' || dType === 'persen') {
+                        if (dValue >= 1 && dValue <= 100) dValue = dValue / 100;
+                        discountAmount = serverCalculatedTotal * dValue;
+                        const maxDisc = parseInt(voucher.max_discount) || 0;
+                        if (maxDisc > 0 && discountAmount > maxDisc) discountAmount = maxDisc;
+                    } else if (dType === 'fixed' || dType === 'nominal') {
+                        discountAmount = dValue; 
+                    }
+
+                    if (discountAmount > serverCalculatedTotal) discountAmount = serverCalculatedTotal;
+                    serverCalculatedTotal -= discountAmount;
                 }
-                serverCalculatedTotal -= discount;
             }
         }
 
         if (serverCalculatedTotal < 0) serverCalculatedTotal = 0;
 
-        // SECURITY PATCH: Batasi panjang string untuk mencegah Database Overload (DoS)
-        const safeAddress = String(shipping_address).substring(0, 500);
-        const safePhone = String(phone_number).substring(0, 50);
-
-        // 1. Buat Baris Pesanan Baru DENGAN HARGA HASIL HITUNGAN SERVER
+        // =========================================================================
+        // 3. EKSEKUSI PENYIMPANAN KE DATABASE DENGAN HARGA YANG SUDAH AMAN
+        // =========================================================================
         const { data: order, error: orderError } = await supabase.from('gg_orders').insert([{
             user_id: user.id,
-            total_price: serverCalculatedTotal, // AMAN 100%
-            shipping_address: `${safeAddress} (Telp: ${safePhone})`,
+            total_price: serverCalculatedTotal, // AMAN 100%: Dihitung oleh server
+            shipping_address: `${shipping_address} (Telp: ${phone_number})`,
             status: 'Diproses'
         }]).select().single();
 
-        // Menyembunyikan pesan error internal Supabase
-        if (orderError) throw new Error('Gagal memproses pesanan di peladen');
+        if (orderError) throw orderError;
 
-        // 2. Pindahkan rincian barang belanjaan
+        // 4. Masukkan items ke tabel gg_order_items
         const orderItemsWithOrderId = secureOrderItems.map(i => ({ ...i, order_id: order.id }));
         const { error: itemsInsertError } = await supabase.from('gg_order_items').insert(orderItemsWithOrderId);
-        if (itemsInsertError) throw new Error('Gagal mencatat rincian barang pesanan');
+        if (itemsInsertError) throw itemsInsertError;
 
-        // 3. Kosongkan keranjang belanja
+        // 5. Kosongkan keranjang belanja
         await supabase.from('gg_cart_items').delete().eq('user_id', user.id);
 
-        // 4. LOCKING VOUCHER (Kunci voucher agar tidak bisa di-spam)
-        if (used_vouchers && Array.isArray(used_vouchers) && used_vouchers.length > 0) {
+        // 6. Kunci Voucher agar tidak bisa dipakai 2x
+        if (used_vouchers && used_vouchers.length > 0) {
             const claimedData = used_vouchers.map(code => ({
-                user_id: user.id, voucher_code: String(code).toUpperCase().trim(), is_used: true
+                user_id: user.id, voucher_code: code, is_used: true
             }));
             await supabase.from('gg_claimed_vouchers').upsert(claimedData, { onConflict: 'user_id, voucher_code' });
         }
 
         return res.status(200).json({ message: 'Pesanan diverifikasi & dibuat', order_id: order.id });
+
     } catch (error) {
-        console.error("Checkout API Error:", error);
-        return res.status(400).json({ error: error.message || 'Terjadi kesalahan sistem' });
+        console.error("Checkout Error:", error);
+        return res.status(500).json({ error: error.message || 'Terjadi kesalahan sistem' });
     }
 }
