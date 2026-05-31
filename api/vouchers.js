@@ -40,12 +40,9 @@ export default async function handler(req, res) {
         const daysSinceCreated = Math.max(0, (now - createdDate) / (1000 * 60 * 60 * 24));
         const daysSinceLastSignIn = Math.max(0, (now - lastSignInDate) / (1000 * 60 * 60 * 24));
 
-        // SECURITY & PERFORMANCE PATCH: Jangan gunakan select('*')
-        // Tarik hanya kolom yang spesifik dibutuhkan untuk mencegah Server Overload
-        const { data: dbVouchers, error: dbError } = await supabase.from('gg_vouchers')
-            .select('id, code, title, description, color, expires_at, target_segment');
-            
-        if (dbError) throw new Error('Gagal memuat data promosi dari server'); // Menyamarkan error DB
+        // Ambil data murni dari database gg_vouchers
+        const { data: dbVouchers, error: dbError } = await supabase.from('gg_vouchers').select('*');
+        if (dbError) throw dbError;
 
         const filteredVouchers = (dbVouchers || []).filter(vch => {
             const segment = (vch.target_segment || 'all').trim().toLowerCase();
@@ -65,8 +62,13 @@ export default async function handler(req, res) {
             // Aturan 5: Segmentasi Marketing Otomatis
             if (segment === 'all') return true;
             if (segment === 'new' && safeOrderCount === 0 && daysSinceCreated <= 14) return true;
-            if (segment === 'comeback' && safeOrderCount === 0 && daysSinceCreated > 14 && daysSinceLastSignIn > 14) return true;
+            
+            // PERBAIKAN: Promo Comeback untuk pengguna yang "Sudah Pernah Belanja (>0)" tapi lama menghilang
+            if (segment === 'comeback' && safeOrderCount > 0 && daysSinceLastSignIn > 14) return true;
+            
+            // Promo Window Shopper untuk pengguna yang mendaftar tapi belum pernah beli, dan baru login
             if (segment === 'window_shopper' && safeOrderCount === 0 && daysSinceLastSignIn <= 7) return true;
+            
             if (segment === 'loyal' && safeOrderCount >= 3) return true;
             
             return false;
@@ -83,8 +85,6 @@ export default async function handler(req, res) {
 
         return res.status(200).json(responseData);
     } catch (error) { 
-        console.error("Vouchers API Error:", error);
-        // SECURITY PATCH: Cegah Information Disclosure (Jangan bocorkan error.message ke publik)
-        return res.status(400).json({ error: 'Tidak dapat memuat daftar promo saat ini.' }); 
+        return res.status(400).json({ error: error.message }); 
     }
 }
