@@ -43,11 +43,13 @@ export default async function handler(req, res) {
         let productsDict = {};
         
         if (productIds.length > 0) {
-            // SECURITY & PERFORMANCE PATCH: Jangan gunakan select('*') agar tidak membuat server lelah (DoS)
-            const { data: products } = await supabase.from('gg_products')
-                .select('id, title, img, price, promo_price, product_name, product_price, image, img_url').in('id', productIds);
+            // PERBAIKAN: Hanya panggil kolom yang benar-benar ada di tabel gg_products
+            const { data: products, error: productError } = await supabase.from('gg_products')
+                .select('id, title, img, price, promo_price').in('id', productIds);
                 
-            if (products) {
+            if (productError) {
+                console.error("Gagal menarik data produk:", productError.message);
+            } else if (products) {
                 products.forEach(p => { productsDict[String(p.id)] = p; }); 
             }
         }
@@ -58,12 +60,16 @@ export default async function handler(req, res) {
             const mappedItems = orderItems.map(item => {
                 const prod = productsDict[String(item.product_id)] || {}; 
                 
+                // PERBAIKAN: Format data 'price' dari database (misal: "Rp 650.000") menjadi angka murni
+                let fallbackPrice = 0;
+                if (prod.price) {
+                    fallbackPrice = parseInt(prod.price.replace(/\D/g, '')) || 0;
+                }
+                
                 return {
-                    // PERBAIKAN: Menarik "title" agar akurat dengan database produk
-                    product_name: prod.title || prod.product_name || prod.name || 'Barang Grosir',
-                    // PERBAIKAN: Menarik "img"
-                    product_img: prod.img || prod.product_img || prod.image || prod.img_url || '',
-                    product_price: item.price_at_buy || prod.product_price || prod.price || 0, 
+                    product_name: prod.title || 'Barang Grosir', // Ambil 'title' sesuai database
+                    product_img: prod.img || '',                 // Ambil 'img' sesuai database
+                    product_price: item.price_at_buy || fallbackPrice || 0, 
                     quantity: item.quantity
                 };
             });
