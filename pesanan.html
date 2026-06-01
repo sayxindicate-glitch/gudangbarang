@@ -345,15 +345,12 @@
         // =========================================================================
         // SECURITY PATCH: KUNCI LINGKUNGAN JAVASCRIPT & SANITASI
         // =========================================================================
-        // MENCEGAH PROTOTYPE POLLUTION (Ancaman 2)
         Object.freeze(Object.prototype);
 
-        // MENCEGAH CLICKJACKING / UI REDRESSING FALLBACK (Ancaman 8)
         if (window.top !== window.self) {
             window.top.location = window.self.location;
         }
 
-        // FUNGSI SANITASI MUTLAK (Anti-XSS & DOM Clobbering)
         function escapeHTML(str) {
             if (!str) return '';
             return String(str).replace(/[&<>'"]/g, 
@@ -367,15 +364,13 @@
             );
         }
 
-        // FUNGSI VALIDASI URL (Anti javascript: URI Bypass - Ancaman 1 & 3)
         function safeURL(url) {
             if (!url) return 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=GG';
             const strUrl = String(url).trim();
-            // Hanya mengizinkan URL yang diawali protokol aman atau path internal
             if (strUrl.startsWith('http://') || strUrl.startsWith('https://') || strUrl.startsWith('/') || strUrl.startsWith('./') || strUrl.startsWith('../')) {
                 return escapeHTML(strUrl);
             }
-            return 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=GG'; // Tolak skema jahat
+            return 'https://placehold.co/60x60/e0e5ec/a3b1c6?text=GG'; 
         }
         // =========================================================================
 
@@ -412,7 +407,6 @@
                 notifBtn.innerText = redirectUrl ? 'Login Sekarang' : 'Mengerti';
             }
 
-            // Mencegah bug Double Encoding (&amp;) dengan innerText langsung
             notifTitle.innerText = title;
             notifMessage.innerText = message;
             
@@ -442,7 +436,7 @@
         });
 
         // =========================================================================
-        // LOAD FOOTER DATA (DARI SISTEM LAMA)
+        // LOAD FOOTER DATA
         // =========================================================================
         async function loadFooterData() {
             try {
@@ -542,9 +536,15 @@
             updateNavUI(); 
 
             try {
+                // PATCH: Memaksa browser dan server cache layer untuk memberikan data aktual dari database tanpa campur tangan data kadaluwarsa.
                 const response = await fetch('/api/orders', {
                     method: 'GET',
-                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                    headers: { 
+                        'Authorization': `Bearer ${session.access_token}`,
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache'
+                    },
+                    cache: 'no-store'
                 });
 
                 if (!response.ok) {
@@ -610,7 +610,6 @@
             }
 
             filteredOrders.forEach(order => {
-                // SECURITY ENFORCEMENT PADA DATA PESANAN UTAMA
                 const rawStatus = escapeHTML(order.status || 'Pending');
                 const displayStatus = rawStatus.charAt(0).toUpperCase() + rawStatus.slice(1).toLowerCase();
                 const statusClass = `status-${rawStatus.toLowerCase()}`;
@@ -621,15 +620,25 @@
                 const safeOrderId = escapeHTML(order.id ? order.id.toString() : '');
                 const shortId = safeOrderId.split('-')[0].toUpperCase() || Math.floor(Math.random()*10000);
 
-                const items = order.items || [];
+                // PATCH: Ekstraksi objek array yang sangat toleran terhadap variasi pengembalian Supabase JSON agar item tetap terbaca.
+                let items = [];
+                if (Array.isArray(order.items)) {
+                    items = order.items;
+                } else if (typeof order.items === 'string') {
+                    try { items = JSON.parse(order.items); } catch(e) { items = []; }
+                } else if (order.items && typeof order.items === 'object') {
+                    items = Object.values(order.items);
+                }
+
                 let itemsHTML = '';
                 
                 if (items.length > 0) {
                     const firstItem = items[0];
-                    const safeFirstImg = safeURL(firstItem.product_img);
-                    const safeFirstName = escapeHTML(firstItem.product_name || 'Barang Belanjaan');
-                    const safeFirstQty = escapeHTML(firstItem.quantity || 1);
-                    const safeFirstPriceRaw = (firstItem.product_price || firstItem.price_at_buy || 0);
+                    // PATCH: Menambahkan fallback properti yang komprehensif agar tetap akurat meskipun skema backend sedikit berubah
+                    const safeFirstImg = safeURL(firstItem.product_img || firstItem.img || firstItem.image || firstItem.img_url);
+                    const safeFirstName = escapeHTML(firstItem.product_name || firstItem.title || firstItem.name || 'Barang Belanjaan');
+                    const safeFirstQty = parseInt(firstItem.quantity) || 1;
+                    const safeFirstPriceRaw = parseFloat(firstItem.product_price || firstItem.price_at_buy || firstItem.price || 0);
                     
                     itemsHTML += `
                         <div class="order-item">
@@ -648,10 +657,10 @@
                         
                         for (let i = 1; i < items.length; i++) {
                             const currItem = items[i];
-                            const safeCurrImg = safeURL(currItem.product_img);
-                            const safeCurrName = escapeHTML(currItem.product_name || 'Barang Belanjaan');
-                            const safeCurrQty = escapeHTML(currItem.quantity || 1);
-                            const safeCurrPriceRaw = (currItem.product_price || currItem.price_at_buy || 0);
+                            const safeCurrImg = safeURL(currItem.product_img || currItem.img || currItem.image || currItem.img_url);
+                            const safeCurrName = escapeHTML(currItem.product_name || currItem.title || currItem.name || 'Barang Belanjaan');
+                            const safeCurrQty = parseInt(currItem.quantity) || 1;
+                            const safeCurrPriceRaw = parseFloat(currItem.product_price || currItem.price_at_buy || currItem.price || 0);
 
                             hiddenItemsHTML += `
                                 <div class="order-item">
