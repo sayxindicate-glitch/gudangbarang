@@ -762,9 +762,9 @@
                                       prod.category === currentCategory || 
                                       flatTags.includes(currentCategory);
                 
-                const matchSearch = prod.title.toLowerCase().includes(keyword) || 
-                                    (prod.info && prod.info.toLowerCase().includes(keyword)) || 
-                                    flatTags.some(tag => tag.toLowerCase().includes(keyword));
+                const matchSearch = (prod.title || '').toLowerCase().includes(keyword) || 
+                    (prod.info && prod.info.toLowerCase().includes(keyword)) || 
+                    flatTags.some(tag => tag.toLowerCase().includes(keyword));
                 return matchCategory && matchSearch;
             });
             updateDynamicFilterUI(scopeProducts);
@@ -1029,11 +1029,11 @@
             clearSearchBtn.style.display = keyword.length > 0 ? 'block' : 'none';
             
             const matchedProducts = allProducts.filter(prod => {
-                const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
-                return prod.title.toLowerCase().includes(keyword) || 
-                       (prod.info && prod.info.toLowerCase().includes(keyword)) || 
-                       flatTags.some(tag => tag.toLowerCase().includes(keyword));
-            });
+    const flatTags = prod.filters ? Object.values(prod.filters).flat() : [];
+    return (prod.title || '').toLowerCase().includes(keyword) || 
+           (prod.info && prod.info.toLowerCase().includes(keyword)) || 
+           flatTags.some(tag => tag.toLowerCase().includes(keyword));
+});
             
             const dynamicCategories = new Set();
             if (keyword.length > 0) {
